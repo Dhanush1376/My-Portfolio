@@ -46,9 +46,9 @@
   --cursor-hover-size: 35px;
 
   /* Project Images (Dark) */
-  --project-1-img: url('assets/Project-dark/AI-Chatbot-with-RAG.png');
-  --project-2-img: url('assets/Project-dark/Attendance-System.png');
-  --project-3-img: url('assets/Project-dark/Resume-Screener.png');
+  --project-1-img: url('assets/Project-dark/hlpu.png');
+  --project-2-img: url('assets/Project-dark/Traffic-Volume-Predection.png');
+  --project-3-img: url('assets/Project-dark/Modulation-Signal-Processing.png');
 }
 
 /* Light theme */
@@ -72,13 +72,15 @@
   --cursor-dot-viz: hidden;
 
   /* Project Images (Light) */
-  --project-1-img: url('assets/Project-light/AI-Chatbot-with-RAG.png');
-  --project-2-img: url('assets/Project-light/Attendance-System.png');
-  --project-3-img: url('assets/Project-light/Resume-Screener.png');
+  --project-1-img: url('assets/Project-light/hlpu.png');
+  --project-2-img: url('assets/Project-light/Traffic-Volume-Predection.png');
+  --project-3-img: url('assets/Project-light/Modulation-Signal-Processing.png');
 }
 
 [data-theme="light"] .project-card-img {
   background-size: contain;
+  padding: 2.5rem;
+  background-origin: content-box;
 }
 
 html {
@@ -1028,20 +1030,26 @@ img {
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 3rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2.5rem;
 }
 
 .skill-category {
-  padding: 1.5rem;
-  border: 1px solid rgba(255,255,255,0.04);
-  border-radius: 12px;
-  transition: border-color 0.3s, background 0.3s;
+  padding: 2rem;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  transition: all 0.5s var(--transition);
 }
 
 .skill-category:hover {
-  border-color: rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.02);
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-8px);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
 }
 
 .skill-cat-title {
@@ -1173,9 +1181,9 @@ img {
 .project-card-img {
   width: 100%;
   aspect-ratio: 16/10;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
   background-color: var(--bg-alt);
   border-radius: 12px;
   display: flex;
@@ -1184,6 +1192,8 @@ img {
   overflow: hidden;
   box-shadow: 0 15px 40px var(--card-shadow);
   border: 1px solid var(--surface-border);
+  padding: 1.5rem;
+  background-origin: content-box;
 }
 
 .project-card[data-index="01"] .project-card-img {
