@@ -172,10 +172,10 @@ gsap.to('.hero-content', {
 });
 
 // ─── Section Stacking (Overlay Scroll) ────────────────
-const stackSections = gsap.utils.toArray('.section');
+const stackSections = gsap.utils.toArray('.section').filter(sec => !sec.classList.contains('projects'));
 stackSections.forEach((sec, i) => {
-  // Don't pin the last section
-  if (i === stackSections.length - 1) return;
+  // Don't pin the last section or on mobile
+  if (i === stackSections.length - 1 || window.innerWidth < 1024) return;
 
   // Pin the section as the next one scrolls over it
   ScrollTrigger.create({
@@ -378,17 +378,13 @@ gsap.utils.toArray('.skill-category').forEach((cat, i) => {
   });
 });
 
-// Projects section
+// Projects section logic (Ultra Fix 3.0 with MatchMedia)
 const projectCards = gsap.utils.toArray('.project-card');
 const numbersStack = document.querySelector('.projects-numbers');
 const numberItems = gsap.utils.toArray('.number-item');
 
-// 1. Numbers Sync (Switched to discrete slide for better stability with pins)
-// We handle this inside the card loop now for perfect active index matching.
-
-// 2. Individual Card State (Scale & Opacity)
-projectCards.forEach((card, i) => {
-  // Reveal layout
+// Reveal transitions for each card (Theme-aware entry)
+projectCards.forEach((card) => {
   gsap.from(card, {
     y: 80,
     opacity: 0,
@@ -399,31 +395,122 @@ projectCards.forEach((card, i) => {
       start: 'top 85%',
     }
   });
+});
 
+const mm = gsap.matchMedia();
 
+mm.add("(min-width: 1024px)", () => {
+  // Desktop Pinning
   ScrollTrigger.create({
-    trigger: card,
-    start: 'top center',
-    end: 'bottom center',
-    onToggle: (self) => {
-      if (self.isActive) {
-        // Slide the numbers stack to this index
-        if (numbersStack) {
-          gsap.to(numbersStack, {
-            y: -i * 8 + 'rem',
-            duration: 0.8,
-            ease: 'expo.out'
-          });
-        }
-        
-        numberItems.forEach((item, idx) => {
-          item.classList.toggle('active', idx === i);
-        });
-      }
+    trigger: '.projects',
+    start: 'top top',
+    end: 'bottom bottom',
+    pin: '.projects-left',
+    pinSpacing: false,
+    onRefresh: (self) => {
+      const pinEl = document.querySelector('.projects-left');
+      if (pinEl) pinEl.style.paddingTop = '120px';
     }
   });
 
+  // Desktop Scroll Progress Sync (Vertical)
+  projectCards.forEach((card, i) => {
+    ScrollTrigger.create({
+      trigger: card,
+      start: 'top center',
+      end: 'bottom center',
+      onToggle: (self) => {
+        if (self.isActive) {
+          if (numbersStack) {
+            gsap.to(numbersStack, {
+              y: -i * 8 + 'rem',
+              duration: 0.8,
+              ease: 'expo.out'
+            });
+          }
+          numberItems.forEach((item, idx) => {
+            item.classList.toggle('active', idx === i);
+          });
+        }
+      }
+    });
+  });
 });
+
+mm.add("(max-width: 1023px)", () => {
+  // Mobile Horizontal Slider Sync
+  projectCards.forEach((card, i) => {
+    ScrollTrigger.create({
+      trigger: card,
+      start: 'left center',
+      end: 'right center',
+      scroller: '.projects-right',
+      horizontal: true,
+      onToggle: (self) => {
+        if (self.isActive) {
+          const mobileCounter = document.querySelector('.project-mobile-counter .current');
+          if (mobileCounter) {
+            mobileCounter.textContent = (i + 1).toString().padStart(2, '0');
+          }
+          numberItems.forEach((item, idx) => {
+            item.classList.toggle('active', idx === i);
+          });
+        }
+      }
+    });
+  });
+
+  // Certificates Mobile Slider Sync
+  const certCards = gsap.utils.toArray('.cert-card');
+  certCards.forEach((card, i) => {
+    ScrollTrigger.create({
+      trigger: card,
+      start: 'left center',
+      end: 'right center',
+      scroller: '.certificates-grid',
+      horizontal: true,
+      onToggle: (self) => {
+        if (self.isActive) {
+          const certCounter = document.querySelector('.certificates-mobile-counter .current');
+          if (certCounter) {
+            certCounter.textContent = (i + 1).toString().padStart(2, '0');
+          }
+        }
+      }
+    });
+  });
+});
+
+// Direct scroll listener for mobile horizontal sliders (fallback for quick swipes)
+const projectsScroller = document.querySelector('.projects-right');
+if (projectsScroller) {
+  projectsScroller.addEventListener('scroll', () => {
+    if (window.innerWidth < 1024) {
+      const index = Math.round(projectsScroller.scrollLeft / projectsScroller.clientWidth);
+      const mobileCounter = document.querySelector('.project-mobile-counter .current');
+      if (mobileCounter) {
+        mobileCounter.textContent = (index + 1).toString().padStart(2, '0');
+      }
+      
+      numberItems.forEach((item, idx) => {
+        item.classList.toggle('active', idx === index);
+      });
+    }
+  });
+}
+
+const certsScroller = document.querySelector('.certificates-grid');
+if (certsScroller) {
+  certsScroller.addEventListener('scroll', () => {
+    if (window.innerWidth < 1024) {
+      const index = Math.round(certsScroller.scrollLeft / (window.innerWidth - 24)); // Approximation for card width
+      const certCounter = document.querySelector('.certificates-mobile-counter .current');
+      if (certCounter) {
+        certCounter.textContent = (index + 1).toString().padStart(2, '0');
+      }
+    }
+  });
+}
 
 
 // Timeline section
@@ -615,4 +702,7 @@ if (backToTopBtn) {
     }
   });
 }
-
+// Refresh ScrollTrigger on resize to handle mobile orientation changes
+window.addEventListener('resize', () => {
+  ScrollTrigger.refresh();
+});

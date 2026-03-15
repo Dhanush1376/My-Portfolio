@@ -33,14 +33,25 @@
   <nav class="navbar" id="navbar">
     <a href="#hero" class="nav-brand">dhanush<span class="reg">®</span></a>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#hero" class="nav-link active">Home</a></li>
-      <li><a href="#about" class="nav-link">About Me</a></li>
-      <li><a href="#education" class="nav-link">Education</a></li>
-      <li><a href="#skills" class="nav-link">Skills</a></li>
-      <li><a href="#projects" class="nav-link">Projects</a></li>
-      <li><a href="#certificates" class="nav-link">Certificates</a></li>
-      <li><a href="#experience" class="nav-link">Journey</a></li>
-      <li><a href="#contact" class="nav-link">Contact</a></li>
+      <li><a href="#hero" class="nav-link active" data-text="HOME">Home</a></li>
+      <li><a href="#about" class="nav-link" data-text="ABOUT ME">About Me</a></li>
+      <li><a href="#education" class="nav-link" data-text="EDUCATION">Education</a></li>
+      <li><a href="#skills" class="nav-link" data-text="SKILLS">Skills</a></li>
+      <li><a href="#projects" class="nav-link" data-text="PROJECTS">Projects</a></li>
+      <li><a href="#certificates" class="nav-link" data-text="CERTIFICATES">Certificates</a></li>
+      <li><a href="#experience" class="nav-link" data-text="EXPERIENCE">Experience</a></li>
+      <li><a href="#contact" class="nav-link" data-text="CONTACT">Contact</a></li>
+
+      <!-- Mobile Menu Footer -->
+      <div class="mobile-menu-footer">
+        <div class="mm-footer-label">EMAIL ADDRESS</div>
+        <a href="mailto:dhanush1376@gmail.com" class="mm-footer-email">dhanush1376@gmail.com</a>
+        <div class="mm-footer-socials">
+          <a href="https://www.linkedin.com/in/dhanush" target="_blank">LinkedIn</a>
+          <a href="https://github.com/Dhanush1376" target="_blank">Github</a>
+          <a href="https://leetcode.com/u/dhanush1376/" target="_blank">Leetcode</a>
+        </div>
+      </div>
     </ul>
     <div class="nav-actions">
       <a href="assets/docs/resume.pdf" download="Dhanush_CV.pdf" class="nav-resume-btn" id="navResume">
@@ -439,7 +450,12 @@
       <div class="projects-left">
         <div class="projects-header-wrapper">
           <div class="section-label">03 / Projects</div>
-          <h2 class="section-title">Selected <br /><span class="text-outline">Works</span></h2>
+          <div class="projects-title-row">
+            <h2 class="section-title">Selected <br /><span class="text-outline">Works</span></h2>
+            <div class="project-mobile-counter">
+              <span class="current">01</span> / <span class="total">03</span>
+            </div>
+          </div>
         </div>
         <div class="sticky-indicator-wrapper">
           <div class="projects-numbers">
@@ -518,7 +534,14 @@
   <!-- Certificates Section -->
   <section class="section certificates" id="certificates">
     <div class="section-label">04 / Credentials</div>
-    <h2 class="section-title">Professional <br /><span class="text-outline">Certificates</span></h2>
+    <div class="certificates-title-row">
+      <h2 class="section-title">Professional <br /><span class="text-outline">Certificates</span></h2>
+      <div class="certificates-mobile-counter">
+        <span class="current">01</span>
+        <span class="divider">/</span>
+        <span class="total">04</span>
+      </div>
+    </div>
 
     <div class="certificates-grid">
       <!-- Certificate 1 -->
@@ -767,6 +790,7 @@
           <li><a href="#hero">Home</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#projects">Projects</a></li>
+          <li><a href="#certifications">Certifications</a></li>
           <li><a href="#experience">Experience</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
