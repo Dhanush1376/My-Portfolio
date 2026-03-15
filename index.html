@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dhanush Atmakuri — AI & Software Engineer</title>
+  <meta name="description"
+    content="Portfolio of Dhanush Atmakuri — Machine Learning Engineer and Product Designer building intelligent, user-focused products." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-outline" id="cursorOutline"></div>
+
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-inner">
+      <div class="preloader-brand">Dhanush<span class="reg">®</span></div>
+      <div class="preloader-line"></div>
+      <div class="preloader-sub">Loading Experience</div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <a href="#hero" class="nav-brand">dhanush<span class="reg">®</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#hero" class="nav-link active">Home</a></li>
+      <li><a href="#about" class="nav-link">About Me</a></li>
+      <li><a href="#education" class="nav-link">Education</a></li>
+      <li><a href="#skills" class="nav-link">Skills</a></li>
+      <li><a href="#projects" class="nav-link">Projects</a></li>
+      <li><a href="#certificates" class="nav-link">Certificates</a></li>
+      <li><a href="#experience" class="nav-link">Experience</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="assets/docs/resume.pdf" download="Dhanush_CV.pdf" class="nav-resume-btn" id="navResume">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        <span>Resume</span>
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="section hero" id="hero">
+    <div class="hero-bg">
+      <img src="assets/portrait.jpg" alt="Dhanush Atmakuri" class="hero-img" id="heroImg" />
+      <div class="hero-grain"></div>
+      <div class="hero-vignette"></div>
+    </div>
+
+    <!-- Floating Crosshairs -->
+    <div class="crosshair ch-1">+</div>
+    <div class="crosshair ch-2">+</div>
+    <div class="crosshair ch-3">+</div>
+    <div class="crosshair ch-4">+</div>
+    <div class="crosshair ch-5">+</div>
+
+    <div class="hero-content">
+      <div class="hero-left">
+        <h1 class="hero-title">
+          <span class="title-line">Dhanush</span><span class="reg-big">®</span>
+        </h1>
+        <p class="hero-subtitle">Engineering ideas into intelligent systems</p>
+        <div class="hero-micro">
+          <span>AI & ML Enthusiast</span>
+          <span class="dot">·</span>
+          <span>Full-Stack Developer</span>
+          <span class="dot">·</span>
+          <span>LPU '27</span>
+        </div>
+        <div class="hero-tagline">
+          <span class="tagline-dash">—</span>
+          Building intelligent, user-focused products that bridge <strong>cutting-edge AI</strong> and
+          <strong>real-world usability</strong>.
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="glass-card" id="glassCard">
+          <div class="glass-card-header">
+            <div class="glass-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="glass-label">Featured</span>
+          </div>
+          <h3 class="glass-title">AI &amp; Software Engineering</h3>
+          <div class="glass-preview">
+            <div class="glass-preview-img"></div>
+            <div class="glass-preview-text">
+              <span class="glass-stat">3+ Projects</span>
+              <span class="glass-stat">200+ LeetCode</span>
+            </div>
+          </div>
+          <div class="glass-links">
+            <a href="https://github.com/dhanush" target="_blank" class="glass-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+              </svg>
+              GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/dhanush" target="_blank" class="glass-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                <rect x="2" y="9" width="4" height="12" />
+                <circle cx="4" cy="4" r="2" />
+              </svg>
+              LinkedIn
+            </a>
+          </div>
+          <a href="#contact" class="glass-cta">Let's Connect</a>
+          <div class="glass-year">© 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll-indicator">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="section about" id="about">
+    <div class="section-label">01 / About</div>
+    <h2 class="section-title">About <br /><span class="text-outline">Me</span></h2>
+    <div class="about-content">
+      <div class="about-text-col">
+        <p class="about-intro">
+          I'm an <strong>innovative Machine Learning Engineer</strong> and <strong>Product Designer</strong> with a deep
+          passion for building intelligent systems that solve real problems. I specialize in LLMs, computer vision, and
+          human-centered AI — bridging cutting-edge research with real-world usability.
+        </p>
+        <p class="about-philosophy">
+          My approach combines rigorous engineering with creative problem-solving. I believe the best AI products are
+          those that feel invisible — <em>powerful under the hood, intuitive on the surface.</em>
+        </p>
+
+        <!-- Stat Counters -->
+        <div class="about-stats">
+          <div class="stat-item">
+            <span class="stat-number">3+</span>
+            <span class="stat-label">Projects Built</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">200+</span>
+            <span class="stat-label">LeetCode Solved</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">7.56</span>
+            <span class="stat-label">CGPA</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">5+</span>
+            <span class="stat-label">Certifications</span>
+          </div>
+        </div>
+
+        <!-- Focus Areas -->
+        <div class="about-focus">
+          <span class="focus-label">Focus Areas</span>
+          <div class="focus-tags">
+            <span class="focus-tag">Machine Learning</span>
+            <span class="focus-tag">Large Language Models</span>
+            <span class="focus-tag">Computer Vision</span>
+            <span class="focus-tag">Product Design</span>
+            <span class="focus-tag">NLP</span>
+            <span class="focus-tag">Generative AI</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education Section -->
+  <section class="section education" id="education">
+    <div class="section-label">01.5 / Education</div>
+    <h2 class="section-title">
+      Academic <br />
+      <span class="text-outline">Background</span>
+    </h2>
+
+    <div class="edu-grid">
+
+      <!-- LPU -->
+      <div class="edu-card edu-card-featured">
+        <div class="edu-card-accent"></div>
+
+        <div class="edu-card-content">
+
+          <div class="edu-card-header">
+            <span class="edu-degree">
+              Bachelor of Technology — Computer Science & Engineering
+            </span>
+            <span class="edu-year">2023 – 2027</span>
+          </div>
+
+          <h3 class="edu-institution">Lovely Professional University</h3>
+          <p class="edu-location">Punjab, India</p>
+
+          <div class="edu-meta">
+            <div class="edu-meta-item">
+              <span class="edu-meta-label">CGPA</span>
+              <span class="edu-meta-value">7.56</span>
+            </div>
+
+            <div class="edu-meta-item">
+              <span class="edu-meta-label">Status</span>
+              <span class="edu-meta-value">Currently Pursuing</span>
+            </div>
+          </div>
+
+          <!-- coursework -->
+          <div class="edu-coursework">
+            <h4>Key Coursework</h4>
+            <ul>
+              <li>Data Structures & Algorithms</li>
+              <li>Object Oriented Programming</li>
+              <li>Database Management Systems</li>
+              <li>Operating Systems</li>
+              <li>Computer Networks</li>
+              <li>Artificial Intelligence</li>
+            </ul>
+          </div>
+
+          <!-- technical focus -->
+          <div class="edu-highlights">
+            <span>Machine Learning</span>
+            <span>Deep Learning</span>
+            <span>Computer Vision</span>
+            <span>Large Language Models</span>
+            <span>Python</span>
+            <span>Java</span>
+            <span>Data Structures</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Intermediate -->
+      <div class="edu-card">
+
+        <div class="edu-card-accent"></div>
+
+        <div class="edu-card-content">
+
+          <div class="edu-card-header">
+            <span class="edu-degree">
+              Intermediate (12th Grade) — MPC
+            </span>
+            <span class="edu-year">2021 – 2023</span>
+          </div>
+
+          <h3 class="edu-institution">Sri Saraswathi Educational Institutions</h3>
+          <p class="edu-location">Andhra Pradesh, India</p>
+
+          <div class="edu-meta">
+
+            <div class="edu-meta-item">
+              <span class="edu-meta-label">CGPA</span>
+              <span class="edu-meta-value">8.0</span>
+            </div>
+
+            <div class="edu-meta-item">
+              <span class="edu-meta-label">Focus</span>
+              <span class="edu-meta-value">Mathematics, Physics, Chemistry</span>
+            </div>
+
+          </div>
+
+          <p class="edu-description">
+            Developed strong analytical and mathematical foundations through the
+            MPC stream, which built the basis for pursuing Computer Science and
+            engineering studies.
+          </p>
+
+        </div>
+      </div>
+
+      <!-- 10th -->
+      <div class="edu-card">
+
+        <div class="edu-card-accent"></div>
+
+        <div class="edu-card-content">
+
+          <div class="edu-card-header">
+            <span class="edu-degree">
+              Secondary School Certificate (SSC)
+            </span>
+            <span class="edu-year">2020 – 2021</span>
+          </div>
+
+          <h3 class="edu-institution">Bhashyam High School</h3>
+          <p class="edu-location">Andhra Pradesh, India</p>
+
+          <div class="edu-meta">
+
+            <div class="edu-meta-item">
+              <span class="edu-meta-label">CGPA</span>
+              <span class="edu-meta-value">10.0</span>
+            </div>
+
+            <div class="edu-meta-item">
+              <span class="edu-meta-label">Achievement</span>
+              <span class="edu-meta-value">Perfect Score</span>
+            </div>
+
+          </div>
+
+          <p class="edu-description">
+            Achieved a perfect score in SSC examinations, demonstrating strong
+            academic discipline and excellence across all subjects.
+          </p>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section class="section skills" id="skills">
+    <div class="section-label">02 / Skills</div>
+    <h2 class="section-title">Technical <br /><span class="text-outline">Arsenal</span></h2>
+    <div class="skills-grid">
+
+      <div class="skill-category">
+        <h4 class="skill-cat-title">Programming Languages</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Java</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h4 class="skill-cat-title">Web Technologies</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">HTML</span>
+          <span class="skill-tag">CSS</span>
+          <span class="skill-tag">JavaScript</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h4 class="skill-cat-title">Machine Learning</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">Supervised Learning</span>
+          <span class="skill-tag">Unsupervised Learning</span>
+          <span class="skill-tag">Regression</span>
+          <span class="skill-tag">Classification</span>
+          <span class="skill-tag">Clustering</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h4 class="skill-cat-title">Libraries & Tools</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">TensorFlow</span>
+          <span class="skill-tag">Scikit-learn</span>
+          <span class="skill-tag">Pandas</span>
+          <span class="skill-tag">NumPy</span>
+          <span class="skill-tag">Matplotlib</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h4 class="skill-cat-title">Core Concepts</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">Data Structures & Algorithms (DSA)</span>
+          <span class="skill-tag">Product Design</span>
+          <span class="skill-tag">UI/UX</span>
+        </div>
+      </div>
+
+      <div class="skill-category">
+        <h4 class="skill-cat-title">Soft Skills</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">Analytical Problem-Solving</span>
+          <span class="skill-tag">Leadership</span>
+          <span class="skill-tag">Adaptability</span>
+          <span class="skill-tag">Time Management</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section class="section projects" id="projects">
+    <div class="projects-split">
+      <div class="projects-left">
+        <div class="projects-header-wrapper">
+          <div class="section-label">03 / Projects</div>
+          <h2 class="section-title">Selected <br /><span class="text-outline">Works</span></h2>
+        </div>
+        <div class="sticky-indicator-wrapper">
+          <div class="projects-numbers">
+            <div class="number-item" data-for="01">01</div>
+            <div class="number-item" data-for="02">02</div>
+            <div class="number-item" data-for="03">03</div>
+          </div>
+        </div>
+      </div>
+      <div class="projects-right">
+
+        <div class="project-card" data-index="01">
+          <div class="project-card-img"></div>
+          <div class="project-card-body">
+            <div class="project-mobile-number">01</div>
+            <span class="project-date">June '25 – Present</span>
+            <h3 class="project-title">hLPU – Student–Alumni Career Connectivity Platform</h3>
+            <p class="project-desc">
+              Developed a full-stack web platform connecting students and alumni to facilitate mentorship, referrals, mock interviews, and verified job opportunities. Implemented stream-specific matching and dynamic job listings.
+            </p>
+            <div class="project-tech">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>React</span><span>Node.js/Flask</span><span>Web-Sockets</span>
+            </div>
+            <div class="project-links">
+              <a href="#" target="_blank" class="project-btn">GitHub</a>
+              <a href="#" class="project-btn btn-outline">Live Demo ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-index="02">
+          <div class="project-card-img"></div>
+          <div class="project-card-body">
+            <div class="project-mobile-number">02</div>
+            <span class="project-date">March '25 - April '25</span>
+            <h3 class="project-title">Traffic Volume Prediction</h3>
+            <p class="project-desc">
+              Targeted future traffic forecasting and congestion analysis across major Bangalore road networks. Applied K-Means, PCA, and constructed regression and ARIMA models with Plotly visualizations.
+            </p>
+            <div class="project-tech">
+              <span>Python</span><span>Pandas</span><span>NumPy</span><span>Scikit-learn</span><span>ARIMA</span><span>Matplotlib</span><span>Plotly</span>
+            </div>
+            <div class="project-links">
+              <a href="#" target="_blank" class="project-btn">GitHub</a>
+              <a href="#" class="project-btn btn-outline">Live Demo ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card" data-index="03">
+          <div class="project-card-img"></div>
+          <div class="project-card-body">
+            <div class="project-mobile-number">03</div>
+            <span class="project-date">June '25 – August '25</span>
+            <h3 class="project-title">Modulation & Signal Processing Training</h3>
+            <p class="project-desc">
+              Hands-on training focused on analog and digital modulation techniques (AM, FM, PM, ASK, FSK, PSK). Signal generation, noise application, and bandwidth analysis using Python.
+            </p>
+            <div class="project-tech">
+              <span>Python</span><span>NumPy</span><span>Matplotlib</span><span>SciPy</span>
+            </div>
+            <div class="project-links">
+              <a href="#" target="_blank" class="project-btn">GitHub</a>
+              <a href="#" class="project-btn btn-outline">Live Demo ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience / Achievements Section -->
+  <section class="section experience" id="experience">
+    <div class="section-label">04 / Journey</div>
+    <h2 class="section-title">Experience &amp; <br /><span class="text-outline">Achievements</span></h2>
+    <div class="timeline">
+      <div class="timeline-line"></div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">June '25 – Present</span>
+          <h4 class="timeline-title">hLPU – Student–Alumni Career Connectivity Platform</h4>
+          <p class="timeline-desc">Full-stack web platform connecting students and alumni. Implemented stream-specific matching and dynamic job listings.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">March '25 - April '25</span>
+          <h4 class="timeline-title">Traffic Volume Prediction</h4>
+          <p class="timeline-desc">Future traffic forecasting and congestion analysis across major Bangalore road networks using ML regression and ARIMA models.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">August '24</span>
+          <h4 class="timeline-title">Gold Coder on HackerRank</h4>
+          <p class="timeline-desc">Achieved Gold Coder status for consistent performance in Java and Problem-Solving challenges.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">April '24</span>
+          <h4 class="timeline-title">Hackathon — Top 10 Rank</h4>
+          <p class="timeline-desc">Secured Top 10 Rank among 400 participants in a competitive Hackathon.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <span class="timeline-date">August '23</span>
+          <h4 class="timeline-title">Joined Lovely Professional University</h4>
+          <p class="timeline-desc">Started B.Tech in Computer Science & Engineering. Maintaining a CGPA of 7.56.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Certificates Section -->
+  <section class="section certificates" id="certificates">
+    <div class="section-label">05 / Credentials</div>
+    <h2 class="section-title">Professional <br /><span class="text-outline">Certificates</span></h2>
+
+    <div class="certificates-grid">
+      <!-- Certificate 1 -->
+      <div class="cert-card">
+        <div class="cert-card-inner">
+          <div class="cert-img-placeholder">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path
+                d="M12 15l-3-3m0 0l3-3m-3 3h8M2 12c0 5.523 4.477 10 10 10s10-4.477 10-10S17.523 2 12 2 2 6.477 2 12z" />
+            </svg>
+            <div class="cert-badge">Verified</div>
+          </div>
+          <div class="cert-content">
+            <h3 class="cert-title">AI & ML for Real World Problem Solving</h3>
+            <p class="cert-issuer">Center for Professional Enhancement</p>
+            <div class="cert-footer">
+              <span class="cert-date">July '25</span>
+              <a href="#" class="cert-link">View Certificate ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certificate 2 -->
+      <div class="cert-card">
+        <div class="cert-card-inner">
+          <div class="cert-img-placeholder">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path
+                d="M12 15l-3-3m0 0l3-3m-3 3h8M2 12c0 5.523 4.477 10 10 10s10-4.477 10-10S17.523 2 12 2 2 6.477 2 12z" />
+            </svg>
+            <div class="cert-badge">Verified</div>
+          </div>
+          <div class="cert-content">
+            <h3 class="cert-title">ChatGPT-4 Prompt Engineering</h3>
+            <p class="cert-issuer">Infosys Springboard</p>
+            <div class="cert-footer">
+              <span class="cert-date">August '25</span>
+              <a href="#" class="cert-link">View Certificate ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certificate 3 -->
+      <div class="cert-card">
+        <div class="cert-card-inner">
+          <div class="cert-img-placeholder">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path
+                d="M12 15l-3-3m0 0l3-3m-3 3h8M2 12c0 5.523 4.477 10 10 10s10-4.477 10-10S17.523 2 12 2 2 6.477 2 12z" />
+            </svg>
+            <div class="cert-badge">Verified</div>
+          </div>
+          <div class="cert-content">
+            <h3 class="cert-title">Master Generative AI & Tools</h3>
+            <p class="cert-issuer">Udemy</p>
+            <div class="cert-footer">
+              <span class="cert-date">August '25</span>
+              <a href="#" class="cert-link">View Certificate ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certificate 4 -->
+      <div class="cert-card">
+        <div class="cert-card-inner">
+          <div class="cert-img-placeholder">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path
+                d="M12 15l-3-3m0 0l3-3m-3 3h8M2 12c0 5.523 4.477 10 10 10s10-4.477 10-10S17.523 2 12 2 2 6.477 2 12z" />
+            </svg>
+            <div class="cert-badge">Verified</div>
+          </div>
+          <div class="cert-content">
+            <h3 class="cert-title">Responsive Web Design</h3>
+            <p class="cert-issuer">FreeCodeCamp</p>
+            <div class="cert-footer">
+              <span class="cert-date">Nov '23</span>
+              <a href="#" class="cert-link">View Certificate ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section contact" id="contact">
+    <div class="section-label">05 / Contact</div>
+    <h2 class="section-title">Get in <br /><span class="text-outline">Touch</span></h2>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p class="contact-intro">Have a project in mind, want to collaborate, or just want to say hello? Drop me a
+          message.</p>
+        <div class="contact-details">
+          <a href="mailto:dhanush1376@gmail.com" class="contact-detail-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+            </svg>
+            dhanush1376@gmail.com
+          </a>
+          <a href="tel:+919154691315" class="contact-detail-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+            +91-9154691315
+          </a>
+          <a href="https://www.linkedin.com/in/dhanush" target="_blank" class="contact-detail-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+              <rect x="2" y="9" width="4" height="12" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <div class="form-group">
+          <input type="text" id="formName" name="user_name" placeholder="Your Name" required />
+        </div>
+        <div class="form-group">
+          <input type="email" id="formEmail" name="user_email" placeholder="Your Email" required />
+        </div>
+        <div class="form-group">
+          <textarea id="formMessage" name="message" rows="5" placeholder="Your Message" required></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Send Message</button>
+          <a href="assets/docs/resume.pdf" download="Dhanush_CV.pdf" class="btn-secondary" id="downloadResume">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Download Resume
+          </a>
+        </div>
+        <div class="form-success" id="formSuccess">Message sent successfully! I'll get back to you soon.</div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-col brand-col">
+        <div class="footer-logo">dhanush<span class="reg">®</span></div>
+        <p class="footer-tagline">Crafting digital experiences with precision, passion, and a touch of brutalist soul.
+        </p>
+        <div class="footer-socials">
+          <a href="https://linkedin.com/in/dhanush" target="_blank" aria-label="LinkedIn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+              <rect x="2" y="9" width="4" height="12" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
+          </a>
+          <a href="https://github.com/dhanush" target="_blank" aria-label="GitHub">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+            </svg>
+          </a>
+          <a href="mailto:dhanush1376@gmail.com" aria-label="Email">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col links-col">
+        <h4 class="footer-heading">Navigation</h4>
+        <ul class="footer-nav">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col contact-col">
+        <h4 class="footer-heading">Say Hello</h4>
+        <p>Currently open to new opportunities and collaborations.</p>
+        <a href="mailto:dhanush1376@gmail.com" class="footer-email">dhanush1376@gmail.com</a>
+        <button id="backToTop" class="back-to-top">
+          <span>Back to Top</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="18 15 12 9 6 15" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copyright">© 2026 Dhanush Atmakuri. All rights reserved.</div>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- GSAP & Lenis -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+  <!-- EmailJS integration -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function () {
+      // TODO: Replace with your actual EmailJS Public Key from https://dashboard.emailjs.com/
+      emailjs.init({
+        publicKey: "l2rMNFo7Yt5VSlTK7",
+      });
+    })();
+  </script>
+  <script src="script.js"></script>
+</body>
+
+</html>
