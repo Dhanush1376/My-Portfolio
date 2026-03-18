@@ -93,7 +93,7 @@
   </nav>
 
   <!-- Hero Section -->
-  <section class="section hero" id="hero">
+  <section class="hero" id="hero">
     <div class="hero-bg">
       <img src="assets/portrait.jpg" alt="Dhanush Atmakuri" class="hero-img" id="heroImg" />
       <div class="hero-grain"></div>
@@ -178,6 +178,7 @@
 
   <!-- About Section -->
   <section class="section about" id="about">
+    <div class="stars-bg"></div>
     <div class="section-divider-container">
       <div class="section-divider"></div>
     </div>
@@ -234,6 +235,7 @@
 
   <!-- Skills Section -->
   <section class="section skills" id="skills">
+    <div class="stars-bg"></div>
     <div class="section-divider-container">
       <div class="section-divider"></div>
     </div>
@@ -387,6 +389,7 @@
 
   <!-- Projects Section -->
   <section class="section projects" id="projects">
+    <div class="stars-bg"></div>
     <div class="section-divider-container">
       <div class="section-divider"></div>
     </div>
@@ -427,7 +430,8 @@
             </div>
             <div class="project-links">
               <a href="https://github.com/Dhanush1376/hlpu" target="_blank" class="project-btn">GitHub</a>
-              <a href="hlpu-iw53tvo0i-dhanush1376-9388s-projects.vercel.app" target="_blank" class="project-btn btn-outline">Live Demo ↗</a>
+              <a href="hlpu-iw53tvo0i-dhanush1376-9388s-projects.vercel.app" target="_blank"
+                class="project-btn btn-outline">Live Demo ↗</a>
             </div>
           </div>
         </div>
@@ -479,119 +483,162 @@
   </section>
 
   <!-- Certificates Section -->
-  <section class="section certificates" id="certificates">
+  <section class="section certificates-new" id="certificates">
     <div class="section-divider-container">
       <div class="section-divider"></div>
     </div>
-    <div class="section-label">04 / Certificates</div>
-    <div class="certificates-title-row">
-      <h2 class="section-title">Professional <br /><span class="text-outline">Certificates</span></h2>
-      <div class="certificates-mobile-counter">
-        <span class="current">01</span>
-        <span class="divider">/</span>
-        <span class="total">04</span>
+    <div class="stars-bg"></div>
+    <div class="certs-container">
+      <div class="certs-header">
+        <div class="section-label">04 / Certificates</div>
+        <h2 class="section-title">Certifications</h2>
       </div>
-    </div>
 
-    <div class="certificates-grid">
-      <!-- Certificate 1 -->
-      <div class="cert-card">
-        <div class="cert-card-inner">
-          <div class="cert-glow"></div>
-          <div class="cert-icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path
-                d="M12 15l-3-3m0 0l3-3m-3 3h8M2 12c0 5.523 4.477 10 10 10s10-4.477 10-10S17.523 2 12 2 2 6.477 2 12z" />
-            </svg>
+      <div class="certs-slider-wrapper">
+        <div class="certs-slider" id="certsSlider">
+          <!-- Card 1 -->
+          <div class="cert-card-new active" data-index="0">
+            <div class="cert-card-inner">
+              <div class="cert-view-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="cert-img-box">
+                <img src="assets/certificates/Center-of-professional-enhancement.png"
+                  alt="AI & ML for Real World Problem Solving" class="cert-img" />
+              </div>
+              <div class="cert-content-box">
+                <h3 class="cert-title-text">AI & ML for Real World Problem Solving</h3>
+                <p class="cert-issuer-text">Center for Professional Enhancement</p>
+                <div class="cert-meta-info">
+                  <span class="cert-year-text">2025</span>
+                  <a href="https://drive.google.com/file/d/1ygQNO7w-3K_6ljwhYk5mw_N7cCozBCJv/view" target="_blank"
+                    class="cert-link-btn">Verify ↗</a>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="cert-content">
-            <div class="cert-badge">Verified</div>
-            <h3 class="cert-title">AI & ML for Real World Problem Solving</h3>
-            <p class="cert-issuer">Center for Professional Enhancement</p>
-            <div class="cert-footer">
-              <span class="cert-date">July '25</span>
-              <a href="https://drive.google.com/file/d/1ygQNO7w-3K_6ljwhYk5mw_N7cCozBCJv/view" target="_blank"
-                class="cert-link">View Certificate ↗</a>
+
+          <!-- Card 2 -->
+          <div class="cert-card-new" data-index="1">
+            <div class="cert-card-inner">
+              <div class="cert-view-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="cert-img-box">
+                <img src="assets/certificates/Infosys.png" alt="ChatGPT-4 Prompt Engineering" class="cert-img" />
+              </div>
+              <div class="cert-content-box">
+                <h3 class="cert-title-text">ChatGPT-4 Prompt Engineering</h3>
+                <p class="cert-issuer-text">Infosys Springboard</p>
+                <div class="cert-meta-info">
+                  <span class="cert-year-text">2025</span>
+                  <a href="https://drive.google.com/file/d/1ucGLQF0xgYwAuW0jIMEUs6DDLfJGD33O/view" target="_blank"
+                    class="cert-link-btn">Verify ↗</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="cert-card-new" data-index="2">
+            <div class="cert-card-inner">
+              <div class="cert-view-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="cert-img-box">
+                <img src="assets/certificates/Udemy.png" alt="Master Generative AI & Tools" class="cert-img" />
+              </div>
+              <div class="cert-content-box">
+                <h3 class="cert-title-text">Master Generative AI & Tools</h3>
+                <p class="cert-issuer-text">Udemy</p>
+                <div class="cert-meta-info">
+                  <span class="cert-year-text">2025</span>
+                  <a href="https://drive.google.com/file/d/1VQNWCg0m4JSb2jQpayIQCaKjV_ONlar7/view" target="_blank"
+                    class="cert-link-btn">Verify ↗</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="cert-card-new" data-index="3">
+            <div class="cert-card-inner">
+              <div class="cert-view-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="cert-img-box">
+                <img src="assets/certificates/FreeCodeCamp.png" alt="Responsive Web Design" class="cert-img" />
+              </div>
+              <div class="cert-content-box">
+                <h3 class="cert-title-text">Responsive Web Design</h3>
+                <p class="cert-issuer-text">FreeCodeCamp</p>
+                <div class="cert-meta-info">
+                  <span class="cert-year-text">2023</span>
+                  <a href="https://drive.google.com/file/d/1y6k3iDCHJ8j43cxyzt4hQv2p7SNIzrem/view" target="_blank"
+                    class="cert-link-btn">Verify ↗</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="cert-card-new" data-index="4">
+            <div class="cert-card-inner">
+              <div class="cert-view-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="cert-img-box">
+                <img src="assets/certificates/Web-Ka-Hackathon.png" alt="Web Ka Hackathon" class="cert-img" />
+              </div>
+              <div class="cert-content-box">
+                <h3 class="cert-title-text">Web Ka Hackathon Participation</h3>
+                <p class="cert-issuer-text">Lovely Professional University</p>
+                <div class="cert-meta-info">
+                  <span class="cert-year-text">2024</span>
+                  <a href="#" class="cert-link-btn">View Details ↗</a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Certificate 2 -->
-      <div class="cert-card">
-        <div class="cert-card-inner">
-          <div class="cert-glow"></div>
-          <div class="cert-icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path
-                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.364-5.636l-.707-.707M6.53 17a6 6 0 1 1 10.94 0M12 21a2 2 0 0 1-2-2h4a2 2 0 0 1-2 2z" />
-            </svg>
-          </div>
-          <div class="cert-content">
-            <div class="cert-badge">Verified</div>
-            <h3 class="cert-title">ChatGPT-4 Prompt Engineering</h3>
-            <p class="cert-issuer">Infosys Springboard</p>
-            <div class="cert-footer">
-              <span class="cert-date">August '25</span>
-              <a href="https://drive.google.com/file/d/1ucGLQF0xgYwAuW0jIMEUs6DDLfJGD33O/view" target="_blank"
-                class="cert-link">View Certificate ↗</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Certificate 3 -->
-      <div class="cert-card">
-        <div class="cert-card-inner">
-          <div class="cert-glow"></div>
-          <div class="cert-icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path
-                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-              <line x1="12" y1="22.08" x2="12" y2="12" />
-            </svg>
-          </div>
-          <div class="cert-content">
-            <div class="cert-badge">Verified</div>
-            <h3 class="cert-title">Master Generative AI & Tools</h3>
-            <p class="cert-issuer">Udemy</p>
-            <div class="cert-footer">
-              <span class="cert-date">August '25</span>
-              <a href="https://drive.google.com/file/d/1VQNWCg0m4JSb2jQpayIQCaKjV_ONlar7/view" target="_blank"
-                class="cert-link">View Certificate ↗</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Certificate 4 -->
-      <div class="cert-card">
-        <div class="cert-card-inner">
-          <div class="cert-glow"></div>
-          <div class="cert-icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <polyline points="16 18 22 12 16 6" />
-              <polyline points="8 6 2 12 8 18" />
-            </svg>
-          </div>
-          <div class="cert-content">
-            <div class="cert-badge">Verified</div>
-            <h3 class="cert-title">Responsive Web Design</h3>
-            <p class="cert-issuer">FreeCodeCamp</p>
-            <div class="cert-footer">
-              <span class="cert-date">Nov '23</span>
-              <a href="https://drive.google.com/file/d/1y6k3iDCHJ8j43cxyzt4hQv2p7SNIzrem/view" target="_blank"
-                class="cert-link">View Certificate ↗</a>
-            </div>
-          </div>
-        </div>
+      <div class="slider-controls">
+        <div class="slider-dots" id="certsDots"></div>
       </div>
     </div>
   </section>
 
+  <!-- Cert Modal -->
+  <div class="cert-modal" id="certModal">
+    <div class="cert-modal-overlay"></div>
+    <div class="cert-modal-content">
+      <button class="cert-modal-close" id="closeCertModal">&times;</button>
+      <div class="cert-modal-body">
+        <!-- I'll use an iframe or image here based on the link -->
+        <p>Opening certificate view...</p>
+      </div>
+    </div>
+  </div>
+
   <!-- Education Section -->
   <section class="section education" id="education">
+    <div class="stars-bg"></div>
     <div class="section-divider-container">
       <div class="section-divider"></div>
     </div>
@@ -722,6 +769,7 @@
 
   <!-- Experience / Achievements Section -->
   <section class="section experience" id="experience">
+    <div class="stars-bg"></div>
     <div class="section-divider-container">
       <div class="section-divider"></div>
     </div>
@@ -781,6 +829,7 @@
     </div>
   </section>
   <section class="section contact" id="contact">
+    <div class="stars-bg"></div>
     <div class="section-divider-container">
       <div class="section-divider"></div>
     </div>

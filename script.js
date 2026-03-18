@@ -320,21 +320,68 @@ function updateTimelineColor() {
 }
 
 // ─── Section Animations ─────────────────────────────
-// About section
+// About section Scroll Reveal Animation
+function initAboutScrollReveal() {
+  const aboutText = document.querySelector('.about-text-col');
+  if (!aboutText) return;
 
-if (document.querySelector('.about-text-col')) {
-  gsap.from('.about-text-col > *', {
-    y: 40,
+  // Split text into characters while preserving HTML structure
+  function recursiveSplit(element) {
+    const nodes = Array.from(element.childNodes);
+    nodes.forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
+        const text = node.textContent;
+        const fragment = document.createDocumentFragment();
+        
+        for (let char of text) {
+          const span = document.createElement('span');
+          span.className = 'char-reveal';
+          span.textContent = char;
+          // Initial low opacity for letters to be revealed
+          span.style.opacity = '0.1';
+          span.style.transition = 'opacity 0.2s ease-out';
+          fragment.appendChild(span);
+        }
+        
+        element.replaceChild(fragment, node);
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        recursiveSplit(node);
+      }
+    });
+  }
+
+  const paragraphs = aboutText.querySelectorAll('p');
+  paragraphs.forEach(p => recursiveSplit(p));
+
+  // Animation logic using ScrollTrigger scrub
+  gsap.to('.char-reveal', {
+    opacity: 1,
+    stagger: 0.1,
+    scrollTrigger: {
+      trigger: aboutText,
+      start: 'top 85%',
+      end: 'bottom 60%',
+      scrub: 1,
+      // markers: true, // Uncomment for debugging
+    }
+  });
+
+  // Fade out other elements in about-text-col normally
+  gsap.from('.about-stats, .about-focus', {
+    y: 30,
     opacity: 0,
-    stagger: 0.12,
     duration: 0.8,
+    stagger: 0.2,
     ease: 'power3.out',
     scrollTrigger: {
-      trigger: '.about',
-      start: 'top 70%',
+      trigger: '.about-stats',
+      start: 'top 90%',
     }
   });
 }
+
+// Call the reveal init
+initAboutScrollReveal();
 
 // About stats counter animation
 if (document.querySelector('.about-stats')) {
@@ -498,21 +545,6 @@ mm.add("(max-width: 1023px)", () => {
       setActiveNumber(activeIndex);
     });
   }
-
-  // Certificates mobile sync
-  const certsGrid = document.querySelector('.certificates-grid');
-  if (certsGrid) {
-    certsGrid.addEventListener('scroll', () => {
-      const scrollLeft = certsGrid.scrollLeft;
-      const cardWidth = certsGrid.offsetWidth;
-      const activeIndex = Math.round(scrollLeft / cardWidth);
-      
-      const certCounter = document.querySelector('.certificates-mobile-counter .current');
-      if (certCounter) {
-        certCounter.textContent = (activeIndex + 1).toString().padStart(2, '0');
-      }
-    });
-  }
 });
 
 // Timeline section
@@ -549,19 +581,254 @@ gsap.utils.toArray('.timeline-item').forEach((item, i) => {
   });
 });
 
-// Certificates section
-const certGrid = document.querySelector('.certificates-grid');
-const certCardsClass = '.cert-card';
-if (certGrid && document.querySelector(certCardsClass)) {
-  gsap.from(certCardsClass, {
-    y: 60,
-    opacity: 0,
-    stagger: 0.15,
-    duration: 0.8,
-    ease: 'power3.out',
-    scrollTrigger: {
-      trigger: certGrid,
-      start: 'top 85%',
+// ─── New 3D Certifications Carousel ──────────────────
+const certsSlider = document.getElementById('certsSlider');
+const certCards = gsap.utils.toArray('.cert-card-new');
+const certDotsContainer = document.getElementById('certsDots');
+let certCurrentIndex = 0;
+let certAutoScrollTimer;
+
+if (certsSlider && certCards.length > 0) {
+  // Create dots
+  certCards.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.classList.add('dot');
+    if (i === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => goToCert(i));
+    certDotsContainer.appendChild(dot);
+  });
+
+  const certDots = document.querySelectorAll('.slider-dots .dot');
+
+  function updateCertSlider() {
+    certCards.forEach((card, i) => {
+      let state = 'hidden';
+      const diff = (i - certCurrentIndex + certCards.length) % certCards.length;
+
+      if (diff === 0) state = 'center';
+      else if (diff === 1) state = 'right-1';
+      else if (diff === certCards.length - 1) state = 'left-1';
+      else if (diff === 2) state = 'right-2';
+      else if (diff === certCards.length - 2) state = 'left-2';
+
+      card.setAttribute('data-state', state);
+      
+      // Update active class for center card
+      if (state === 'center') card.classList.add('active');
+      else card.classList.remove('active');
+    });
+
+    // Update dots
+    certDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === certCurrentIndex);
+    });
+  }
+
+  function goToCert(index) {
+    certCurrentIndex = index;
+    updateCertSlider();
+    resetCertAutoScroll();
+  }
+
+  function nextCert() {
+    certCurrentIndex = (certCurrentIndex + 1) % certCards.length;
+    updateCertSlider();
+  }
+
+  function startCertAutoScroll() {
+    certAutoScrollTimer = setInterval(nextCert, 4000);
+  }
+
+  function resetCertAutoScroll() {
+    clearInterval(certAutoScrollTimer);
+    startCertAutoScroll();
+  }
+
+  // Click on card to center it
+  certCards.forEach((card, i) => {
+    card.addEventListener('click', (e) => {
+      if (certCurrentIndex !== i) {
+        goToCert(i);
+      }
+    });
+  });
+
+  // Pause on hover
+  certsSlider.addEventListener('mouseenter', () => clearInterval(certAutoScrollTimer));
+  certsSlider.addEventListener('mouseleave', () => startCertAutoScroll());
+
+  // Mouse and Touch Dragging
+  let startX = 0;
+  let isDragging = false;
+  
+  const handleDragStart = (e) => {
+    isDragging = true;
+    startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+    clearInterval(certAutoScrollTimer);
+  };
+  
+  const handleDragEnd = (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    const endX = e.type === 'touchend' ? e.changedTouches[0].clientX : e.clientX;
+    const diff = startX - endX;
+    
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) nextCert();
+      else prevCert();
+    }
+    startCertAutoScroll();
+  };
+  
+  certsSlider.addEventListener('mousedown', handleDragStart);
+  window.addEventListener('mouseup', handleDragEnd);
+  certsSlider.addEventListener('touchstart', handleDragStart, { passive: true });
+  certsSlider.addEventListener('touchend', handleDragEnd, { passive: true });
+
+  // Mouse Wheel Scroll support - Horizontal Only
+  let wheelTimeout;
+  certsSlider.addEventListener('wheel', (e) => {
+    if (wheelTimeout) return;
+    
+    // Only capture horizontal scrolling with significant intent
+    if (Math.abs(e.deltaX) > 25 && Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      e.preventDefault();
+      
+      if (e.deltaX > 0) nextCert();
+      else prevCert();
+      
+      wheelTimeout = setTimeout(() => {
+        wheelTimeout = null;
+      }, 600); 
+      
+      resetCertAutoScroll();
+    }
+  }, { passive: false });
+
+  function prevCert() {
+    certCurrentIndex = (certCurrentIndex - 1 + certCards.length) % certCards.length;
+    updateCertSlider();
+  }
+
+  // Global scroll listener to pause auto-scroll
+  if (window.lenis) {
+    window.lenis.on('scroll', () => {
+      resetCertAutoScroll();
+    });
+  } else {
+    window.addEventListener('scroll', () => {
+      resetCertAutoScroll();
+    }, { passive: true });
+  }
+
+  // Initial call
+  updateCertSlider();
+  startCertAutoScroll();
+}
+
+// ─── Certificate Modal ────────────────────────────────
+const certModal = document.getElementById('certModal');
+const closeCertModal = document.getElementById('closeCertModal');
+const certModalOverlay = document.querySelector('.cert-modal-overlay');
+
+if (certModal) {
+  // Open modal when clicking the view icon or a center card
+  document.querySelectorAll('.cert-view-icon').forEach((btn, i) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openModal(i);
+    });
+  });
+
+  // Also allow clicking the image or title of the center card
+  certCards.forEach((card, i) => {
+    card.addEventListener('click', (e) => {
+      if (card.getAttribute('data-state') === 'center') {
+        // Only open if the user didn't click the link or icon specifically
+        if (!e.target.closest('.cert-link-btn') && !e.target.closest('.cert-view-icon')) {
+           openModal(i);
+        }
+      }
+    });
+  });
+
+  function openModal(index) {
+    if (!certModal) return;
+    const card = certCards[index];
+    if (!card) return;
+
+    const title = card.querySelector('.cert-title-text').textContent;
+    const issuer = card.querySelector('.cert-issuer-text').textContent;
+    const link = card.querySelector('.cert-link-btn').href;
+    const imgElement = card.querySelector('.cert-img');
+    const imgSrc = imgElement ? imgElement.src : '';
+    
+    const modalBody = certModal.querySelector('.cert-modal-body');
+    const modalContent = certModal.querySelector('.cert-modal-content');
+    
+    if (modalBody) {
+      modalBody.innerHTML = `
+        <div class="modal-header-simple" style="text-align: left; width: 100%; margin-bottom: 25px;">
+          <h2 style="margin: 0 0 5px 0; font-size: 1.6rem; font-weight: 800; color: var(--text);">${title}</h2>
+          <p style="margin: 0; color: var(--text-secondary); font-size: 0.95rem; font-weight: 500;">${issuer}</p>
+        </div>
+        
+        <div class="modal-cert-display" style="width: 100%; display: flex; flex-direction: column; gap: 25px;">
+          ${imgSrc ? `
+          <div class="modal-img-container" style="width: 100%; max-height: 75vh; border-radius: 16px; overflow: hidden; border: 1px solid var(--surface-border); background: #000; box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
+            <img src="${imgSrc}" style="max-width: 100%; height: auto; max-height: 75vh; display: block; object-fit: contain;" alt="${title}">
+          </div>
+          ` : ''}
+          
+          <div style="width: 100%; display: flex; justify-content: flex-start;">
+            ${link && link !== '#' && !link.includes(window.location.pathname) ? `
+            <a href="${link}" target="_blank" class="cert-link-btn" style="padding: 12px 28px; font-size: 0.95rem; font-weight: 700; background: var(--text); color: var(--bg); border-radius: 12px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-decoration: none; display: inline-block;">Verify Certificate ↗</a>
+            ` : `
+            <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; border-left: 2px solid var(--surface-border); padding-left: 15px; margin: 0;">Official verification link not available for this entry.</p>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    // Modal Visibility with GSAP
+    gsap.set(certModal, { display: 'flex', opacity: 1 });
+    certModal.classList.add('active'); // Still add for backdrop-filter CSS
+    
+    // Animate Overlay and Content
+    gsap.fromTo(certModalOverlay, { opacity: 0 }, { opacity: 1, duration: 0.4 });
+    gsap.fromTo(modalContent, 
+      { opacity: 0, scale: 0.85, y: 30 },
+      { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "power4.out" }
+    );
+
+    document.body.style.overflow = 'hidden';
+    if (window.lenis) window.lenis.stop();
+  }
+
+  function closeModal() {
+    if (!certModal) return;
+    const modalContent = certModal.querySelector('.cert-modal-content');
+
+    gsap.to(certModalOverlay, { opacity: 0, duration: 0.3 });
+    gsap.to(modalContent, {
+      opacity: 0, scale: 0.9, y: 20, duration: 0.3, ease: "power2.in",
+      onComplete: () => {
+        certModal.classList.remove('active');
+        certModal.style.display = 'none';
+        document.body.style.overflow = '';
+        if (window.lenis) window.lenis.start();
+      }
+    });
+  }
+
+  closeCertModal.addEventListener('click', closeModal);
+  certModalOverlay.addEventListener('click', closeModal);
+  
+  // ESC key to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && certModal.classList.contains('active')) {
+      closeModal();
     }
   });
 }
