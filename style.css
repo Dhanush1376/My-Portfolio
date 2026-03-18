@@ -1346,25 +1346,64 @@ html.lenis {
   min-height: 100%;
 }
 
+/* Entire left column (header + numbers) will be sticky via CSS */
 .projects-left {
-  position: relative;
+  position: -webkit-sticky; /* Support for Safari */
+  position: sticky;
+  top: 10vh; /* Adjust offset from top */
+  height: fit-content;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  /* Aligned left */
-  gap: 15vh;
+  gap: 2rem;
   padding: 0;
   z-index: 15;
   padding-top: 5vh;
   text-align: left;
-  /* Aligned left */
 }
 
+/* Header section within the pinned column */
 .projects-header-wrapper {
-  margin-top: 0 !important;
   width: 100%;
+  margin-bottom: 2rem;
 }
+
+/* Numbers wrapper within the pinned column */
+.sticky-indicator-wrapper {
+  height: 8rem;
+  overflow: hidden;
+  position: relative;
+  margin-top: 0;
+  width: 100%;
+  z-index: 20;
+}
+
+.projects-numbers {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.number-item {
+  height: 8rem;
+  font-size: 8rem;
+  font-weight: 900;
+  color: var(--project-number-color);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  opacity: 0.1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  transition: opacity 0.3s ease;
+}
+
+.number-item.active {
+  opacity: 0.5;
+}
+
+
 
 /* Align section-title left in projects */
 .projects-left .section-title {

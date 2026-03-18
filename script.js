@@ -180,7 +180,7 @@ gsap.to('.hero-content', {
 });
 
 // ─── Section Stacking (Overlay Scroll) ────────────────
-const stackSections = gsap.utils.toArray('.section').filter(sec => !sec.classList.contains('projects'));
+const stackSections = gsap.utils.toArray('.section');
 stackSections.forEach((sec, i) => {
   // Don't pin the last section or on mobile
   if (i === stackSections.length - 1 || window.innerWidth < 1024) return;
@@ -381,12 +381,17 @@ gsap.utils.toArray('.skill-category').forEach((cat, i) => {
   });
 });
 
-// Projects section logic (Ultra Fix 3.0 with MatchMedia)
+// ===== FIXED PROJECTS SECTION - ONLY NUMBERS STICKY =====
 const projectCards = gsap.utils.toArray('.project-card');
 const numbersStack = document.querySelector('.projects-numbers');
-const numberItems = gsap.utils.toArray('.number-item');
+const numberItems = document.querySelectorAll('.number-item');
+const projectsSection = document.querySelector('.projects');
+const stickyNumbersWrapper = document.querySelector('.sticky-indicator-wrapper');
 
-// Reveal transitions for each card (Theme-aware entry)
+// Initial setup - hide number items initially (will be shown by animation)
+gsap.set(numberItems, { opacity: 0 });
+
+// Reveal animations for project cards
 projectCards.forEach((card) => {
   gsap.from(card, {
     y: 80,
@@ -400,128 +405,109 @@ projectCards.forEach((card) => {
   });
 });
 
+// Animate number items appearing
+gsap.to(numberItems, {
+  opacity: 0.1,
+  stagger: 0.2,
+  duration: 0.8,
+  ease: 'power2.out',
+  scrollTrigger: {
+    trigger: '.projects',
+    start: 'top 80%',
+  }
+});
+
+// Make active number more visible
+function setActiveNumber(index) {
+  numberItems.forEach((item, i) => {
+    if (i === index) {
+      gsap.to(item, {
+        opacity: 0.5,
+        duration: 0.3,
+        overwrite: true
+      });
+    } else {
+      gsap.to(item, {
+        opacity: 0.1,
+        duration: 0.3,
+        overwrite: true
+      });
+    }
+  });
+  
+  if (numbersStack) {
+    gsap.to(numbersStack, {
+      y: -index * 8 + 'rem',
+      duration: 0.6,
+      ease: 'power2.out',
+      overwrite: true
+    });
+  }
+}
+
+// MatchMedia for responsive behavior
 const mm = gsap.matchMedia();
 
 mm.add("(min-width: 1024px)", () => {
-  // Desktop Pinning
-  ScrollTrigger.create({
-    trigger: '.projects',
-    start: 'top top',
-    end: 'bottom bottom',
-    pin: '.projects-left',
-    pinSpacing: false,
-    anticipatePin: 1,
-    invalidateOnRefresh: true,
-    refreshPriority: 1, // Give it priority
-    onRefresh: (self) => {
-      // Ensure the pinned element doesn't have unwanted offsets
-      const pinEl = document.querySelector('.projects-left');
-      if (pinEl) {
-        pinEl.style.paddingTop = '0';
-        pinEl.style.marginTop = '0';
-      }
+  // Kill any existing pins to avoid conflicts
+  ScrollTrigger.getAll().forEach(st => {
+    if (st.vars.id === 'numbers-pin') {
+      st.kill();
     }
   });
 
-  // Desktop Scroll Progress Sync (Vertical)
-  projectCards.forEach((card, i) => {
+  // (Pinning is now handled by CSS position: sticky for better reliability)
+
+  // Update numbers based on which card is in view
+  projectCards.forEach((card, index) => {
     ScrollTrigger.create({
       trigger: card,
       start: 'top center',
       end: 'bottom center',
-      onToggle: (self) => {
-        if (self.isActive) {
-          if (numbersStack) {
-            gsap.to(numbersStack, {
-              y: -i * 8 + 'rem',
-              duration: 0.8,
-              ease: 'expo.out'
-            });
-          }
-          numberItems.forEach((item, idx) => {
-            item.classList.toggle('active', idx === i);
-          });
-        }
-      }
+      onEnter: () => setActiveNumber(index),
+      onEnterBack: () => setActiveNumber(index),
     });
   });
+
+  // Set initial active number
+  setTimeout(() => {
+    setActiveNumber(0);
+  }, 500);
 });
 
 mm.add("(max-width: 1023px)", () => {
-  // Mobile Horizontal Slider Sync (Synced with Certificates style)
-  projectCards.forEach((card, i) => {
-    ScrollTrigger.create({
-      trigger: card,
-      start: 'left center',
-      end: 'right center',
-      scroller: '.projects-right',
-      horizontal: true,
-      onToggle: (self) => {
-        if (self.isActive && window.innerWidth < 1024) {
-          const mobileCounter = document.querySelector('.project-mobile-counter .current');
-          if (mobileCounter) {
-            mobileCounter.textContent = (i + 1).toString().padStart(2, '0');
-          }
-          numberItems.forEach((item, idx) => {
-            if (item) item.classList.toggle('active', idx === i);
-          });
-        }
-      }
-    });
-  });
-
-  // Certificates Mobile Slider Sync
-  const certCards = gsap.utils.toArray('.cert-card');
-  certCards.forEach((card, i) => {
-    ScrollTrigger.create({
-      trigger: card,
-      start: 'left center',
-      end: 'right center',
-      scroller: '.certificates-grid',
-      horizontal: true,
-      onToggle: (self) => {
-        if (self.isActive) {
-          const certCounter = document.querySelector('.certificates-mobile-counter .current');
-          if (certCounter) {
-            certCounter.textContent = (i + 1).toString().padStart(2, '0');
-          }
-        }
-      }
-    });
-  });
-});
-
-// Direct scroll listener for mobile horizontal sliders (fallback for quick swipes)
-const projectsScroller = document.querySelector('.projects-right');
-if (projectsScroller) {
-  projectsScroller.addEventListener('scroll', () => {
-    if (window.innerWidth < 1024) {
-      const index = Math.round(projectsScroller.scrollLeft / projectsScroller.offsetWidth);
+  // Mobile: horizontal scroll sync
+  const projectsRight = document.querySelector('.projects-right');
+  
+  if (projectsRight) {
+    projectsRight.addEventListener('scroll', () => {
+      const scrollLeft = projectsRight.scrollLeft;
+      const cardWidth = projectsRight.offsetWidth;
+      const activeIndex = Math.round(scrollLeft / cardWidth);
+      
       const mobileCounter = document.querySelector('.project-mobile-counter .current');
       if (mobileCounter) {
-        mobileCounter.textContent = (index + 1).toString().padStart(2, '0');
+        mobileCounter.textContent = (activeIndex + 1).toString().padStart(2, '0');
       }
-      
-      numberItems.forEach((item, idx) => {
-        if (item) item.classList.toggle('active', idx === index);
-      });
-    }
-  });
-}
+      setActiveNumber(activeIndex);
+    });
+  }
 
-const certsScroller = document.querySelector('.certificates-grid');
-if (certsScroller) {
-  certsScroller.addEventListener('scroll', () => {
-    if (window.innerWidth < 1024) {
-      const index = Math.round(certsScroller.scrollLeft / certsScroller.offsetWidth);
+  // Certificates mobile sync
+  const certsGrid = document.querySelector('.certificates-grid');
+  if (certsGrid) {
+    certsGrid.addEventListener('scroll', () => {
+      const scrollLeft = certsGrid.scrollLeft;
+      const cardWidth = certsGrid.offsetWidth;
+      const activeIndex = Math.round(scrollLeft / cardWidth);
+      
       const certCounter = document.querySelector('.certificates-mobile-counter .current');
       if (certCounter) {
-        certCounter.textContent = (index + 1).toString().padStart(2, '0');
+        certCounter.textContent = (activeIndex + 1).toString().padStart(2, '0');
       }
-    }
-  });
-}
-
+    });
+  }
+});
 
 // Timeline section
 const timelineLine = document.querySelector('.timeline-line');
@@ -838,6 +824,7 @@ if (backToTopBtn) {
     smoothScrollTo(0);
   });
 }
+
 // Refresh ScrollTrigger on resize to handle mobile orientation changes
 window.addEventListener('resize', () => {
   if (typeof ScrollTrigger !== 'undefined') {
