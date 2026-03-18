@@ -50,7 +50,7 @@
   --surface: rgba(255, 255, 255, 0.06);
   --surface-border: rgba(255, 255, 255, 0.1);
   --surface-hover: rgba(255, 255, 255, 0.02);
-  --card-shadow: rgba(0, 0, 0, 0.5);
+  --card-shadow: rgba(0, 0, 0, 0.3);
   --nav-scrolled: rgba(0, 0, 0, 0.6);
   --hero-brightness: 0.65;
   --outline-stroke: #ffffff;
@@ -80,7 +80,7 @@
   --surface: rgba(0, 0, 0, 0.04);
   --surface-border: rgba(0, 0, 0, 0.1);
   --surface-hover: rgba(0, 0, 0, 0.02);
-  --card-shadow: rgba(0, 0, 0, 0.1);
+  --card-shadow: rgba(0, 0, 0, 0.05);
   --nav-scrolled: rgba(245, 245, 245, 0.75);
   --hero-brightness: 0.75;
   --outline-stroke: #171717;
@@ -104,14 +104,14 @@ html {
   font-size: 16px;
   cursor: none;
   width: 100vw !important;
-  overflow-x: hidden !important;
+  overflow-x: clip !important;
 }
 
 body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text);
-  overflow-x: hidden !important;
+  overflow-x: clip !important;
   width: 100% !important;
   min-width: 100% !important;
   -webkit-font-smoothing: antialiased;
@@ -224,7 +224,7 @@ html.lenis {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow:
-    0 4px 15px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.2),
     0 0 20px rgba(255, 255, 255, 0.05);
   opacity: 0.8;
 }
@@ -233,7 +233,7 @@ html.lenis {
 [data-theme="light"] .section-divider {
   background: black !important;
   border-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   opacity: 1;
 }
 
@@ -684,7 +684,7 @@ html.lenis {
   border-radius: 16px;
   padding: 1.5rem;
   width: 280px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
 }
 
 .glass-card-header {
@@ -810,7 +810,7 @@ html.lenis {
 
 .glass-cta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
 }
 
 .glass-year {
@@ -879,7 +879,7 @@ html.lenis {
 .section.card-focus {
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
-  box-shadow: 0 -40px 100px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.3);
 }
 
 .section.hero {
@@ -1043,7 +1043,7 @@ html.lenis {
 
 .edu-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   border-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -1231,7 +1231,7 @@ html.lenis {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   transition: all 0.5s var(--transition);
   display: flex;
   flex-direction: column;
@@ -1243,7 +1243,7 @@ html.lenis {
   border-color: rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.05);
   transform: translateY(-8px);
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.05);
 }
 
 .skill-cat-header {
@@ -1489,7 +1489,7 @@ html.lenis {
 
 .project-card:hover {
   transform: translateY(-8px) scale(1.01);
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -1661,7 +1661,7 @@ html.lenis {
 
 .project-btn:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
 }
 
 .project-btn.btn-outline {
@@ -1863,7 +1863,7 @@ html.lenis {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.15);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
 }
 
 .btn-secondary {
@@ -2827,7 +2827,7 @@ html.lenis {
 [data-theme="light"] .glass-card {
   background: rgba(255, 255, 255, 0.7);
   border-color: rgba(0, 0, 0, 0.08);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
 }
 
 [data-theme="light"] .glass-title,
@@ -2943,7 +2943,7 @@ html.lenis {
 }
 
 [data-theme="light"] .edu-card:hover {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   border-color: rgba(0, 0, 0, 0.15);
 }
 
@@ -3107,7 +3107,7 @@ html.lenis {
 }
 
 [data-theme="light"] .btn-primary:hover {
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 [data-theme="light"] .btn-secondary {
@@ -3214,14 +3214,14 @@ html.lenis {
   transition: all 0.5s var(--transition);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .cert-card:hover .cert-card-inner {
   transform: translateY(-12px);
   border-color: rgba(255, 255, 255, 0.4);
   background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .cert-glow {
