@@ -69,6 +69,7 @@ const preloaderTL = gsap.timeline({
       onComplete: () => {
         preloader.style.display = 'none';
         heroTL.play(); // Play the pre-initialized hero animation
+        ScrollTrigger.refresh(); // Crucial for accurate pinning
       }
     });
   }
@@ -192,11 +193,11 @@ stackSections.forEach((sec, i) => {
     pinSpacing: false,
     invalidateOnRefresh: true,
     end: "max",
+    id: `pin-${sec.id}`, // Add an ID for easier reference
     onUpdate: (self) => {
       const nextSection = stackSections[i + 1];
       if (nextSection) {
         const nextTop = nextSection.getBoundingClientRect().top;
-        // As the next section approaches the top, give it the rounded "card" look
         if (nextTop < window.innerHeight * 0.95) {
           nextSection.classList.add('card-focus');
         } else {
@@ -409,9 +410,16 @@ mm.add("(min-width: 1024px)", () => {
     end: 'bottom bottom',
     pin: '.projects-left',
     pinSpacing: false,
+    anticipatePin: 1,
+    invalidateOnRefresh: true,
+    refreshPriority: 1, // Give it priority
     onRefresh: (self) => {
+      // Ensure the pinned element doesn't have unwanted offsets
       const pinEl = document.querySelector('.projects-left');
-      if (pinEl) pinEl.style.paddingTop = '0';
+      if (pinEl) {
+        pinEl.style.paddingTop = '0';
+        pinEl.style.marginTop = '0';
+      }
     }
   });
 
@@ -681,17 +689,40 @@ contactForm.addEventListener('submit', (e) => {
     });
 });
 
-// ─── Smooth Scroll for anchor links ──────────────────
+// ─── Navigation State Transitions ──────────────────
+function startNavigation() {
+  document.body.classList.add('is-navigating');
+}
+
+function endNavigation() {
+  setTimeout(() => {
+    document.body.classList.remove('is-navigating');
+  }, 200);
+}
+
+// ─── Smooth Navigation with Pinned Sections Support ───────────
+let isNavigating = false; // Prevent multiple navigation attempts
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
+  anchor.addEventListener('click', function(e) {
     const targetId = this.getAttribute('href');
-    if (targetId === '#' || this.id === 'backToTop') return;
+    
+    if (targetId === '#' || targetId === '' || isNavigating) return;
+    
+    if (this.id === 'backToTop') {
+      e.preventDefault();
+      smoothScrollTo(0);
+      return;
+    }
     
     const targetElement = document.querySelector(targetId);
+    
     if (targetElement) {
       e.preventDefault();
+      isNavigating = true;
+      startNavigation();
       
-      // Handle mobile menu if open
+      // Close mobile menu if open
       const navLinks = document.getElementById('navLinks');
       const hamburger = document.getElementById('hamburger');
       if (navLinks && navLinks.classList.contains('open')) {
@@ -699,29 +730,112 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         hamburger.classList.remove('active');
         document.body.style.overflow = '';
       }
-
-      // Small delay to let menu close if needed
+      
+      // Small delay for menu close animation
       setTimeout(() => {
-        window.lenis.scrollTo(targetId, { 
-          offset: -80, 
-          duration: 1.8,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-        });
+        navigateToSection(targetElement);
       }, 50);
     }
   });
 });
 
-// Back to Top functionality
+function navigateToSection(targetElement) {
+  const navbarHeight = 80;
+  const targetId = targetElement.id;
+  
+  // Temporarily disable all ScrollTriggers to prevent interference
+  ScrollTrigger.getAll().forEach(st => {
+    if (st.vars.pin) { // Only disable pins, keep others active
+      st.disable();
+    }
+  });
+  
+  // Get the accurate position
+  let targetPosition;
+  
+  if (targetId === 'hero') {
+    targetPosition = 0;
+  } else {
+    // Use a more reliable method for pinned sections
+    const rect = targetElement.getBoundingClientRect();
+    const currentScroll = window.scrollY;
+    targetPosition = currentScroll + rect.top - navbarHeight;
+    
+    // Ensure we don't go negative
+    targetPosition = Math.max(0, targetPosition);
+  }
+  
+  console.log(`Navigating to ${targetId} at position: ${targetPosition}`);
+  
+  // Smooth scroll with Lenis
+  if (window.lenis) {
+    window.lenis.scrollTo(targetPosition, {
+      duration: 1.8,
+      easing: (t) => {
+        // Custom easing for smoother feel
+        return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+      },
+      onComplete: () => {
+        // Re-enable pins and refresh
+        setTimeout(() => {
+          ScrollTrigger.getAll().forEach(st => {
+            if (st.vars.pin) {
+              st.enable();
+            }
+          });
+          ScrollTrigger.refresh();
+          isNavigating = false;
+          endNavigation();
+          
+          // Update URL hash without jumping
+          history.pushState(null, null, `#${targetId}`);
+        }, 100);
+      }
+    });
+  } else {
+    // Fallback to native smooth scroll
+    window.scrollTo({
+      top: targetPosition,
+      behavior: 'smooth'
+    });
+    
+    setTimeout(() => {
+      ScrollTrigger.getAll().forEach(st => {
+        if (st.vars.pin) {
+          st.enable();
+        }
+      });
+      ScrollTrigger.refresh();
+      isNavigating = false;
+      endNavigation();
+      history.pushState(null, null, `#${targetId}`);
+    }, 1000);
+  }
+}
+
+function smoothScrollTo(position) {
+  startNavigation();
+  if (window.lenis) {
+    window.lenis.scrollTo(position, {
+      duration: 1.5,
+      easing: (t) => 1 - Math.pow(2, -10 * t),
+      onComplete: () => {
+        ScrollTrigger.refresh();
+        endNavigation();
+      }
+    });
+  } else {
+    window.scrollTo({ top: position, behavior: 'smooth' });
+    setTimeout(endNavigation, 1000);
+  }
+}
+
+// Back to Top button
 const backToTopBtn = document.getElementById('backToTop');
 if (backToTopBtn) {
-  backToTopBtn.addEventListener('click', () => {
-    // Scroll to top using Lenis if available, otherwise native
-    if (window.lenis) {
-      window.lenis.scrollTo('#hero', { duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+  backToTopBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    smoothScrollTo(0);
   });
 }
 // Refresh ScrollTrigger on resize to handle mobile orientation changes

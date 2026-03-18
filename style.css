@@ -1,3 +1,15 @@
+/* Hide certificates-mobile-counter on desktop/laptop */
+@media (min-width: 768px) {
+  .certificates-mobile-counter {
+    display: none !important;
+  }
+}
+/* Hide project-mobile-counter on desktop/laptop */
+@media (min-width: 768px) {
+  .project-mobile-counter {
+    display: none !important;
+  }
+}
 /* ========================================
    DHANUSH ATMAKURI — CINEMATIC BRUTALIST PORTFOLIO
    ======================================== */
@@ -128,6 +140,48 @@ textarea {
 img {
   display: block;
   max-width: 100%;
+}
+
+/* Fix for pinned sections navigation */
+html {
+  scroll-behavior: auto !important; /* Override any smooth scrolling */
+}
+
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.section {
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Ensure proper stacking */
+.gsap-pin-spacer {
+  pointer-events: none;
+}
+
+/* Disable pointer events during navigation to prevent conflicts */
+.is-navigating {
+  pointer-events: none;
+}
+
+.is-navigating .section {
+  pointer-events: none;
 }
 
 /* ---------- Custom Cursor ---------- */
@@ -285,6 +339,9 @@ img {
 }
 
 .nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-size: 0.9rem;
   /* Reduced size of dhanush */
   font-weight: 700;
@@ -292,6 +349,14 @@ img {
   opacity: 0.7;
   /* Make the brand text translucent */
   transition: opacity 0.3s var(--transition);
+}
+
+.nav-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  /* filter: brightness(0) invert(1); */
+  transition: transform 0.3s var(--transition);
 }
 
 .nav-brand:hover {
@@ -1277,28 +1342,36 @@ img {
   grid-template-columns: minmax(200px, 0.7fr) 2fr;
   gap: 6rem;
   align-items: start;
+  position: relative;
+  min-height: 100%;
 }
 
 .projects-left {
   position: relative;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
-  /* Centered */
+  align-items: flex-start;
+  /* Aligned left */
   gap: 15vh;
   padding: 0;
   z-index: 15;
   padding-top: 5vh;
-  text-align: center;
-  /* Centered */
+  text-align: left;
+  /* Aligned left */
 }
 
 .projects-header-wrapper {
   margin-top: 0 !important;
   width: 100%;
 }
+
+/* Align section-title left in projects */
+.projects-left .section-title {
+  text-align: left;
+  margin-left: 0;
+}
+
 
 .projects-title-row {
   display: flex;
@@ -1433,6 +1506,10 @@ img {
 
 [data-theme="light"] .project-card[data-index="01"] .project-card-img {
   background-image: url('assets/Project-light/hlpu.png') !important;
+}
+
+[data-theme="light"] .project-card[data-index="02"] .project-card-img {
+  background-image: url('assets/Project-light/Traffic-Volume-Predection.png') !important;
 }
 
 .project-card-body {
