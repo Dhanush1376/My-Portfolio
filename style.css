@@ -671,6 +671,13 @@ html.lenis {
   opacity: 0.4;
 }
 
+.hero-cta-group {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+  align-items: center;
+}
+
 /* Hero Right — Glass Card */
 .hero-right {
   flex-shrink: 0;
@@ -1849,6 +1856,9 @@ html.lenis {
 }
 
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.85rem 2rem;
   background: var(--white);
   color: var(--black);
@@ -2050,8 +2060,7 @@ html.lenis {
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
   .hero-img {
-    object-position: 80% 20% !important;
-    /* Aggressively slide image left */
+    object-position: center !important;
   }
 
   .section {
@@ -2203,7 +2212,7 @@ html.lenis {
     flex-direction: row !important;
     overflow-x: auto !important;
     scroll-snap-type: x mandatory !important;
-    gap: 1.5rem;
+    gap: 1rem !important;
     width: 100vw !important;
     padding: 0 1.5rem 2rem !important;
     margin-left: -1.5rem;
@@ -2217,8 +2226,8 @@ html.lenis {
   }
 
   .cert-card {
-    min-width: calc(100vw - 3rem) !important;
-    width: calc(100vw - 3rem) !important;
+    min-width: 85vw !important;
+    width: 85vw !important;
     flex-shrink: 0 !important;
     scroll-snap-align: center !important;
   }
@@ -2625,7 +2634,7 @@ html.lenis {
 
   .hero {
     min-height: 550px;
-    align-items: center;
+    align-items: flex-end;
     width: 100% !important;
   }
 
@@ -2633,13 +2642,20 @@ html.lenis {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
-    object-position: 80% center !important;
-    /* Move subject on mobile */
+    object-position: center !important;
   }
 
   .hero-content {
-    padding: 0 1rem 2rem !important;
-    align-items: center !important;
+    padding: 0 1.25rem 0.5rem !important;
+    align-items: flex-start !important;
+  }
+
+  .hero-cta-group {
+    margin-top: 1.25rem;
+  }
+
+  .hero-left {
+    margin-bottom: 0 !important;
   }
 
   .hero-title {
@@ -2655,8 +2671,7 @@ html.lenis {
   }
 
   .glass-card {
-    width: 100%;
-    max-width: 280px;
+    display: none !important;
   }
 
   .section {
@@ -2772,6 +2787,20 @@ html.lenis {
 
   .form-actions {
     flex-direction: column;
+  }
+
+  .hero-cta-group {
+    flex-direction: row;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .hero-cta-group .btn-primary,
+  .hero-cta-group .btn-secondary {
+    flex: 1;
+    padding: 0.85rem 0.25rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
   }
 
   .btn-primary,

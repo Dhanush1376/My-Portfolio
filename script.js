@@ -133,6 +133,12 @@ if (document.querySelector('.hero-title')) {
       opacity: 0,
       duration: 0.7,
     }, '-=0.4')
+    // CTA Group
+    .from('.hero-cta-group', {
+      y: 20,
+      opacity: 0,
+      duration: 0.6,
+    }, '-=0.4')
     // Glass card
     .from('.glass-card', {
       y: 60,
