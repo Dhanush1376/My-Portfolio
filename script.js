@@ -1099,8 +1099,23 @@ if (backToTopBtn) {
 }
 
 // Refresh ScrollTrigger on resize to handle mobile orientation changes
+// Refresh ScrollTrigger on resize to handle mobile orientation changes
 window.addEventListener('resize', () => {
   if (typeof ScrollTrigger !== 'undefined') {
     ScrollTrigger.refresh();
   }
 });
+
+// ─── Background Star Parallax ───────────────────────
+gsap.utils.toArray('.stars-bg').forEach((bg) => {
+  gsap.to(bg, {
+    y: -150, // Move up as we scroll down
+    ease: 'none',
+    scrollTrigger: {
+      trigger: bg.parentElement,
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true,
+    }
+  });
+});

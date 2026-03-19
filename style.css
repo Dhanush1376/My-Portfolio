@@ -874,9 +874,10 @@ html.lenis {
   /* Top padding is exactly navbar height + 2px so it sits flush when scrolled */
   padding: 3.25rem 3rem 8rem;
   scroll-margin-top: 0;
-  background: var(--bg);
+  background: transparent;
   /* Ensure sections have solid background for stacking */
   z-index: 10;
+
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   box-shadow: none;
@@ -900,7 +901,83 @@ html.lenis {
   text-transform: uppercase;
   color: var(--gray-600);
   margin-bottom: 1.5rem;
+  display: block;
 }
+
+/* ---------- Stars Background Animation ---------- */
+.stars-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* Star Layers using pseudo-elements */
+.stars-bg::before,
+.stars-bg::after {
+  content: '';
+  position: absolute;
+  inset: -100px;
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Base layer of tiny stars */
+.stars-bg::before {
+  background-image: 
+    radial-gradient(1px 1px at 10% 10%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 20% 40%, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 35% 70%, #fff, transparent),
+    radial-gradient(1.2px 1.2px at 50% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 65% 55%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1.5px 1.5px at 80% 85%, #fff, transparent),
+    radial-gradient(1px 1px at 95% 15%, #fff, transparent),
+    radial-gradient(1.2px 1.2px at 15% 95%, #fff, transparent);
+  background-size: 450px 450px;
+  background-position: 0 0;
+  opacity: 0.25;
+  animation: stars-drift-slow 150s linear infinite;
+}
+
+/* Larger stars and nebula glows */
+.stars-bg::after {
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(100, 150, 255, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(255, 100, 200, 0.04) 0%, transparent 40%),
+    radial-gradient(2px 2px at 25% 25%, #fff, transparent),
+    radial-gradient(2.5px 2.5px at 75% 75%, #fff, transparent),
+    radial-gradient(2px 2px at 10% 80%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2.2px 2.2px at 90% 20%, #fff, transparent);
+  background-size: 800px 800px;
+  background-position: 50% 50%;
+  opacity: 0.15;
+  animation: stars-drift-slow 200s linear infinite reverse;
+}
+
+@keyframes stars-drift-slow {
+  from { transform: translateY(0); }
+  to { transform: translateY(-400px); }
+}
+
+/* Smooth fade for the background edges */
+.stars-bg::before {
+  mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+}
+
+/* Light Theme overrides for the star field */
+[data-theme="light"] .stars-bg {
+  background: var(--bg);
+}
+
+[data-theme="light"] .stars-bg::before,
+[data-theme="light"] .stars-bg::after {
+  opacity: 0.15;
+  filter: invert(1) brightness(0.3);
+}
+
 
 .section-title {
   font-size: clamp(2.5rem, 5vw, 4.5rem);
