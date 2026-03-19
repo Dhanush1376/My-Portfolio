@@ -64,8 +64,8 @@
 
   /* Project Images */
   --project-1-img: url('assets/Project-dark/hlpu.png');
-  --project-2-img: url('assets/Project-dark/Traffic-Volume-Predection.png');
-  --project-3-img: url('assets/Project-dark/Modulation-Signal-Processing.png');
+  --project-2-img: url('assets/Project-dark/InvoiceIQ.png');
+  --project-3-img: url('assets/Project-dark/Traffic-Volume-Predection.png');
 }
 
 /* Light theme */
@@ -93,8 +93,8 @@
 
   /* Project Images - Light Variants */
   --project-1-img: url('assets/Project-light/hlpu.png');
-  --project-2-img: url('assets/Project-light/Traffic-Volume-Predection.png');
-  --project-3-img: url('assets/Project-light/Modulation-Signal-Processing.png');
+  --project-2-img: url('assets/Project-light/InvoiceIQ.png');
+  --project-3-img: url('assets/Project-light/Traffic-Volume-Predection.png');
 }
 
 /* Removed light theme contain override to keep projects full-width showcase */
@@ -2049,12 +2049,18 @@ html.lenis {
 }
 
 .project-card[data-index="02"] .project-card-img {
-  background-image: url('assets/Project-dark/Traffic-Volume-Predection.png') !important;
+  background-image: url('assets/Project-dark/InvoiceIQ.png') !important;
   display: block !important;
   opacity: 1 !important;
 }
 
 .project-card[data-index="03"] .project-card-img {
+  background-image: url('assets/Project-dark/Traffic-Volume-Predection.png') !important;
+  display: block !important;
+  opacity: 1 !important;
+}
+
+.project-card[data-index="04"] .project-card-img {
   background-image: url('assets/Project-dark/Modulation-Signal-Processing.png') !important;
   display: block !important;
   opacity: 1 !important;
@@ -2065,7 +2071,7 @@ html.lenis {
 }
 
 [data-theme="light"] .project-card[data-index="02"] .project-card-img {
-  background-image: url('assets/Project-light/Traffic-Volume-Predection.png') !important;
+  background-image: url('assets/Project-light/InvoiceIQ.png') !important;
 }
 
 .project-card-body {
@@ -2080,6 +2086,10 @@ html.lenis {
 }
 
 [data-theme="light"] .project-card[data-index="03"] .project-card-img {
+  background-image: url('assets/Project-light/Traffic-Volume-Predection.png') !important;
+}
+
+[data-theme="light"] .project-card[data-index="04"] .project-card-img {
   background-image: url('assets/Project-light/Modulation-Signal-Processing.png') !important;
 }
 
