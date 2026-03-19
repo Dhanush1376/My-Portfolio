@@ -954,13 +954,20 @@ html.lenis {
   background-size: 800px 800px;
   background-position: 50% 50%;
   opacity: 0.15;
-  animation: stars-drift-slow 200s linear infinite reverse;
+  animation: stars-drift-reverse 200s linear infinite;
 }
 
+
 @keyframes stars-drift-slow {
-  from { transform: translateY(0); }
-  to { transform: translateY(-400px); }
+  from { background-position: 0 0; }
+  to { background-position: 0 -450px; }
 }
+
+@keyframes stars-drift-reverse {
+  from { background-position: 0 0; }
+  to { background-position: 0 800px; }
+}
+
 
 /* Smooth fade for the background edges */
 .stars-bg::before {
