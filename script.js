@@ -111,10 +111,10 @@ if (document.getElementById('heroImg')) {
 
 if (document.querySelector('.hero-title')) {
   heroTL.from('.hero-title', {
-      y: 80,
-      opacity: 0,
-      duration: 1,
-    }, '-=1.4')
+    y: 80,
+    opacity: 0,
+    duration: 1,
+  }, '-=1.4')
     // Subtitle
     .from('.hero-subtitle', {
       y: 40,
@@ -232,12 +232,12 @@ const navbar = document.getElementById('navbar');
 const navLinks = document.querySelectorAll('.nav-link');
 
 ScrollTrigger.create({
-  start: 'top -80',
+  start: 'top -100', // Trigger slightly later for cleaner transition
   onUpdate: (self) => {
-    if (self.direction === 1 || window.scrollY > 80) {
+    if (self.direction === 1 || window.scrollY > 100) {
       navbar.classList.add('scrolled');
     }
-    if (window.scrollY <= 80) {
+    if (window.scrollY <= 100) {
       navbar.classList.remove('scrolled');
     }
   }
@@ -332,7 +332,7 @@ function initAboutScrollReveal() {
       if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
         const text = node.textContent;
         const fragment = document.createDocumentFragment();
-        
+
         for (let char of text) {
           const span = document.createElement('span');
           span.className = 'char-reveal';
@@ -342,7 +342,7 @@ function initAboutScrollReveal() {
           span.style.transition = 'opacity 0.2s ease-out';
           fragment.appendChild(span);
         }
-        
+
         element.replaceChild(fragment, node);
       } else if (node.nodeType === Node.ELEMENT_NODE) {
         recursiveSplit(node);
@@ -383,56 +383,94 @@ function initAboutScrollReveal() {
 // Call the reveal init
 initAboutScrollReveal();
 
-// About stats counter animation
+// About stats counter animation — enhanced with spring bounce
 if (document.querySelector('.about-stats')) {
   gsap.from('.stat-item', {
-    y: 30,
+    y: 50,
     opacity: 0,
-    stagger: 0.1,
-    duration: 0.6,
-    ease: 'power3.out',
+    scale: 0.9,
+    stagger: 0.12,
+    duration: 0.8,
+    ease: 'back.out(1.7)',
     scrollTrigger: {
       trigger: '.about-stats',
       start: 'top 85%',
+      once: true,
     }
   });
 }
 
-// Education cards
+// Education cards — cascade from alternating sides
 gsap.utils.toArray('.edu-card').forEach((card, i) => {
+  const fromLeft = i % 2 === 0;
   gsap.from(card, {
-    y: 60,
+    x: fromLeft ? -80 : 80,
+    y: 40,
     opacity: 0,
-    duration: 0.8,
+    scale: 0.92,
+    rotation: fromLeft ? -3 : 3,
+    duration: 1,
     delay: i * 0.15,
-    ease: 'power3.out',
+    ease: 'power4.out',
     scrollTrigger: {
       trigger: '.edu-grid',
       start: 'top 80%',
+      once: true,
     }
   });
 });
 
-// Skills section — animate categories and their tags together
-gsap.utils.toArray('.skill-category').forEach((cat, i) => {
-  // Set initial state
-  gsap.set(cat, { y: 40, opacity: 0 });
+// Skills section — Bento cards cascade with directional reveals
+const bentoCards = gsap.utils.toArray('.bento-card');
+if (bentoCards.length > 0) {
+  bentoCards.forEach((card, i) => {
+    const directions = [
+      { x: -100, y: 30, rotation: -4 },  // Featured card from left
+      { x: 100, y: 20, rotation: 3 },    // From right
+      { x: -60, y: 50, rotation: -2 },   // From left-bottom
+      { x: 60, y: 40, rotation: 2 },     // From right-bottom
+      { x: 0, y: 80, rotation: 0 },      // From bottom
+    ];
+    const dir = directions[i % directions.length];
 
-  ScrollTrigger.create({
-    trigger: cat,
-    start: 'top 85%',
-    once: true,
-    onEnter: () => {
-      gsap.to(cat, {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        delay: i * 0.1,
-        ease: 'power3.out',
-      });
-    }
+    gsap.from(card, {
+      x: dir.x,
+      y: dir.y,
+      opacity: 0,
+      scale: 0.85,
+      rotation: dir.rotation,
+      duration: 1,
+      delay: i * 0.12,
+      ease: 'power4.out',
+      scrollTrigger: {
+        trigger: '.bento-skills-grid',
+        start: 'top 80%',
+        once: true,
+      }
+    });
   });
-});
+}
+
+// Fallback for .skill-category if bento cards don't exist
+if (bentoCards.length === 0) {
+  gsap.utils.toArray('.skill-category').forEach((cat, i) => {
+    gsap.set(cat, { y: 40, opacity: 0 });
+    ScrollTrigger.create({
+      trigger: cat,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => {
+        gsap.to(cat, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          delay: i * 0.1,
+          ease: 'power3.out',
+        });
+      }
+    });
+  });
+}
 
 // ===== FIXED PROJECTS SECTION - ONLY NUMBERS STICKY =====
 const projectCards = gsap.utils.toArray('.project-card');
@@ -444,16 +482,19 @@ const stickyNumbersWrapper = document.querySelector('.sticky-indicator-wrapper')
 // Initial setup - hide number items initially (will be shown by animation)
 gsap.set(numberItems, { opacity: 0 });
 
-// Reveal animations for project cards
-projectCards.forEach((card) => {
+// Reveal animations for project cards — dramatic scale + slide
+projectCards.forEach((card, i) => {
   gsap.from(card, {
-    y: 80,
+    y: 100,
     opacity: 0,
-    duration: 0.8,
-    ease: 'power3.out',
+    scale: 0.85,
+    duration: 1,
+    delay: i * 0.15,
+    ease: 'power4.out',
     scrollTrigger: {
       trigger: card,
-      start: 'top 85%',
+      start: 'top 90%',
+      once: true,
     }
   });
 });
@@ -487,7 +528,7 @@ function setActiveNumber(index) {
       });
     }
   });
-  
+
   if (numbersStack) {
     gsap.to(numbersStack, {
       y: -index * 8 + 'rem',
@@ -531,13 +572,13 @@ mm.add("(min-width: 1024px)", () => {
 mm.add("(max-width: 1023px)", () => {
   // Mobile: horizontal scroll sync
   const projectsRight = document.querySelector('.projects-right');
-  
+
   if (projectsRight) {
     projectsRight.addEventListener('scroll', () => {
       const scrollLeft = projectsRight.scrollLeft;
       const cardWidth = projectsRight.offsetWidth;
       const activeIndex = Math.round(scrollLeft / cardWidth);
-      
+
       const mobileCounter = document.querySelector('.project-mobile-counter .current');
       if (mobileCounter) {
         mobileCounter.textContent = (activeIndex + 1).toString().padStart(2, '0');
@@ -568,15 +609,19 @@ if (timelineLine && timeline) {
   });
 }
 
+// Timeline items — enhanced with scale + stagger
 gsap.utils.toArray('.timeline-item').forEach((item, i) => {
   gsap.from(item, {
-    x: i % 2 === 0 ? -60 : 60,
+    x: i % 2 === 0 ? -80 : 80,
+    y: 30,
     opacity: 0,
+    scale: 0.9,
     duration: 1,
-    ease: 'power3.out',
+    ease: 'power4.out',
     scrollTrigger: {
       trigger: item,
-      start: 'top 85%',
+      start: 'top 88%',
+      once: true,
     }
   });
 });
@@ -589,6 +634,24 @@ let certCurrentIndex = 0;
 let certAutoScrollTimer;
 
 if (certsSlider && certCards.length > 0) {
+  // Certificates entry animation — animate the wrapper instead of cards to avoid state conflicts
+  gsap.from('.certs-slider-wrapper', {
+    y: 50,
+    opacity: 0,
+    scale: 0.95,
+    duration: 1.2,
+    ease: 'power4.out',
+    scrollTrigger: {
+      trigger: '.certs-container',
+      start: 'top 80%',
+      once: true,
+      onEnter: () => {
+        // Ensure slider state is updated when it becomes visible
+        updateCertSlider();
+      }
+    }
+  });
+
   // Create dots
   certCards.forEach((_, i) => {
     const dot = document.createElement('div');
@@ -612,7 +675,7 @@ if (certsSlider && certCards.length > 0) {
       else if (diff === certCards.length - 2) state = 'left-2';
 
       card.setAttribute('data-state', state);
-      
+
       // Update active class for center card
       if (state === 'center') card.classList.add('active');
       else card.classList.remove('active');
@@ -660,26 +723,26 @@ if (certsSlider && certCards.length > 0) {
   // Mouse and Touch Dragging
   let startX = 0;
   let isDragging = false;
-  
+
   const handleDragStart = (e) => {
     isDragging = true;
     startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
     clearInterval(certAutoScrollTimer);
   };
-  
+
   const handleDragEnd = (e) => {
     if (!isDragging) return;
     isDragging = false;
     const endX = e.type === 'touchend' ? e.changedTouches[0].clientX : e.clientX;
     const diff = startX - endX;
-    
+
     if (Math.abs(diff) > 50) {
       if (diff > 0) nextCert();
       else prevCert();
     }
     startCertAutoScroll();
   };
-  
+
   certsSlider.addEventListener('mousedown', handleDragStart);
   window.addEventListener('mouseup', handleDragEnd);
   certsSlider.addEventListener('touchstart', handleDragStart, { passive: true });
@@ -689,18 +752,18 @@ if (certsSlider && certCards.length > 0) {
   let wheelTimeout;
   certsSlider.addEventListener('wheel', (e) => {
     if (wheelTimeout) return;
-    
+
     // Only capture horizontal scrolling with significant intent
     if (Math.abs(e.deltaX) > 25 && Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
       e.preventDefault();
-      
+
       if (e.deltaX > 0) nextCert();
       else prevCert();
-      
+
       wheelTimeout = setTimeout(() => {
         wheelTimeout = null;
-      }, 600); 
-      
+      }, 600);
+
       resetCertAutoScroll();
     }
   }, { passive: false });
@@ -724,6 +787,11 @@ if (certsSlider && certCards.length > 0) {
   // Initial call
   updateCertSlider();
   startCertAutoScroll();
+  
+  // Ensure ScrollTrigger is aware of the new layout
+  setTimeout(() => {
+    ScrollTrigger.refresh();
+  }, 100);
 }
 
 // ─── Certificate Modal ────────────────────────────────
@@ -746,7 +814,7 @@ if (certModal) {
       if (card.getAttribute('data-state') === 'center') {
         // Only open if the user didn't click the link or icon specifically
         if (!e.target.closest('.cert-link-btn') && !e.target.closest('.cert-view-icon')) {
-           openModal(i);
+          openModal(i);
         }
       }
     });
@@ -762,10 +830,10 @@ if (certModal) {
     const link = card.querySelector('.cert-link-btn').href;
     const imgElement = card.querySelector('.cert-img');
     const imgSrc = imgElement ? imgElement.src : '';
-    
+
     const modalBody = certModal.querySelector('.cert-modal-body');
     const modalContent = certModal.querySelector('.cert-modal-content');
-    
+
     if (modalBody) {
       modalBody.innerHTML = `
         <div class="modal-header-simple" style="text-align: left; width: 100%; margin-bottom: 25px;">
@@ -794,10 +862,10 @@ if (certModal) {
     // Modal Visibility with GSAP
     gsap.set(certModal, { display: 'flex', opacity: 1 });
     certModal.classList.add('active'); // Still add for backdrop-filter CSS
-    
+
     // Animate Overlay and Content
     gsap.fromTo(certModalOverlay, { opacity: 0 }, { opacity: 1, duration: 0.4 });
-    gsap.fromTo(modalContent, 
+    gsap.fromTo(modalContent,
       { opacity: 0, scale: 0.85, y: 30 },
       { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "power4.out" }
     );
@@ -824,7 +892,7 @@ if (certModal) {
 
   closeCertModal.addEventListener('click', closeModal);
   certModalOverlay.addEventListener('click', closeModal);
-  
+
   // ESC key to close
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && certModal.classList.contains('active')) {
@@ -833,17 +901,34 @@ if (certModal) {
   });
 }
 
-// Contact section
+// Contact Watermark Animation
+if (document.querySelector('.contact-watermark')) {
+  gsap.from('.contact-watermark', {
+    y: 100,
+    opacity: 0,
+    duration: 1.5,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: '.contact',
+      start: 'top 80%',
+      once: true,
+    }
+  });
+}
+
+// Contact section — cinematic reveals
 const contactInfo = document.querySelector('.contact-info');
 if (contactInfo) {
   gsap.from(contactInfo, {
-    x: -40,
+    x: -80,
     opacity: 0,
-    duration: 0.8,
-    ease: 'power3.out',
+    scale: 0.95,
+    duration: 1,
+    ease: 'power4.out',
     scrollTrigger: {
       trigger: '.contact',
       start: 'top 75%',
+      once: true,
     }
   });
 }
@@ -851,30 +936,33 @@ if (contactInfo) {
 const contactFormEl = document.querySelector('.contact-form');
 if (contactFormEl) {
   gsap.from('.contact-form > *', {
-    y: 30,
+    y: 50,
     opacity: 0,
+    scale: 0.95,
     stagger: 0.1,
-    duration: 0.6,
-    ease: 'power3.out',
+    duration: 0.8,
+    ease: 'back.out(1.4)',
     scrollTrigger: {
       trigger: '.contact-form',
-      start: 'top 80%',
+      start: 'top 82%',
+      once: true,
     }
   });
 }
 
-// Section labels & titles
+// Section labels & titles — dramatic reveal
 const sectionLabels = gsap.utils.toArray('.section-label');
 if (sectionLabels.length > 0) {
   sectionLabels.forEach(label => {
     gsap.from(label, {
-      x: -30,
+      x: -50,
       opacity: 0,
-      duration: 0.6,
-      ease: 'power3.out',
+      duration: 0.8,
+      ease: 'power4.out',
       scrollTrigger: {
         trigger: label,
-        start: 'top 85%',
+        start: 'top 88%',
+        once: true,
       }
     });
   });
@@ -886,7 +974,7 @@ const sectionTitles = gsap.utils.toArray('.section-title');
 if (sectionTitles.length > 0) {
   sectionTitles.forEach(title => {
     if (title.closest('.projects')) return;
-    
+
     gsap.from(title, {
       y: 50,
       opacity: 0,
@@ -906,7 +994,7 @@ const formSuccess = document.getElementById('formSuccess');
 
 contactForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  
+
   const btn = contactForm.querySelector('.btn-primary');
   btn.textContent = 'Sending...';
   btn.disabled = true;
@@ -924,7 +1012,7 @@ contactForm.addEventListener('submit', (e) => {
       formSuccess.style.background = 'rgba(40,202,66,0.05)';
       formSuccess.classList.add('show');
       btn.textContent = 'Sent ✓';
-      
+
       setTimeout(() => {
         contactForm.reset();
         btn.textContent = 'Send Message';
@@ -941,7 +1029,7 @@ contactForm.addEventListener('submit', (e) => {
       formSuccess.classList.add('show');
       btn.textContent = 'Send Message';
       btn.disabled = false;
-      
+
       setTimeout(() => {
         formSuccess.classList.remove('show');
       }, 5000);
@@ -963,24 +1051,24 @@ function endNavigation() {
 let isNavigating = false; // Prevent multiple navigation attempts
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
+  anchor.addEventListener('click', function (e) {
     const targetId = this.getAttribute('href');
-    
+
     if (targetId === '#' || targetId === '' || isNavigating) return;
-    
+
     if (this.id === 'backToTop') {
       e.preventDefault();
       smoothScrollTo(0);
       return;
     }
-    
+
     const targetElement = document.querySelector(targetId);
-    
+
     if (targetElement) {
       e.preventDefault();
       isNavigating = true;
       startNavigation();
-      
+
       // Close mobile menu if open
       const navLinks = document.getElementById('navLinks');
       const hamburger = document.getElementById('hamburger');
@@ -989,7 +1077,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         hamburger.classList.remove('active');
         document.body.style.overflow = '';
       }
-      
+
       // Small delay for menu close animation
       setTimeout(() => {
         navigateToSection(targetElement);
@@ -1001,17 +1089,17 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 function navigateToSection(targetElement) {
   const navbarHeight = 80;
   const targetId = targetElement.id;
-  
+
   // Temporarily disable all ScrollTriggers to prevent interference
   ScrollTrigger.getAll().forEach(st => {
     if (st.vars.pin) { // Only disable pins, keep others active
       st.disable();
     }
   });
-  
+
   // Get the accurate position
   let targetPosition;
-  
+
   if (targetId === 'hero') {
     targetPosition = 0;
   } else {
@@ -1019,13 +1107,13 @@ function navigateToSection(targetElement) {
     const rect = targetElement.getBoundingClientRect();
     const currentScroll = window.scrollY;
     targetPosition = currentScroll + rect.top - navbarHeight;
-    
+
     // Ensure we don't go negative
     targetPosition = Math.max(0, targetPosition);
   }
-  
+
   console.log(`Navigating to ${targetId} at position: ${targetPosition}`);
-  
+
   // Smooth scroll with Lenis
   if (window.lenis) {
     window.lenis.scrollTo(targetPosition, {
@@ -1045,7 +1133,7 @@ function navigateToSection(targetElement) {
           ScrollTrigger.refresh();
           isNavigating = false;
           endNavigation();
-          
+
           // Update URL hash without jumping
           history.pushState(null, null, `#${targetId}`);
         }, 100);
@@ -1057,7 +1145,7 @@ function navigateToSection(targetElement) {
       top: targetPosition,
       behavior: 'smooth'
     });
-    
+
     setTimeout(() => {
       ScrollTrigger.getAll().forEach(st => {
         if (st.vars.pin) {
@@ -1118,4 +1206,4 @@ gsap.utils.toArray('.stars-bg').forEach((bg) => {
       scrub: true,
     }
   });
-});
+});

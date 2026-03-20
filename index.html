@@ -32,63 +32,86 @@
 
   <!-- Navbar -->
   <nav class="navbar" id="navbar">
-    <a href="#hero" class="nav-brand">
-      <img src="assets/logo.png" alt="Dhanush" class="nav-logo" />
-      <span>dhanush</span>
-    </a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#hero" class="nav-link active" data-text="HOME">Home</a></li>
-      <li><a href="#about" class="nav-link" data-text="ABOUT ME">About Me</a></li>
-      <li><a href="#skills" class="nav-link" data-text="SKILLS">Skills</a></li>
-      <li><a href="#projects" class="nav-link" data-text="PROJECTS">Projects</a></li>
-      <li><a href="#certificates" class="nav-link" data-text="CERTIFICATES">Certificates</a></li>
-      <li><a href="#education" class="nav-link" data-text="EDUCATION">Education</a></li>
-      <li><a href="#experience" class="nav-link" data-text="JOURNEY">Journey</a></li>
-      <li><a href="#contact" class="nav-link" data-text="CONTACT">Contact</a></li>
-
-      <!-- Mobile Menu Footer -->
-      <div class="mobile-menu-footer">
-        <div class="mm-footer-label">EMAIL ADDRESS</div>
-        <a href="mailto:dhanush1376@gmail.com" class="mm-footer-email">dhanush1376@gmail.com</a>
-        <div class="mm-footer-socials">
-          <a href="https://www.linkedin.com/in/dhanush1376/" target="_blank">LinkedIn</a>
-          <a href="https://github.com/Dhanush1376" target="_blank">Github</a>
-          <a href="https://leetcode.com/u/dhanush1376/" target="_blank">Leetcode</a>
-        </div>
-      </div>
-    </ul>
-    <div class="nav-actions">
-      <a href="assets/docs/resume.pdf" download="Dhanush_CV.pdf" class="nav-resume-btn" id="navResume">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-          <polyline points="7 10 12 15 17 10" />
-          <line x1="12" y1="15" x2="12" y2="3" />
-        </svg>
-        <span>Resume</span>
+    <div class="nav-pill">
+      <!-- Left: Brand -->
+      <a href="#hero" class="nav-brand">
+        <img src="assets/logo.png" alt="Dhanush" class="nav-logo" />
+        <span>DHANUSH<span class="brand-dot">.</span></span>
       </a>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2">
-          <circle cx="12" cy="12" r="5" />
-          <line x1="12" y1="1" x2="12" y2="3" />
-          <line x1="12" y1="21" x2="12" y2="23" />
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-          <line x1="1" y1="12" x2="3" y2="12" />
-          <line x1="21" y1="12" x2="23" y2="12" />
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-        </svg>
-        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-        </svg>
-      </button>
-      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+
+      <!-- Center: Nav Links -->
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about" class="nav-link" data-text="ABOUT">About</a></li>
+        <li><a href="#skills" class="nav-link" data-text="SKILLS">Skills</a></li>
+        <li><a href="#projects" class="nav-link" data-text="PROJECTS">Projects</a></li>
+        <li><a href="#certificates" class="nav-link" data-text="CERTIFICATES">Certificates</a></li>
+        <li><a href="#education" class="nav-link" data-text="EDUCATION">Education</a></li>
+        <li><a href="#experience" class="nav-link" data-text="EXPERIENCE">Journey</a></li>
+        <li><a href="#contact" class="nav-link" data-text="CONTACT">Contact</a></li>
+
+        <!-- Mobile Menu Footer -->
+        <div class="mobile-menu-footer">
+          <div class="mm-footer-label">EMAIL ADDRESS</div>
+          <a href="mailto:dhanush1376@gmail.com" class="mm-footer-email">dhanush1376@gmail.com</a>
+          <div class="mm-footer-socials">
+            <a href="https://www.linkedin.com/in/dhanush1376/" target="_blank">LinkedIn</a>
+            <a href="https://github.com/Dhanush1376" target="_blank">Github</a>
+            <a href="https://leetcode.com/u/dhanush1376/" target="_blank">Leetcode</a>
+          </div>
+        </div>
+      </ul>
+
+      <!-- Right: Social Icons + CTA + Theme Toggle -->
+      <div class="nav-actions">
+        <div class="nav-socials">
+          <a href="https://github.com/Dhanush1376" target="_blank" class="nav-social-icon" aria-label="GitHub">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/dhanush1376/" target="_blank" class="nav-social-icon"
+            aria-label="LinkedIn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+              <rect x="2" y="9" width="4" height="12" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
+          </a>
+          <a href="https://leetcode.com/u/dhanush1376/" target="_blank" class="nav-social-icon" aria-label="LeetCode">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z" />
+            </svg>
+          </a>
+        </div>
+        <a href="assets/docs/resume.pdf" download="Dhanush_CV.pdf" class="nav-hire-btn">Download Resume</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
     </div>
   </nav>
 
@@ -178,12 +201,14 @@
 
   <!-- About Section -->
   <section class="section about" id="about">
-    <div class="stars-bg"></div>
     <div class="section-divider-container">
       <div class="section-divider"></div>
     </div>
-    <div class="section-label">01 / About</div>
-    <h2 class="section-title">About <br /><span class="text-outline">Me</span></h2>
+    <div class="section-header">
+      <div class="section-label">01 / About</div>
+      <div class="section-watermark">ABOUT ME</div>
+      <h2 class="section-title">BEHIND THE <span class="text-outline">CODE</span></h2>
+    </div>
     <div class="about-content">
       <div class="about-text-col">
         <p class="about-intro">
@@ -239,275 +264,283 @@
     <div class="section-divider-container">
       <div class="section-divider"></div>
     </div>
-    <div class="section-label">02 / Skills</div>
-    <h2 class="section-title">Technical <br /><span class="text-outline">Arsenal</span></h2>
-    <div class="skills-grid">
-      <!-- 1. Programming & Computer Science -->
-      <div class="skill-category">
-        <div class="skill-cat-header">
-          <div class="skill-cat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="16 18 22 12 16 6" />
-              <polyline points="8 6 2 12 8 18" />
-            </svg>
-          </div>
-          <h3 class="skill-cat-title">Programming & Computer Science</h3>
+    <div class="section-header">
+      <div class="section-label">02 / Skills</div>
+      <div class="section-watermark">SKILLS</div>
+      <h2 class="section-title">TECHNICAL <span class="text-outline">ARSENAL</span></h2>
+    </div>
+
+    <div class="bento-skills-grid">
+      <!-- 1. ML & Data Science (Large Left Card) -->
+      <div class="bento-card bento-ml dark-card">
+        <div class="bento-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+            </path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
         </div>
-        <div class="skill-groups">
-          <div class="skill-group">
-            <h4 class="skill-group-title">Languages</h4>
-            <div class="skill-list">Python, Java, JavaScript (ES6+)</div>
-          </div>
-          <div class="skill-group">
-            <h4 class="skill-group-title">Computer Science</h4>
-            <div class="skill-list">Data Structures & Algorithms, Problem Solving, Algorithm Design, Time & Space
-              Complexity Optimization</div>
-          </div>
+        <h3 class="bento-card-title">MACHINE LEARNING & DATA SCIENCE</h3>
+        <p class="bento-card-desc">Building intelligent systems, advanced data pipelines, and predictive models to solve
+          complex real-world challenges.</p>
+        <div class="bento-tags">
+          <span class="bento-tag">Supervised Learning</span>
+          <span class="bento-tag">Unsupervised Learning</span>
+          <span class="bento-tag">Regression</span>
+          <span class="bento-tag">Classification</span>
+          <span class="bento-tag">Clustering</span>
+          <span class="bento-tag">Model Evaluation</span>
+          <span class="bento-tag">Data Preprocessing</span>
+          <span class="bento-tag"><img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg"
+              alt="TensorFlow" width="14" height="14"> TensorFlow</span>
+          <span class="bento-tag"><img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg"
+              alt="Scikit-learn" width="14" height="14"> Scikit-learn</span>
+          <span class="bento-tag"><img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" alt="Pandas"
+              width="14" height="14" class="dark-invert"> Pandas</span>
+          <span class="bento-tag"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg"
+              alt="NumPy" width="14" height="14"> NumPy</span>
+          <span class="bento-tag"><img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/matplotlib/matplotlib-original.svg"
+              alt="Matplotlib" width="14" height="14"> Matplotlib</span>
         </div>
       </div>
 
-      <!-- 2. Web Development & Backend -->
-      <div class="skill-category">
-        <div class="skill-cat-header">
-          <div class="skill-cat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-              <line x1="8" y1="21" x2="16" y2="21" />
-              <line x1="12" y1="17" x2="12" y2="21" />
-            </svg>
-          </div>
-          <h3 class="skill-cat-title">Web Development & Backend</h3>
+      <!-- 2. Web Dev & Backend (Top Right Card) -->
+      <div class="bento-card bento-web light-card">
+        <div class="bento-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+            <line x1="8" y1="21" x2="16" y2="21" />
+            <line x1="12" y1="17" x2="12" y2="21" />
+          </svg>
         </div>
-        <div class="skill-groups">
-          <div class="skill-group">
-            <h4 class="skill-group-title">Frontend</h4>
-            <div class="skill-list">HTML5, CSS3, Responsive Web Design</div>
-          </div>
-          <div class="skill-group">
-            <h4 class="skill-group-title">APIs & Real-time</h4>
-            <div class="skill-list">REST API Integration, WebSockets</div>
-          </div>
-          <div class="skill-group">
-            <h4 class="skill-group-title">Backend</h4>
-            <div class="skill-list">Flask, Node.js (Basics), API Integration</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. Machine Learning & Data Science -->
-      <div class="skill-category">
-        <div class="skill-cat-header">
-          <div class="skill-cat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path
-                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-              <line x1="12" y1="22.08" x2="12" y2="12" />
-            </svg>
-          </div>
-          <h3 class="skill-cat-title">Machine Learning & Data Science</h3>
-        </div>
-        <div class="skill-groups">
-          <div class="skill-group">
-            <h4 class="skill-group-title">Core ML</h4>
-            <div class="skill-list">Supervised Learning, Unsupervised Learning</div>
-          </div>
-          <div class="skill-group">
-            <h4 class="skill-group-title">Algorithms</h4>
-            <div class="skill-list">Regression, Classification, Clustering</div>
-          </div>
-          <div class="skill-group">
-            <h4 class="skill-group-title">Processing</h4>
-            <div class="skill-list">Model Evaluation, Data Preprocessing</div>
-          </div>
-          <div class="skill-group">
-            <h4 class="skill-group-title">Libraries</h4>
-            <div class="skill-list">TensorFlow, Scikit-learn, Pandas, NumPy, Matplotlib</div>
-          </div>
+        <h3 class="bento-card-title">WEB DEV & BACKEND</h3>
+        <div class="bento-tags">
+          <span class="bento-tag"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"
+              alt="HTML5" width="14" height="14"> HTML5</span>
+          <span class="bento-tag"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"
+              alt="CSS3" width="14" height="14"> CSS3</span>
+          <span class="bento-tag">Responsive Web Design</span>
+          <span class="bento-tag">REST API Integration</span>
+          <span class="bento-tag">WebSockets</span>
+          <span class="bento-tag"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg"
+              alt="Flask" width="14" height="14" class="dark-invert"> Flask</span>
+          <span class="bento-tag"><img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js"
+              width="14" height="14"> Node.js (Basics)</span>
+          <span class="bento-tag">API Integration</span>
         </div>
       </div>
 
-      <!-- 4. Cloud & Development Tools -->
-      <div class="skill-category">
-        <div class="skill-cat-header">
-          <div class="skill-cat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
-          </div>
-          <h3 class="skill-cat-title">Cloud & Development Tools</h3>
+      <!-- 3. Programming & CS (Bottom Left Card) -->
+      <div class="bento-card bento-prog light-card">
+        <div class="bento-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6" />
+            <polyline points="8 6 2 12 8 18" />
+          </svg>
         </div>
-        <div class="skill-groups">
-          <div class="skill-group">
-            <h4 class="skill-group-title">Cloud Platforms</h4>
-            <div class="skill-list">AWS / Google Cloud (Basics)</div>
-          </div>
-          <div class="skill-group">
-            <h4 class="skill-group-title">Version Control</h4>
-            <div class="skill-list">Git, GitHub</div>
-          </div>
-          <div class="skill-group">
-            <h4 class="skill-group-title">Tools</h4>
-            <div class="skill-list">VS Code, Jupyter Notebook</div>
-          </div>
-          <div class="skill-group">
-            <h4 class="skill-group-title">DevOps</h4>
-            <div class="skill-list">Vercel, Netlify, CI/CD Concepts</div>
-          </div>
+        <h3 class="bento-card-title">PROGRAMMING & CS</h3>
+        <div class="bento-tags">
+          <span class="bento-tag"><img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"
+              width="14" height="14"> Python</span>
+          <span class="bento-tag"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg"
+              alt="Java" width="14" height="14"> Java</span>
+          <span class="bento-tag"><img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+              alt="JavaScript" width="14" height="14"> JavaScript (ES6+)</span>
+          <span class="bento-tag">Data Structures & Algorithms</span>
+          <span class="bento-tag">Problem Solving</span>
+          <span class="bento-tag">Algorithm Design</span>
+          <span class="bento-tag">Time & Space Complexity Optimization</span>
         </div>
       </div>
 
-      <!-- 5. Soft Skills -->
-      <div class="skill-category">
-        <div class="skill-cat-header">
-          <div class="skill-cat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-          </div>
-          <h3 class="skill-cat-title">Soft Skills</h3>
+      <!-- 4. Cloud & Tools (Bottom Middle Card) -->
+      <div class="bento-card bento-cloud light-card">
+        <div class="bento-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path d="M2 17l10 5 10-5" />
+            <path d="M2 12l10 5 10-5" />
+          </svg>
         </div>
-        <div class="skill-groups">
-          <div class="skill-group">
-            <h4 class="skill-group-title">Thinking & Leadership</h4>
-            <div class="skill-list">Product Thinking, Analytical Thinking, Leadership</div>
-          </div>
-          <div class="skill-group">
-            <h4 class="skill-group-title">Personal</h4>
-            <div class="skill-list">Communication, Adaptability, Team Collaboration, Time Management</div>
-          </div>
+        <h3 class="bento-card-title">CLOUD & TOOLS</h3>
+        <div class="bento-tags">
+          <span class="bento-tag"><img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg"
+              alt="AWS" width="14" height="14" class="dark-invert"> AWS / Google Cloud (Basics)</span>
+          <span class="bento-tag"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg"
+              alt="Git" width="14" height="14"> Git</span>
+          <span class="bento-tag"><img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub"
+              width="14" height="14" class="dark-invert"> GitHub</span>
+          <span class="bento-tag"><img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="VS Code"
+              width="14" height="14"> VS Code</span>
+          <span class="bento-tag"><img
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jupyter/jupyter-original.svg" alt="Jupyter"
+              width="14" height="14"> Jupyter Notebook</span>
+          <span class="bento-tag">Vercel</span>
+          <span class="bento-tag">Netlify</span>
+          <span class="bento-tag">CI/CD Concepts</span>
         </div>
       </div>
 
+      <!-- 5. Soft Skills (Bottom Right Card) -->
+      <div class="bento-card bento-soft light-card">
+        <div class="bento-card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+        </div>
+        <h3 class="bento-card-title">SOFT SKILLS</h3>
+        <div class="bento-tags">
+          <span class="bento-tag">Product Thinking</span>
+          <span class="bento-tag">Analytical Thinking</span>
+          <span class="bento-tag">Leadership</span>
+          <span class="bento-tag">Communication</span>
+          <span class="bento-tag">Adaptability</span>
+          <span class="bento-tag">Team Collaboration</span>
+          <span class="bento-tag">Time Management</span>
+        </div>
+      </div>
     </div>
   </section>
 
- <!-- Projects Section -->
-<section class="section projects" id="projects">
-  <div class="stars-bg"></div>
-  <div class="section-divider-container">
-    <div class="section-divider"></div>
-  </div>
-  <div class="projects-split">
-    <div class="projects-left">
-      <div class="projects-header-wrapper">
-        <div class="section-label">03 / Projects</div>
-        <div class="projects-title-row">
-          <h2 class="section-title">Selected <br /><span class="text-outline">Works</span></h2>
-          <div class="project-mobile-counter">
-            <span class="current">01</span> / <span class="total">04</span>
+
+  <!-- Projects Section -->
+  <section class="section projects" id="projects">
+    <div class="section-divider-container">
+      <div class="section-divider"></div>
+    </div>
+    <div class="projects-split">
+      <div class="projects-left">
+        <div class="projects-header-wrapper">
+          <div class="section-label">03 / Projects</div>
+          <div class="projects-title-row">
+            <h2 class="section-title">Selected <br /><span class="text-outline">Works</span></h2>
+            <div class="project-mobile-counter">
+              <span class="current">01</span> / <span class="total">04</span>
+            </div>
+          </div>
+        </div>
+        <div class="sticky-indicator-wrapper">
+          <div class="projects-numbers">
+            <div class="number-item" data-for="01">01</div>
+            <div class="number-item" data-for="02">02</div>
+            <div class="number-item" data-for="03">03</div>
+            <div class="number-item" data-for="04">04</div>
           </div>
         </div>
       </div>
-      <div class="sticky-indicator-wrapper">
-        <div class="projects-numbers">
-          <div class="number-item" data-for="01">01</div>
-          <div class="number-item" data-for="02">02</div>
-          <div class="number-item" data-for="03">03</div>
-          <div class="number-item" data-for="04">04</div>
+
+      <div class="projects-right">
+
+        <!-- 01 -->
+        <div class="project-card" data-index="01">
+          <div class="project-card-img"></div>
+          <div class="project-card-body">
+            <div class="project-mobile-number">01</div>
+            <span class="project-date">June '25 – Present</span>
+            <h3 class="project-title">hLPU – Student–Alumni Career Connectivity Platform</h3>
+            <p class="project-desc">
+              Developed a full-stack web platform connecting students and alumni to facilitate mentorship, referrals,
+              mock interviews, and verified job opportunities. Implemented stream-specific matching and dynamic job
+              listings.
+            </p>
+            <div class="project-tech">
+              <span>HTML</span><span>CSS</span><span>JS</span><span>React</span><span>Node.js/Flask</span><span>Web-Sockets</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/Dhanush1376/hlpu" target="_blank" class="project-btn">GitHub</a>
+              <a href="https://hlpu.vercel.app/" target="_blank" class="project-btn btn-outline">Live Demo ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 02 NEW PROJECT -->
+        <div class="project-card" data-index="02">
+          <div class="project-card-img"></div>
+          <div class="project-card-body">
+            <div class="project-mobile-number">02</div>
+            <span class="project-date">October'25 – December' 25</span>
+            <h3 class="project-title">InvoExtract – AI-Powered Invoice Data Extraction</h3>
+            <p class="project-desc">
+              Built an end-to-end OCR + NLP pipeline that extracts structured line-item data from invoice images and
+              converts
+              it into validated JSON. Implemented preprocessing with OpenCV, text detection using PaddleOCR, spatial row
+              grouping,
+              and intelligent data validation for real-world financial automation.
+            </p>
+            <div class="project-tech">
+              <span>Python</span><span>OpenCV</span><span>PaddleOCR</span><span>NLP</span><span>Regex</span><span>JSON</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/Dhanush1376/AI-Powered-Invoice-Data-Extraction-Pipeline.git" target="_blank"
+                class="project-btn">GitHub</a>
+              <a href="https://dhanush1376.github.io/AI-Powered-Invoice-Data-Extraction-Pipeline/" target="_blank"
+                class="project-btn btn-outline">Live Demo ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="project-card" data-index="03">
+          <div class="project-card-img"></div>
+          <div class="project-card-body">
+            <div class="project-mobile-number">03</div>
+            <span class="project-date">March '25 - April '25</span>
+            <h3 class="project-title">Traffic Volume Prediction</h3>
+            <p class="project-desc">
+              Targeted future traffic forecasting and congestion analysis across major Bangalore road networks. Applied
+              K-Means, PCA, and constructed regression and ARIMA models with Plotly visualizations.
+            </p>
+            <div class="project-tech">
+              <span>Python</span><span>Pandas</span><span>NumPy</span><span>Scikit-learn</span><span>ARIMA</span><span>Matplotlib</span><span>Plotly</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/Dhanush1376/Traffic-Volume-Prediction" target="_blank"
+                class="project-btn">GitHub</a>
+              <a href="https://dhanush1376.github.io/Traffic-Volume-Prediction/" target="_blank"
+                class="project-btn btn-outline">Live Demo ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 04 -->
+        <div class="project-card" data-index="04">
+          <div class="project-card-img"></div>
+          <div class="project-card-body">
+            <div class="project-mobile-number">04</div>
+            <span class="project-date">June '25 – August '25</span>
+            <h3 class="project-title">Modulation & Signal Processing Training</h3>
+            <p class="project-desc">
+              Hands-on training focused on analog and digital modulation techniques (AM, FM, PM, ASK, FSK, PSK). Signal
+              generation, noise application, and bandwidth analysis using Python.
+            </p>
+            <div class="project-tech">
+              <span>Python</span><span>NumPy</span><span>Matplotlib</span><span>SciPy</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/Dhanush1376/AI-Driven-Modulation-Classifier.git" target="_blank"
+                class="project-btn">GitHub</a>
+              <a href="#" target="_blank" class="project-btn btn-outline">Live Demo ↗</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="projects-right">
-
-      <!-- 01 -->
-      <div class="project-card" data-index="01">
-        <div class="project-card-img"></div>
-        <div class="project-card-body">
-          <div class="project-mobile-number">01</div>
-          <span class="project-date">June '25 – Present</span>
-          <h3 class="project-title">hLPU – Student–Alumni Career Connectivity Platform</h3>
-          <p class="project-desc">
-            Developed a full-stack web platform connecting students and alumni to facilitate mentorship, referrals,
-            mock interviews, and verified job opportunities. Implemented stream-specific matching and dynamic job listings.
-          </p>
-          <div class="project-tech">
-            <span>HTML</span><span>CSS</span><span>JS</span><span>React</span><span>Node.js/Flask</span><span>Web-Sockets</span>
-          </div>
-          <div class="project-links">
-            <a href="https://github.com/Dhanush1376/hlpu" target="_blank" class="project-btn">GitHub</a>
-            <a href="https://hlpu.vercel.app/" target="_blank"
-              class="project-btn btn-outline">Live Demo ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 02 NEW PROJECT -->
-      <div class="project-card" data-index="02">
-        <div class="project-card-img"></div>
-        <div class="project-card-body">
-          <div class="project-mobile-number">02</div>
-          <span class="project-date">October'25 – December' 25</span>
-          <h3 class="project-title">InvoExtract – AI-Powered Invoice Data Extraction</h3>
-          <p class="project-desc">
-            Built an end-to-end OCR + NLP pipeline that extracts structured line-item data from invoice images and converts
-            it into validated JSON. Implemented preprocessing with OpenCV, text detection using PaddleOCR, spatial row grouping,
-            and intelligent data validation for real-world financial automation.
-          </p>
-          <div class="project-tech">
-            <span>Python</span><span>OpenCV</span><span>PaddleOCR</span><span>NLP</span><span>Regex</span><span>JSON</span>
-          </div>
-          <div class="project-links">
-            <a href="https://github.com/Dhanush1376/AI-Powered-Invoice-Data-Extraction-Pipeline.git" target="_blank" class="project-btn">GitHub</a>
-            <a href="https://dhanush1376.github.io/AI-Powered-Invoice-Data-Extraction-Pipeline/" target="_blank" class="project-btn btn-outline">Live Demo ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 03 -->
-      <div class="project-card" data-index="03">
-        <div class="project-card-img"></div>
-        <div class="project-card-body">
-          <div class="project-mobile-number">03</div>
-          <span class="project-date">March '25 - April '25</span>
-          <h3 class="project-title">Traffic Volume Prediction</h3>
-          <p class="project-desc">
-            Targeted future traffic forecasting and congestion analysis across major Bangalore road networks. Applied
-            K-Means, PCA, and constructed regression and ARIMA models with Plotly visualizations.
-          </p>
-          <div class="project-tech">
-            <span>Python</span><span>Pandas</span><span>NumPy</span><span>Scikit-learn</span><span>ARIMA</span><span>Matplotlib</span><span>Plotly</span>
-          </div>
-          <div class="project-links">
-            <a href="https://github.com/Dhanush1376/Traffic-Volume-Prediction" target="_blank"
-              class="project-btn">GitHub</a>
-            <a href="https://dhanush1376.github.io/Traffic-Volume-Prediction/" target="_blank"
-              class="project-btn btn-outline">Live Demo ↗</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 04 -->
-      <div class="project-card" data-index="04">
-        <div class="project-card-img"></div>
-        <div class="project-card-body">
-          <div class="project-mobile-number">04</div>
-          <span class="project-date">June '25 – August '25</span>
-          <h3 class="project-title">Modulation & Signal Processing Training</h3>
-          <p class="project-desc">
-            Hands-on training focused on analog and digital modulation techniques (AM, FM, PM, ASK, FSK, PSK). Signal
-            generation, noise application, and bandwidth analysis using Python.
-          </p>
-          <div class="project-tech">
-            <span>Python</span><span>NumPy</span><span>Matplotlib</span><span>SciPy</span>
-          </div>
-          <div class="project-links">
-            <a href="https://github.com/Dhanush1376/AI-Driven-Modulation-Classifier.git" target="_blank"
-              class="project-btn">GitHub</a>
-            <a href="#" target="_blank" class="project-btn btn-outline">Live Demo ↗</a>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
+  </section>
 
   <!-- Certificates Section -->
   <section class="section certificates-new" id="certificates">
@@ -516,9 +549,10 @@
     </div>
     <div class="stars-bg"></div>
     <div class="certs-container">
-      <div class="certs-header">
+      <div class="section-header">
         <div class="section-label">04 / Certificates</div>
-        <h2 class="section-title">Certifications</h2>
+        <div class="section-watermark">CERTIFICATION</div>
+        <h2 class="section-title">PROOF OF <span class="text-outline">WORK</span></h2>
       </div>
 
       <div class="certs-slider-wrapper">
@@ -665,15 +699,14 @@
 
   <!-- Education Section -->
   <section class="section education" id="education">
-    <div class="stars-bg"></div>
     <div class="section-divider-container">
       <div class="section-divider"></div>
     </div>
-    <div class="section-label">05 / Education</div>
-    <h2 class="section-title">
-      Academic <br />
-      <span class="text-outline">Background</span>
-    </h2>
+    <div class="section-header">
+      <div class="section-label">05 / Education</div>
+      <div class="section-watermark">EDUCATION</div>
+      <h2 class="section-title">Academic <span class="text-outline">Background</span></h2>
+    </div>
 
     <div class="edu-grid">
 
@@ -800,8 +833,11 @@
     <div class="section-divider-container">
       <div class="section-divider"></div>
     </div>
-    <div class="section-label">06 / Journey</div>
-    <h2 class="section-title">Journey &amp; <br /><span class="text-outline">Achievements</span></h2>
+    <div class="section-header">
+      <div class="section-label">06 / Journey</div>
+      <div class="section-watermark">MILESTONES</div>
+      <h2 class="section-title">JOURNEY & <span class="text-outline">ACHIEVEMENTS</span></h2>
+    </div>
     <div class="timeline">
       <div class="timeline-line"></div>
 
@@ -856,17 +892,41 @@
     </div>
   </section>
   <section class="section contact" id="contact">
-    <div class="stars-bg"></div>
     <div class="section-divider-container">
       <div class="section-divider"></div>
     </div>
-    <div class="section-label">07 / Contact</div>
-    <h2 class="section-title">Get in <br /><span class="text-outline">Touch</span></h2>
+    <div class="section-header">
+      <div class="section-label">07 / Contact</div>
+      <div class="section-watermark">CONTACT</div>
+      <h2 class="section-title">Let's <span class="text-outline">Connect</span></h2>
+    </div>
     <div class="contact-grid">
       <div class="contact-info">
-        <p class="contact-intro">Have a project in mind, want to collaborate, or just want to say hello? Drop me a
-          message.</p>
-        <div class="contact-details">
+  
+      <form class="contact-form" id="contactForm">
+        <div class="form-group">
+          <input type="text" id="formName" name="user_name" placeholder="Your Name" required />
+        </div>
+        <div class="form-group">
+          <input type="email" id="formEmail" name="user_email" placeholder="Your Email" required />
+        </div>
+        <div class="form-group">
+          <textarea id="formMessage" name="message" rows="5" placeholder="Your Message" required></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Send Message</button>
+          <a href="assets/docs/resume.pdf" download="Dhanush_CV.pdf" class="btn-secondary" id="downloadResume">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Download Resume
+          </a>
+        </div>
+        <div class="form-success" id="formSuccess">Message sent successfully! I'll get back to you soon.</div>
+      </form>
+            <div class="contact-details">
           <a href="mailto:dhanush1376@gmail.com" class="contact-detail-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -891,29 +951,6 @@
           </a>
         </div>
       </div>
-      <form class="contact-form" id="contactForm">
-        <div class="form-group">
-          <input type="text" id="formName" name="user_name" placeholder="Your Name" required />
-        </div>
-        <div class="form-group">
-          <input type="email" id="formEmail" name="user_email" placeholder="Your Email" required />
-        </div>
-        <div class="form-group">
-          <textarea id="formMessage" name="message" rows="5" placeholder="Your Message" required></textarea>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn-primary">Send Message</button>
-          <a href="assets/docs/resume.pdf" download="Dhanush_CV.pdf" class="btn-secondary" id="downloadResume">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Download Resume
-          </a>
-        </div>
-        <div class="form-success" id="formSuccess">Message sent successfully! I'll get back to you soon.</div>
-      </form>
     </div>
   </section>
 
