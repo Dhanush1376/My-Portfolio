@@ -1207,3 +1207,23 @@ gsap.utils.toArray('.stars-bg').forEach((bg) => {
     }
   });
 });
+
+// ─── Section Header Animations (Watermark + Title) ──────────────────
+gsap.utils.toArray('.section-header').forEach(header => {
+  const watermark = header.querySelector('.section-watermark');
+  const title = header.querySelector('.section-title');
+  
+  // Set initial state
+  if (watermark) watermark.classList.add('animate-ready');
+  if (title) title.classList.add('animate-ready');
+  
+  ScrollTrigger.create({
+    trigger: header,
+    start: 'top 85%',
+    once: true,
+    onEnter: () => {
+      if (watermark) watermark.classList.add('animate-in');
+      if (title) title.classList.add('animate-in');
+    }
+  });
+});
