@@ -188,8 +188,8 @@ gsap.to('.hero-content', {
 // ─── Section Stacking (Overlay Scroll) ────────────────
 const stackSections = gsap.utils.toArray('.section');
 stackSections.forEach((sec, i) => {
-  // Don't pin the last section or on mobile
-  if (i === stackSections.length - 1 || window.innerWidth < 1024) return;
+  // Don't pin the last section
+  if (i === stackSections.length - 1) return;
 
   // Pin the section as the next one scrolls over it
   ScrollTrigger.create({
