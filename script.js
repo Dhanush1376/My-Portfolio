@@ -186,7 +186,7 @@ gsap.to('.hero-content', {
 });
 
 // ─── Section Stacking (Overlay Scroll) ────────────────
-const stackSections = gsap.utils.toArray('.section');
+const stackSections = gsap.utils.toArray('.hero, .section');
 stackSections.forEach((sec, i) => {
   // Don't pin the last section
   if (i === stackSections.length - 1) return;
@@ -353,16 +353,16 @@ function initAboutScrollReveal() {
   const paragraphs = aboutText.querySelectorAll('p');
   paragraphs.forEach(p => recursiveSplit(p));
 
-  // Animation logic using ScrollTrigger scrub
+  // Animation logic
   gsap.to('.char-reveal', {
     opacity: 1,
-    stagger: 0.1,
+    stagger: 0.005,
+    duration: 0.1,
+    ease: 'none',
     scrollTrigger: {
       trigger: aboutText,
       start: 'top 85%',
-      end: 'bottom 60%',
-      scrub: 1,
-      // markers: true, // Uncomment for debugging
+      once: true
     }
   });
 
