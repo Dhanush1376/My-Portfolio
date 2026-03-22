@@ -5,8 +5,7 @@
 
 // Initialize Smooth Scrolling (Lenis)
 window.lenis = new Lenis({
-  duration: 1.2,
-  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
+  lerp: 0.08, // Replaced duration/easing with lerp for more fluid continuous smoothing
   direction: 'vertical',
   gestureDirection: 'vertical',
   smooth: true,
@@ -26,32 +25,48 @@ gsap.registerPlugin(ScrollTrigger);
 // ─── Custom Cursor ────────────────────────────────────
 const cursorDot = document.getElementById('cursorDot');
 const cursorOutline = document.getElementById('cursorOutline');
-let mouseX = 0, mouseY = 0;
-let outlineX = 0, outlineY = 0;
 
-document.addEventListener('mousemove', (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-  gsap.to(cursorDot, { x: mouseX, y: mouseY, duration: 0.1 });
+// Use GSAP quickSetters for extreme performance
+const setDotX = gsap.quickSetter(cursorDot, "x", "px");
+const setDotY = gsap.quickSetter(cursorDot, "y", "px");
+const setOutlineX = gsap.quickSetter(cursorOutline, "x", "px");
+const setOutlineY = gsap.quickSetter(cursorOutline, "y", "px");
+
+let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+let outline = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+let isHovering = false;
+
+window.addEventListener('mousemove', (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+  
+  // Instantly update dot using quickSetter
+  setDotX(mouse.x);
+  setDotY(mouse.y);
 });
 
-function animateCursor() {
-  outlineX += (mouseX - outlineX) * 0.12;
-  outlineY += (mouseY - outlineY) * 0.12;
-  cursorOutline.style.left = outlineX + 'px';
-  cursorOutline.style.top = outlineY + 'px';
-  requestAnimationFrame(animateCursor);
-}
-animateCursor();
+// Use GSAP ticker for the outline smooth follow
+gsap.ticker.add(() => {
+  // Adjust lerp factor based on hover state (slower follow when hovered)
+  const dt = 1.0 - Math.pow(1.0 - (isHovering ? 0.08 : 0.15), gsap.ticker.deltaRatio());
+  
+  outline.x += (mouse.x - outline.x) * dt;
+  outline.y += (mouse.y - outline.y) * dt;
+  
+  setOutlineX(outline.x);
+  setOutlineY(outline.y);
+});
 
 // Cursor hover effect on interactive elements
-const hoverTargets = document.querySelectorAll('a, button, .project-card, .glass-card');
+const hoverTargets = document.querySelectorAll('a, button, .project-card, .glass-card, .bento-card');
 hoverTargets.forEach(el => {
   el.addEventListener('mouseenter', () => {
+    isHovering = true;
     cursorDot.classList.add('hover');
     cursorOutline.classList.add('hover');
   });
   el.addEventListener('mouseleave', () => {
+    isHovering = false;
     cursorDot.classList.remove('hover');
     cursorOutline.classList.remove('hover');
   });
@@ -320,6 +335,29 @@ function updateTimelineColor() {
 }
 
 // ─── Section Animations ─────────────────────────────
+// Watermark Animations - Fast to slow center-out reveal
+gsap.utils.toArray('.section-watermark').forEach(watermark => {
+  gsap.fromTo(watermark, 
+    {
+      scale: 0.8,
+      opacity: 0,
+      clipPath: "inset(0 50% 0 50%)", // Starts fully clipped from the left and right (at the center)
+    },
+    {
+      scale: 1,
+      opacity: 0.19, // Use the correct opacity from CSS
+      clipPath: "inset(0 0% 0 0%)", // Reveals fully to the edges
+      duration: 1.8,
+      ease: "power4.out", // "power4.out" starts very fast and smoothly slows down to a stop at the end
+      scrollTrigger: {
+        trigger: watermark,
+        start: "top 85%", // Starts animation when watermark is 85% down the viewport
+        once: true // Ensures it only runs once and does not disappear when scrolling up
+      }
+    }
+  );
+});
+
 // About section Scroll Reveal Animation
 function initAboutScrollReveal() {
   const aboutText = document.querySelector('.about-text-col');
@@ -903,11 +941,11 @@ if (certModal) {
 
 // Contact Watermark Animation
 if (document.querySelector('.contact-watermark')) {
-  gsap.from('.contact-watermark', {
-    y: 100,
-    opacity: 0,
-    duration: 1.5,
-    ease: 'power2.out',
+  gsap.to('.contact-watermark', {
+    clipPath: 'inset(0 0% 0 0%)',
+    opacity: 0.12,
+    duration: 2.5,
+    ease: 'power4.out',
     scrollTrigger: {
       trigger: '.contact',
       start: 'top 80%',
@@ -1222,7 +1260,15 @@ gsap.utils.toArray('.section-header').forEach(header => {
     start: 'top 85%',
     once: true,
     onEnter: () => {
-      if (watermark) watermark.classList.add('animate-in');
+      if (watermark) {
+        gsap.to(watermark, {
+          clipPath: 'inset(0 0% 0 0%)',
+          opacity: 0.19,
+          scale: 1,
+          duration: 1.5,
+          ease: 'power4.out'
+        });
+      }
       if (title) title.classList.add('animate-in');
     }
   });

@@ -1174,16 +1174,14 @@ html.lenis {
 .section-watermark.animate-ready {
   opacity: 0;
   clip-path: inset(0 50% 0 50%);
-  transform: translate(-50%, -50%) scale(0.95);
+  transform: translate(-50%, -50%) scale(0.9);
 }
 
 .section-watermark.animate-in {
   opacity: 0.19;
   clip-path: inset(0 0 0 0);
   transform: translate(-50%, -50%) scale(1);
-  transition: clip-path 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-              opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Transition removed — now handled by GSAP for better control */
 }
 
 .section-title.animate-ready {
@@ -2187,6 +2185,19 @@ html.lenis {
   filter: invert(1);
 }
 
+/* Ensure dark-card tags stay readable even in light mode */
+[data-theme="light"] .dark-card .bento-tag {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #ccc;
+}
+
+[data-theme="light"] .dark-card .bento-tag:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1024px) {
   .bento-skills-grid {
@@ -2278,10 +2289,8 @@ html.lenis {
   position: relative; /* For watermark positioning */
 }
 
-/* Hide projects watermark on desktop */
-.projects-header-wrapper .section-watermark {
-  display: none;
-}
+/* Allow projects watermark on desktop by not setting display: none */
+
 
 /* Numbers wrapper within the pinned column */
 .sticky-indicator-wrapper {
@@ -2840,7 +2849,8 @@ html.lenis {
   font-weight: 900;
   letter-spacing: -0.01em;
   color: var(--text);
-  opacity: 0.08;
+  opacity: 0; /* Changed to 0 for GSAP reveal */
+  clip-path: inset(0 50% 0 50%); /* Start from center */
   white-space: nowrap;
   pointer-events: none;
   z-index: 1;
@@ -2848,6 +2858,7 @@ html.lenis {
   line-height: 1;
   text-transform: uppercase;
   font-family: var(--font);
+  will-change: clip-path, opacity, transform;
 }
 
 [data-theme="light"] .contact-watermark {
