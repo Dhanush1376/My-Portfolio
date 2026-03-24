@@ -9,7 +9,7 @@
     content="Portfolio of Dhanush Atmakuri — Machine Learning Engineer and Product Designer building intelligent, user-focused products." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/png" href="assets/logo.png" />
@@ -894,36 +894,19 @@
     </div>
     <div class="section-header">
       <div class="section-label">07 / Contact</div>
+            <h2 class="section-title">Let's <span class="text-outline">Connect</span></h2>
       <div class="section-watermark">CONTACT</div>
-      <h2 class="section-title">Let's <span class="text-outline">Connect</span></h2>
     </div>
     <div class="contact-grid">
-      <div class="contact-info">
-  
-      <form class="contact-form" id="contactForm">
-        <div class="form-group">
-          <input type="text" id="formName" name="user_name" placeholder="Your Name" required />
-        </div>
-        <div class="form-group">
-          <input type="email" id="formEmail" name="user_email" placeholder="Your Email" required />
-        </div>
-        <div class="form-group">
-          <textarea id="formMessage" name="message" rows="5" placeholder="Your Message" required></textarea>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn-primary">Send Message</button>
-          <a href="assets/docs/resume.pdf" download="Dhanush_CV.pdf" class="btn-secondary" id="downloadResume">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Download Resume
-          </a>
-        </div>
-        <div class="form-success" id="formSuccess">Message sent successfully! I'll get back to you soon.</div>
-      </form>
-            <div class="contact-details">
+      <div class="contact-left">
+        <h3 class="contact-heading">
+          Crafting <span class="text-italic">Digital Experiences</span><br>That Matter
+        </h3>
+        <p class="contact-subtext">
+          From concept to execution—let’s collaborate and bring your vision to life.
+        </p>
+        
+        <div class="contact-details">
           <a href="mailto:dhanush1376@gmail.com" class="contact-detail-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -947,6 +930,32 @@
             LinkedIn
           </a>
         </div>
+      </div>
+
+      <div class="contact-right">
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <input type="text" id="formName" name="user_name" placeholder="Your Name" required />
+          </div>
+          <div class="form-group">
+            <input type="email" id="formEmail" name="user_email" placeholder="Your Email" required />
+          </div>
+          <div class="form-group">
+            <textarea id="formMessage" name="message" rows="5" placeholder="Your Message" required></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Send Message</button>
+            <a href="assets/docs/resume.pdf" download="Dhanush_CV.pdf" class="btn-secondary" id="downloadResume">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Resume
+            </a>
+          </div>
+          <div class="form-success" id="formSuccess">Message sent! I'll get back to you soon.</div>
+        </form>
       </div>
     </div>
   </section>

@@ -955,13 +955,13 @@ if (document.querySelector('.contact-watermark')) {
 }
 
 // Contact section — cinematic reveals
-const contactInfo = document.querySelector('.contact-info');
-if (contactInfo) {
-  gsap.from(contactInfo, {
+const contactLeft = document.querySelector('.contact-left');
+if (contactLeft) {
+  gsap.from(contactLeft, {
     x: -80,
     opacity: 0,
     scale: 0.95,
-    duration: 1,
+    duration: 1.2,
     ease: 'power4.out',
     scrollTrigger: {
       trigger: '.contact',
