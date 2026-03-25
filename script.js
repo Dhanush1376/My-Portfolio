@@ -868,6 +868,10 @@ if (certModal) {
     const link = card.querySelector('.cert-link-btn').href;
     const imgElement = card.querySelector('.cert-img');
     const imgSrc = imgElement ? imgElement.src : '';
+    
+    // Extract description from the card if it exists
+    const descEl = card.querySelector('.cert-desc');
+    const desc = descEl ? descEl.textContent.trim() : '';
 
     const modalBody = certModal.querySelector('.cert-modal-body');
     const modalContent = certModal.querySelector('.cert-modal-content');
@@ -879,14 +883,20 @@ if (certModal) {
           <p style="margin: 0; color: var(--text-secondary); font-size: 0.95rem; font-weight: 500;">${issuer}</p>
         </div>
         
-        <div class="modal-cert-display" style="width: 100%; display: flex; flex-direction: column; gap: 25px;">
+        <div class="modal-cert-display" style="width: 100%; display: flex; flex-direction: column; gap: 20px;">
           ${imgSrc ? `
-          <div class="modal-img-container" style="width: 100%; max-height: 75vh; border-radius: 16px; overflow: hidden; border: 1px solid var(--surface-border); background: #000; box-shadow: 0 20px 50px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
-            <img src="${imgSrc}" style="max-width: 100%; height: auto; max-height: 75vh; display: block; object-fit: contain;" alt="${title}">
+          <div class="modal-img-container" style="width: 100%; max-height: 60vh; border-radius: 16px; overflow: hidden; border: 1px solid var(--surface-border); background: #000; box-shadow: 0 15px 40px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
+            <img src="${imgSrc}" style="max-width: 100%; height: auto; max-height: 60vh; display: block; object-fit: contain;" alt="${title}">
+          </div>
+          ` : ''}
+
+          ${desc ? `
+          <div class="modal-cert-description" style="width: 100%; background: var(--surface); padding: 20px; border-radius: 12px; border: 1px solid var(--surface-border); line-height: 1.6; color: var(--text-secondary); font-size: 0.9rem;">
+            ${desc}
           </div>
           ` : ''}
           
-          <div style="width: 100%; display: flex; justify-content: flex-start;">
+          <div style="width: 100%; display: flex; justify-content: flex-start; margin-top: 5px;">
             ${link && link !== '#' && !link.includes(window.location.pathname) ? `
             <a href="${link}" target="_blank" class="cert-link-btn" style="padding: 12px 28px; font-size: 0.95rem; font-weight: 700; background: var(--text); color: var(--bg); border-radius: 12px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-decoration: none; display: inline-block;">Verify Certificate ↗</a>
             ` : `
