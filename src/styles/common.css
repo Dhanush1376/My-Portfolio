@@ -1,0 +1,422 @@
+/* ==========================================================================
+   EDITORIAL SECTIONS COMMON, STEPPED GEOMETRY & TYPOGRAPHY HIERARCHY
+   ========================================================================== */
+
+/* ---------- Sections Common ---------- */
+.section {
+  position: relative;
+  padding: 6rem 4rem 8rem;
+  scroll-margin-top: 0;
+  background: var(--bg);
+  color: var(--text);
+  z-index: 10;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: 5rem 2.5rem 6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 4rem 1.25rem 5rem;
+  }
+}
+
+/* Section Header - Editorial Layout */
+.section-header {
+  position: relative;
+  text-align: left;
+  margin-bottom: 3.5rem;
+  z-index: 10;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5.5vw, 4.25rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+.section-lead-text {
+  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin-top: 1.25rem;
+  font-weight: 400;
+}
+
+/* Hairline Section Divider */
+.section-divider-container {
+  width: 100%;
+  margin-bottom: 4rem;
+}
+
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ---------- Stepped / Notched Card Geometry ---------- */
+/* Signature geometry inspired by WhyCreatives: a card with a cutout step in the top-right corner */
+.stepped-card-frame {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  overflow: hidden;
+  transition: transform 0.4s var(--transition), border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.stepped-card-frame:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--card-shadow);
+}
+
+/* Tilted Badge */
+.tilted-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.6rem;
+  background: var(--accent);
+  color: #FFFFFF;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 0;
+  transform: rotate(-3deg);
+  box-shadow: none; /* Flat sticky note look */
+}
+
+/* Studio Pill Buttons */
+.studio-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.65rem;
+  border-radius: 9999px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: all 0.3s var(--transition);
+  cursor: pointer;
+  border: none;
+}
+
+.studio-pill-primary {
+  background: var(--pill-bg);
+  color: var(--pill-text);
+}
+
+.studio-pill-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.studio-pill-orange {
+  background: var(--orange);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+}
+
+.studio-pill-orange:hover {
+  background: var(--orange-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+
+.studio-pill-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+}
+
+.studio-pill-ghost:hover {
+  background: var(--surface-hover);
+  border-color: var(--text);
+  transform: translateY(-2px);
+}
+
+.pill-arrow-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #000000;
+  color: #FFFFFF;
+  font-size: 0.85rem;
+  transition: transform 0.3s var(--transition);
+}
+
+.studio-pill-btn:hover .pill-arrow-circle {
+  transform: translateX(3px);
+}
+
+[data-theme="light"] .studio-pill-primary .pill-arrow-circle {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+/* ---------- Standardized Section Header & Watermark ---------- */
+.section-header {
+  position: relative;
+  text-align: center;
+  padding: 5rem 0;
+  margin-bottom: 2rem;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.section-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130%;
+  text-align: center;
+  font-size: 15vw;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  opacity: 0.19;
+  white-space: normal;
+  pointer-events: none;
+  z-index: 1;
+  user-select: none;
+  line-height: 1.1;
+  text-transform: uppercase;
+  font-family: var(--font);
+  will-change: transform, opacity;
+}
+
+/* Specific sizing for CAPABILITIES watermark */
+.services-section .section-watermark,
+#services .section-watermark {
+  width: 100%;
+  max-width: 100%;
+  font-size: clamp(3rem, 13vw, 11.5rem);
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.section-header .section-label {
+  position: relative;
+  z-index: 5;
+  margin-bottom: 1.5rem;
+}
+
+.section-header .section-title {
+  position: relative;
+  z-index: 10;
+}
+
+/* ---------- Section Header Animations ---------- */
+.section-watermark.animate-ready {
+  opacity: 0;
+  clip-path: inset(0 50% 0 50%);
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+.section-watermark.animate-in {
+  opacity: 0.19;
+  clip-path: inset(0 0 0 0);
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.section-title.animate-ready {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  transform: translateX(-15px);
+}
+
+.section-title.animate-in {
+  opacity: 1;
+  clip-path: inset(-10% -10% -10% -10%);
+  transform: translateX(0);
+  transition: clip-path 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0s, 
+              opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0s,
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0s;
+}
+
+@media (max-width: 768px) {
+  .section-header {
+    padding: 3.25rem 1.5rem 4rem;
+    margin-bottom: 0rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.text-outline {
+  -webkit-text-stroke: 1.5px var(--white);
+  color: transparent;
+}
+
+[data-theme="light"] .text-outline {
+  -webkit-text-stroke: 1.5px var(--black);
+  color: transparent;
+}
+
+/* Ensure sections have relative positioning */
+.section {
+  position: relative;
+}
+
+.section > *:not(.stars-bg):not(.fixed-grid-canvas) {
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   GRID BACKGROUND SECTION STACKING & EXPLICIT Z-INDEX HIERARCHY
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  z-index: 10 !important;
+}
+
+.trust-strip {
+  position: relative;
+  z-index: 11 !important;
+  background: var(--bg) !important;
+}
+
+.services-section {
+  position: relative;
+  z-index: 12 !important;
+  background: var(--bg) !important;
+  border-top-left-radius: 36px;
+  border-top-right-radius: 36px;
+  border-top: 1px solid var(--surface-border);
+}
+
+.projects {
+  position: relative;
+  z-index: 13 !important;
+  background: var(--bg-alt) !important;
+}
+
+.process-section {
+  position: relative;
+  z-index: 14 !important;
+  background: var(--bg-alt) !important;
+}
+
+.about-section {
+  position: relative;
+  z-index: 15 !important;
+  background: var(--bg) !important;
+}
+
+.tech-section {
+  position: relative;
+  z-index: 16 !important;
+  background: var(--bg-alt) !important;
+}
+
+.contact {
+  position: relative;
+  z-index: 17 !important;
+  background: var(--bg) !important;
+}
+
+.footer {
+  position: relative;
+  z-index: 18 !important;
+  background: #050505 !important;
+}
+
+/* Multiple backgrounds: Grid lines (fixed) on top of solid background (scroll) */
+.services-section,
+.projects,
+.process-section,
+.about-section,
+.tech-section,
+.contact {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--bg), var(--bg)) !important;
+  background-size: 50px 50px, 50px 50px, 100% 100% !important;
+  background-attachment: scroll !important;
+  background-position: center center !important;
+}
+
+.projects,
+.process-section,
+.tech-section {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--bg-alt), var(--bg-alt)) !important;
+}
+
+[data-theme="light"] .services-section,
+[data-theme="light"] .projects,
+[data-theme="light"] .process-section,
+[data-theme="light"] .about-section,
+[data-theme="light"] .tech-section,
+[data-theme="light"] .contact {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--bg), var(--bg)) !important;
+}
+
+[data-theme="light"] .projects,
+[data-theme="light"] .process-section,
+[data-theme="light"] .tech-section {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--bg-alt), var(--bg-alt)) !important;
+}
+
+.services-section::before,
+.projects::before,
+.process-section::before,
+.about-section::before,
+.tech-section::before,
+.contact::before {
+  display: none;
+}

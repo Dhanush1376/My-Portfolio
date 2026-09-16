@@ -1,0 +1,222 @@
+/* Hide certificates-mobile-counter on desktop/laptop */
+@media (min-width: 768px) {
+  .certificates-mobile-counter {
+    display: none !important;
+  }
+}
+
+/* Hide project-mobile-counter on desktop/laptop */
+@media (min-width: 768px) {
+  .project-mobile-counter {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   DHANUSH — ART-DIRECTED CREATIVE TECH STUDIO
+   ======================================== */
+
+/* ---------- Reset & Base ---------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Brand Accents */
+  --orange: #FF5520;
+  --orange-hover: #E64510;
+  --orange-light: #FF7748;
+  --orange-soft: rgba(255, 85, 32, 0.12);
+  --orange-glow: rgba(0, 0, 0, 0.15);
+
+  /* Fonts */
+  --font: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Roboto Mono', monospace;
+
+  /* Easing */
+  --transition: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+
+  /* Dark Theme Tokens (Default) */
+  --bg: #0A0A0D;
+  --bg-alt: #111217;
+  --bg-card: #15161D;
+  --bg-card-subtle: #1C1D26;
+  --text: #F5F5F7;
+  --text-secondary: #A2A4B0;
+  --text-muted: #6E707D;
+  --text-faint: #43444E;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.07);
+  --surface-active: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+
+  --nav-bg: rgba(10, 10, 13, 0.85);
+  --nav-border: rgba(255, 255, 255, 0.08);
+
+  --accent: var(--orange);
+  --accent-hover: var(--orange-light);
+  --accent-soft: var(--orange-soft);
+
+  --pill-bg: #FFFFFF;
+  --pill-text: #0A0A0D;
+  --pill-dark-bg: #1A1B22;
+  --pill-dark-text: #F5F5F7;
+
+  --cursor-color: #FFFFFF;
+  --cursor-outline: rgba(255, 255, 255, 0.4);
+}
+
+/* Light Theme (Warm Off-White / Cream Base) */
+[data-theme="light"] {
+  --bg: #FBF9F5;
+  --bg-alt: #F2EFE8;
+  --bg-card: #FFFFFF;
+  --bg-card-subtle: #F6F3EC;
+  --text: #0E0F12;
+  --text-secondary: #484A54;
+  --text-muted: #7E808F;
+  --text-faint: #B5B6C2;
+
+  --border: rgba(14, 15, 18, 0.08);
+  --border-strong: rgba(14, 15, 18, 0.18);
+  --border-subtle: rgba(14, 15, 18, 0.04);
+
+  --surface: rgba(0, 0, 0, 0.03);
+  --surface-hover: rgba(0, 0, 0, 0.06);
+  --surface-active: rgba(0, 0, 0, 0.09);
+  --card-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.06);
+
+  --nav-bg: rgba(251, 249, 245, 0.85);
+  --nav-border: rgba(14, 15, 18, 0.08);
+
+  --accent: var(--orange);
+  --accent-hover: var(--orange-hover);
+  --accent-soft: rgba(255, 85, 32, 0.1);
+
+  --pill-bg: #0E0F12;
+  --pill-text: #FFFFFF;
+  --pill-dark-bg: #EAE6DC;
+  --pill-dark-text: #0E0F12;
+
+  --cursor-color: #0E0F12;
+  --cursor-outline: rgba(14, 15, 18, 0.4);
+}
+
+html {
+  scroll-behavior: auto !important;
+  font-size: 16px;
+  cursor: auto;
+  /* Temporarily restored native cursor */
+  width: 100vw !important;
+  overflow-x: hidden !important;
+  /* Hide scrollbar */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari and Opera */
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: clip !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: auto;
+  /* Temporarily restored native cursor */
+  transition: background 0.5s, color 0.5s;
+  /* Hide scrollbar */
+}
+
+body::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari and Opera */
+}
+
+::selection {
+  background: var(--text);
+  color: var(--bg);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  cursor: none;
+}
+
+button,
+input,
+textarea {
+  cursor: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ==========================================================================
+   GSAP & LENIS SMOOTH SCROLL INTEGRATION
+   ========================================================================== */
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.section {
+  position: relative;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Ensure proper stacking for both GSAP spacer class names */
+.pin-spacer,
+.gsap-pin-spacer {
+  pointer-events: none !important;
+}
+
+.pin-spacer>*,
+.gsap-pin-spacer>* {
+  pointer-events: auto !important;
+}
+
+/* Disable pointer events during navigation to prevent conflicts */
+.is-navigating {
+  pointer-events: none;
+}
+
+.is-navigating .section {
+  pointer-events: none;
+}

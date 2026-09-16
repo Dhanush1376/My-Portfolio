@@ -1,0 +1,123 @@
+.swipe-container {
+  position: relative;
+  width: 340px;
+  height: 60px;
+  background: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  user-select: none;
+  touch-action: none; /* Prevents scrolling while swiping on mobile */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+.swipe-text {
+  position: absolute;
+  font-size: 1.15rem;
+  font-weight: 800;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+  margin-left: 27px; /* Balances the text to account for the knob on the left */
+  
+  /* Shimmer effect */
+  background: linear-gradient(90deg, #000000 0%, #000000 40%, #A0A0A0 50%, #000000 60%, #000000 100%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shimmer-text 2.5s linear infinite;
+}
+
+.swipe-text-success {
+  position: absolute;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #000000;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+  margin-right: 27px; /* Balances the text to account for the knob on the right */
+}
+
+@keyframes shimmer-text {
+  to { background-position: -200% center; }
+}
+
+@keyframes nudge-arrow {
+  0%, 100% { transform: translateX(0); }
+  5% { transform: translateX(4px); }
+  10% { transform: translateX(0); }
+  15% { transform: translateX(2px); }
+  20% { transform: translateX(0); }
+}
+
+.swipe-container:not(.success) .swipe-knob svg {
+  animation: nudge-arrow 3s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+  .swipe-container {
+    width: 290px;
+  }
+}
+
+.swipe-knob {
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #000000;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  z-index: 3;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  will-change: transform;
+}
+
+.swipe-knob:active {
+  cursor: grabbing;
+}
+
+.swipe-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: var(--orange); /* Orange trail reveals as you swipe */
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 1;
+  will-change: width;
+}
+
+@keyframes success-glow {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+  70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.swipe-container.success {
+  background: #10B981;
+  border-color: #10B981;
+  animation: success-glow 1.5s infinite;
+}
+
+.swipe-container.success .swipe-fill {
+  background: #10B981 !important;
+  width: 100% !important;
+  transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.4s ease !important;
+}
+
+.swipe-container.success .swipe-text-success {
+  color: #FFFFFF;
+}

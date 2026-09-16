@@ -1,0 +1,778 @@
+/* ==========================================================================
+   REDESIGNED STUDIO FOOTER
+   ========================================================================== */
+
+.footer-redesign-wrapper {
+  position: relative;
+  z-index: 18;
+  display: flex;
+  padding: 0 1rem 1rem 1rem; /* Minimal outer padding */
+  background: var(--bg);
+  overflow: hidden; /* Added to clip 100vw giant text and ensure no horizontal scrollbars */
+  /* Footer Theme Variables - Dark Mode Default */
+  --footer-panel-bg: #1C1E26; /* Distinctly lighter than #0A0A0D */
+  --footer-text-main: #FFFFFF;
+  --footer-text-muted: #8F919E;
+  --footer-border: #2E303A;
+  --footer-pill-bg: rgba(255, 255, 255, 0.04);
+  --footer-pill-border: rgba(255, 255, 255, 0.1);
+  --footer-pill-hover-bg: #FFFFFF;
+  --footer-pill-hover-text: #000000;
+}
+
+[data-theme="light"] .footer-redesign-wrapper {
+  /* Footer Theme Variables - Light Mode */
+  --footer-panel-bg: #EBE6DA; /* Distinctly darker cream than #FBF9F5 */
+  --footer-text-main: #0E0F12;
+  --footer-text-muted: #6E707D;
+  --footer-border: #D1CDC2;
+  --footer-pill-bg: rgba(0, 0, 0, 0.04);
+  --footer-pill-border: rgba(0, 0, 0, 0.1);
+  --footer-pill-hover-bg: #000000;
+  --footer-pill-hover-text: #FFFFFF;
+}
+
+@media (max-width: 1024px) {
+  .footer-redesign-wrapper {
+    padding: 0 1rem 1rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-redesign-wrapper {
+    padding: 0.75rem 0.5rem 0.75rem 0.5rem; /* Tighter outer padding on mobile */
+    gap: 0;
+    display: block; /* Disable flex row so main panel takes 100% width */
+    position: relative;
+  }
+}
+
+/* --- Left Column (Socials + Notch) --- */
+.footer-left-column {
+  display: flex;
+  flex-direction: column;
+  width: 80px; /* Fixed width for the sidebar */
+  flex-shrink: 0;
+}
+
+.footer-mobile-inverted-corner {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .footer-left-column {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.5rem;
+    width: auto;
+    background: var(--bg);
+    padding: 0.65rem 1rem 0.65rem 0.75rem;
+    border-top-left-radius: 26px;
+    border-bottom-left-radius: 26px;
+    border-bottom-right-radius: 26px;
+    z-index: 20;
+  }
+
+  .footer-mobile-inverted-corner {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: -26px;
+    width: 26px;
+    height: 26px;
+    pointer-events: none;
+  }
+}
+
+.footer-social-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.5rem 0;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .footer-social-bar {
+    flex-direction: row;
+    gap: 0.6rem;
+    padding: 0;
+  }
+}
+
+.social-pill {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+}
+
+.social-pill:hover {
+  transform: scale(1.1);
+  background: var(--accent);
+  color: #fff;
+}
+
+/* --- Left Extension & Inverted Notch --- */
+.footer-left-extension {
+  flex: 1; /* Fills remaining vertical space below socials */
+  background: var(--footer-panel-bg);
+  border-bottom-left-radius: 40px; /* Outer curve */
+  border-top-left-radius: 40px; /* Creates the S-curve with the notch above it */
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .footer-left-extension {
+    display: none; /* Hide vertical extension since social icons are a top-left row on mobile */
+  }
+}
+
+.footer-inverted-corner {
+  position: absolute;
+  top: -40px; /* Sits exactly above the extension */
+  right: 0; /* Touches the main block */
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+}
+
+.notch-fill {
+  fill: var(--footer-panel-bg);
+  transition: fill 0.3s ease;
+}
+
+/* Kept the notch visible on mobile */
+
+/* --- Main Curved Dark Container --- */
+.footer-main-block {
+  flex: 1;
+  min-width: 0;
+  background: var(--footer-panel-bg);
+  border-radius: 40px 40px 40px 0; /* Fully rounded except bottom-left which seamlessly connects to footer-left-extension */
+  padding: 2.75rem 4.5rem 3.5rem 3.5rem; /* Symmetrically reduced padding for a more compact height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--footer-text-main);
+  overflow: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+  position: relative; /* Ensure absolute positioning works */
+}
+
+@media (max-width: 768px) {
+  .footer-main-block {
+    padding: 5rem 1.15rem 2.75rem 1.15rem; /* Symmetrically scaled mobile padding */
+    border-radius: 26px; /* Symmetrically scaled corners */
+  }
+}
+
+/* --- Right Column (Back to Top + Notch) --- */
+.footer-right-column {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  /* Width dynamically fits the pill content, restoring the perfect notch cutout! */
+}
+
+@media (max-width: 768px) {
+  .footer-right-column {
+    width: 100%;
+    margin-top: 1rem;
+  }
+}
+
+.footer-back-top-bar {
+  display: flex;
+  padding: 2.15rem 2rem 2.15rem 1rem; /* Natural padding places the pill directly on top of the notch */
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+  .footer-back-top-bar {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.footer-right-extension {
+  flex: 1;
+  background: var(--footer-panel-bg);
+  border-bottom-right-radius: 40px; /* Outer curve */
+  border-top-right-radius: 40px; /* Outer drop-off */
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+.footer-inverted-corner-right {
+  position: absolute;
+  top: -40px;
+  left: 0; /* Touches the main block's right edge */
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .footer-right-extension {
+    display: none;
+  }
+}
+
+/* --- Premium Back to Top Button --- */
+.footer-back-top-pill {
+  position: absolute;
+  top: 2rem;
+  right: 4rem;
+  white-space: nowrap;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--footer-pill-bg);
+  border: 1px solid var(--footer-pill-border);
+  color: var(--footer-text-main);
+  padding: 0.85rem 1.5rem;
+  border-radius: 99px;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+
+@media (max-width: 1024px) {
+  .footer-back-top-pill {
+    display: none;
+  }
+}
+
+.footer-back-top-pill:hover {
+  background: var(--footer-pill-hover-bg);
+  color: var(--footer-pill-hover-text);
+  border-color: var(--footer-pill-hover-bg);
+  transform: translateY(-2px);
+}
+
+/* --- Top Row --- */
+.footer-main-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  gap: 2rem;
+  position: relative; /* Anchor for the absolute grid */
+}
+
+@media (max-width: 1024px) {
+  .footer-main-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.footer-brand-callout {
+  flex: 0 1 auto;
+  max-width: 100%;
+  min-width: 0;
+  padding-right: 18rem; /* Ensure it never overlaps the absolute grid */
+}
+
+@media (max-width: 1024px) {
+  .footer-brand-callout {
+    padding-right: 0;
+  }
+}
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  display: inline-block;
+  margin-bottom: 1.75rem;
+}
+
+.brand-dot {
+  color: var(--accent);
+}
+
+.footer-giant-question {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 3.6vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0 0 1.75rem 0;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 1024px) {
+  .footer-giant-question {
+    margin: 0 0 1.5rem 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-logo {
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-giant-question {
+    font-size: clamp(1.45rem, 5.6vw, 1.95rem);
+    margin: 0 0 1.25rem 0;
+  }
+}
+
+.footer-action-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .footer-action-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .footer-start-btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.78rem;
+  }
+}
+
+.footer-start-btn {
+  background: var(--footer-text-main);
+  color: var(--footer-panel-bg);
+  padding: 0.8rem 1.45rem;
+  border-radius: 99px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.82rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.footer-start-btn .arrow-icon {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footer-start-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.footer-start-btn:hover .arrow-icon {
+  transform: translate(3px, -3px);
+}
+
+.footer-tiny-desc {
+  font-family: var(--font-display, sans-serif);
+  font-size: 0.76rem;
+  color: var(--footer-text-muted, #888);
+  line-height: 1.35;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .footer-tiny-desc {
+    display: none; /* Remove text clutter under CTA on mobile */
+  }
+}
+
+.footer-tiny-desc strong {
+  color: var(--footer-text-main, #fff);
+  font-weight: 700;
+  font-size: 0.88rem;
+  display: block;
+  letter-spacing: -0.01em;
+}
+
+/* Continuous Premium Shine Animation */
+.footer-start-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: skewX(-25deg);
+  animation: button-shine 4s infinite;
+}
+
+[data-theme="light"] .footer-start-btn::after {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.15) 50%, rgba(0, 0, 0, 0) 100%);
+}
+
+@keyframes button-shine {
+  0% { left: -150%; }
+  20% { left: 150%; }
+  100% { left: 150%; }
+}
+
+/* --- Footer Links Grid --- */
+.footer-links-grid {
+  display: flex;
+  gap: 2.75rem;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+}
+
+@media (max-width: 1024px) {
+  .footer-links-grid {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-links-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: clamp(1rem, 4vw, 1.75rem);
+    width: 100%;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--footer-border);
+  }
+
+  .footer-link-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .footer-link-col h4 {
+    font-family: var(--font-display, sans-serif);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--footer-text-muted);
+    margin: 0;
+  }
+
+  .footer-link-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .footer-link-col ul li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font, 'Plus Jakarta Sans', sans-serif);
+  }
+
+  .footer-link-col ul li a,
+  .footer-link-col ul li span {
+    color: var(--footer-text-main);
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer-link-col ul li a:hover {
+    color: var(--accent);
+  }
+
+  .contact-col ul li svg {
+    color: var(--footer-text-muted);
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.footer-link-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.footer-link-col h4 {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--footer-text-main);
+  margin: 0;
+}
+
+.footer-link-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.footer-link-col ul li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--font-mono, monospace);
+}
+
+.footer-link-col ul li a,
+.footer-link-col ul li span {
+  color: var(--footer-text-muted);
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link-col ul li a:hover {
+  color: var(--footer-text-main);
+}
+
+.contact-col ul li svg {
+  color: var(--footer-text-muted);
+}
+
+.badge-new {
+  background: var(--footer-text-main);
+  color: var(--footer-panel-bg);
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* --- Typewriter Animation --- */
+.typewriter-cursor {
+  display: inline-block;
+  width: 4px;
+  height: 1em;
+  background-color: currentColor;
+  vertical-align: text-bottom;
+  margin-left: 8px;
+  animation: blink-cursor 1s ease-in-out infinite;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+
+
+/* --- Giant Text Marquee (Straight & Infinite) --- */
+.footer-marquee-wrapper {
+  margin: 1.75rem -4.5rem 2rem -3.5rem;
+  width: calc(100% + 8rem);
+  padding: 1rem 0;
+  border-top: 1px solid var(--footer-border);
+  border-bottom: 1px solid var(--footer-border);
+  transform: none;
+  overflow: hidden;
+  display: flex;
+}
+
+.footer-marquee-content {
+  display: flex;
+  white-space: nowrap;
+  animation: scroll-marquee 28s linear infinite;
+}
+
+.footer-marquee-content:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 1024px) {
+  .footer-marquee-wrapper {
+    margin: 1.5rem -2.5rem 1.5rem -2.5rem;
+    width: calc(100% + 5rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-marquee-wrapper {
+    margin: 1.25rem -1.15rem 1.25rem -1.15rem;
+    width: calc(100% + 2.3rem);
+    padding: 0.65rem 0;
+    transform: none;
+  }
+}
+
+.footer-giant-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.2vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1;
+  margin: 0;
+  padding: 0 1rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--footer-text-main);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .footer-giant-text {
+    font-size: clamp(1.25rem, 4.8vw, 1.65rem);
+    gap: 1rem;
+  }
+}
+
+.marquee-star {
+  color: var(--accent);
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+}
+
+@media (max-width: 768px) {
+  .marquee-star {
+    font-size: 0.85rem;
+  }
+}
+
+/* --- Bottom Info Row --- */
+.footer-main-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--footer-text-muted);
+}
+
+.footer-bottom-left, .footer-bottom-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* Removed absolute positioning for .footer-bottom-right on desktop so it naturally aligns in the flex row */
+
+@media (max-width: 768px) {
+  .footer-main-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    font-size: 0.64rem;
+    padding-right: 7rem; /* Prevents overlap with scroll to top cutout */
+  }
+  .footer-bottom-logo {
+    display: none; /* Hide redundant logo on mobile since main logo is already at the top */
+  }
+  .footer-bottom-left, .footer-bottom-right {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
+
+/* --- Bottom Right Scroll Cutout --- */
+.footer-bottom-scroll-cutout {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: var(--bg);
+  padding: 0.9rem 1.25rem 0.9rem 2rem;
+  /* NO border-radius on the inner corner, we use a mask! */
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 40px; /* Match the main block's outer curve */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text);
+  font-family: var(--font-display, sans-serif);
+  font-weight: 700;
+  font-size: 0.78rem;
+  z-index: 30;
+  transition: color 0.2s ease;
+}
+
+.footer-bottom-scroll-cutout:hover {
+  color: var(--accent);
+}
+
+/* This draws the perfectly smooth cream convex curve OVER the black box's top-left corner */
+.footer-bottom-scroll-cutout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  /* Circle at bottom right creates the inverted concave shape for the black background */
+  background: radial-gradient(circle at bottom right, transparent 40px, var(--footer-panel-bg) 40px);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .footer-bottom-scroll-cutout {
+    right: 0; /* Align with the edge of the screen on mobile */
+    bottom: 0.75rem;
+    padding: 0.65rem 1rem 0.65rem 1.4rem;
+    font-size: 0.7rem;
+    border-bottom-right-radius: 26px; /* Matches the mobile main block curve */
+  }
+
+  .footer-bottom-scroll-cutout::before {
+    width: 26px;
+    height: 26px;
+    /* Must completely override the background to use 26px circle radius */
+    background: radial-gradient(circle at bottom right, transparent 26px, var(--footer-panel-bg) 26px);
+  }
+}
+
+.footer-bottom-logo {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--footer-text-main);
+  letter-spacing: -0.02em;
+}

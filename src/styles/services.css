@@ -1,0 +1,223 @@
+/* ==========================================================================
+   CAPABILITIES / WHAT I BUILD EDITORIAL SECTION
+   ========================================================================== */
+
+.capabilities-editorial-section {
+  position: relative;
+  background: var(--bg-alt);
+  padding: 8rem 4rem;
+  overflow: hidden;
+  z-index: 13;
+  transition: background 0.4s ease;
+}
+
+@media (max-width: 1024px) {
+  .capabilities-editorial-section {
+    padding: 6rem 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .capabilities-editorial-section {
+    padding: 5rem 1.25rem;
+  }
+}
+
+.capabilities-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 3rem;
+  margin-bottom: 5rem;
+}
+
+@media (max-width: 900px) {
+  .capabilities-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+  }
+}
+
+.capabilities-header-desc {
+  max-width: 480px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.capabilities-editorial-list {
+  max-width: 1360px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+}
+
+.capability-row {
+  border-bottom: 1px solid var(--border);
+  padding: 2.25rem 0;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.capability-row:hover,
+.capability-row.expanded {
+  border-bottom-color: var(--border-strong);
+}
+
+.cap-row-top {
+  display: grid;
+  grid-template-columns: 80px 1fr 60px;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .cap-row-top {
+    grid-template-columns: 40px 1fr 30px;
+    gap: 1rem;
+  }
+}
+
+.cap-num {
+  font-family: var(--font-mono, monospace);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+
+.cap-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cap-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.2vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin: 0;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.capability-row:hover .cap-name,
+.capability-row.expanded .cap-name {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+.cap-summary {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 800px;
+}
+
+.cap-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.cap-plus {
+  font-family: var(--font-mono, monospace);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.capability-row:hover .cap-plus,
+.capability-row.expanded .cap-plus {
+  color: var(--accent);
+}
+
+/* Detail Drawer */
+.cap-detail-drawer {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.45s var(--transition), opacity 0.4s ease, margin-top 0.3s ease;
+}
+
+.capability-row.expanded .cap-detail-drawer {
+  max-height: 400px;
+  opacity: 1;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.cap-detail-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 0.8fr;
+  gap: 2.5rem;
+  padding-left: 80px;
+}
+
+@media (max-width: 950px) {
+  .cap-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-left: 0;
+  }
+}
+
+.cap-detail-label {
+  display: block;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.cap-deliverables-text {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.cap-tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cap-tech-pill {
+  padding: 0.3rem 0.7rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.cap-proof-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.cap-proof-link:hover {
+  color: var(--accent);
+  transform: translateX(3px);
+}

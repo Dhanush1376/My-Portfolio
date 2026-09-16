@@ -1,0 +1,239 @@
+/* ==========================================================================
+   HYBRID EDITORIAL CUSTOM CURSOR & SECTION DIVIDERS
+   ========================================================================== */
+
+/* ---------- Custom Cursor Dot ---------- */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  background: var(--text, #FFFFFF);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 100001;
+  transition: opacity 0.25s ease, width 0.2s cubic-bezier(0.16, 1, 0.3, 1), height 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease;
+  will-change: opacity, width, height;
+}
+
+[data-theme="light"] .cursor-dot {
+  background: #0E0F12;
+}
+
+/* ---------- Custom Cursor Outline / Badge ---------- */
+.cursor-outline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--cursor-outline, rgba(255, 255, 255, 0.4));
+  background: transparent;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  transition:
+    width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    border-width 0.25s ease,
+    box-shadow 0.35s ease,
+    opacity 0.25s ease;
+  will-change: width, height;
+}
+
+/* Arrow inside cursor badge */
+.cursor-arrow-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111111;
+  opacity: 0;
+  transform: scale(0.3) rotate(-25deg);
+  transition:
+    opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="light"] .cursor-arrow-icon {
+  color: #FFFFFF;
+}
+
+/* State 1: Hover over standard clickable elements (links, buttons, pills) */
+.cursor-outline.cursor-hover {
+  width: 50px;
+  height: 50px;
+  border-color: var(--accent, #FF5520);
+  background: rgba(255, 85, 32, 0.08);
+  border-width: 1.5px;
+}
+
+.cursor-dot.cursor-hover {
+  width: 10px;
+  height: 10px;
+  background: var(--accent, #FF5520);
+}
+
+/* State 2: Project Card Floating Badge (Exact match to WhyCreatives screenshot) */
+.cursor-outline.cursor-project {
+  width: 58px;
+  height: 58px;
+  background: #FFFFFF;
+  border: none;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.32);
+}
+
+[data-theme="light"] .cursor-outline.cursor-project {
+  background: #0E0F12;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.cursor-dot.cursor-project {
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+}
+
+.cursor-outline.cursor-project .cursor-arrow-icon {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+/* State 3: Active Click Micro-Squash */
+.cursor-outline.cursor-clicking {
+  width: 32px;
+  height: 32px;
+}
+
+.cursor-dot.cursor-clicking {
+  width: 6px;
+  height: 6px;
+}
+
+/* State 4: Hidden when mouse leaves viewport */
+.cursor-hidden {
+  opacity: 0 !important;
+}
+
+/* Touch devices: disable custom cursor */
+@media (pointer: coarse) {
+  .cursor-dot,
+  .cursor-outline {
+    display: none !important;
+  }
+}
+
+/* Desktop pointer devices: hide default system cursor so custom cursor takes over seamlessly */
+@media (pointer: fine) {
+  .contact-page-wrapper,
+  .portfolio-app {
+    cursor: none;
+  }
+
+  .contact-page-wrapper a,
+  .contact-page-wrapper button,
+  .contact-page-wrapper [role="button"],
+  .contact-page-wrapper input,
+  .contact-page-wrapper textarea,
+  .contact-page-wrapper .service-pill-chip,
+  .contact-page-wrapper .step-nav-tab,
+  .contact-page-wrapper .hero-dock-btn,
+  .portfolio-app a,
+  .portfolio-app button,
+  .portfolio-app [role="button"],
+  .portfolio-app input,
+  .portfolio-app textarea {
+    cursor: none;
+  }
+}
+
+/* ---------- Section Dividers ---------- */
+.section-divider-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.section-divider {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: -2%;
+  width: 150px;
+  height: 8px;
+  background: white;
+  border-radius: 100px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    0 0 20px rgba(255, 255, 255, 0.05);
+  opacity: 0.8;
+}
+
+[data-theme="light"] .section-divider {
+  background: black !important;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  opacity: 1;
+}
+
+[data-theme="light"] .section:hover .section-divider {
+  background: rgba(0, 0, 0, 0.15);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* ---------- Preloader ---------- */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.preloader-inner {
+  text-align: center;
+}
+
+.preloader-brand {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  text-transform: lowercase;
+  opacity: 0;
+}
+
+.preloader-brand .reg {
+  font-size: 0.4em;
+  vertical-align: super;
+  font-weight: 400;
+  opacity: 0.5;
+}
+
+.preloader-line {
+  width: 0;
+  height: 1px;
+  background: var(--white);
+  margin: 1.5rem auto;
+}
+
+.preloader-sub {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+  opacity: 0;
+}

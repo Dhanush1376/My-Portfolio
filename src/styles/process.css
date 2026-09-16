@@ -1,0 +1,109 @@
+/* ---------- Process Section (How I Build) ---------- */
+.process-section {
+  background: var(--bg-alt);
+}
+
+.process-roadmap {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.process-step {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 2rem;
+}
+
+.step-num-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-num {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: var(--white);
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-connector {
+  width: 2px;
+  flex: 1;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+  margin: 0.75rem 0;
+}
+
+.last-connector {
+  display: none;
+}
+
+.step-card {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--surface-border);
+  border-radius: 18px;
+  padding: 2.25rem;
+  transition: all 0.4s var(--transition);
+}
+
+.step-card:hover {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateX(8px);
+}
+
+.step-card.highlight-step {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.step-badge {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.step-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 0.6rem;
+}
+
+.step-desc {
+  font-size: 0.95rem;
+  color: var(--gray-300);
+  line-height: 1.65;
+  margin-bottom: 1.25rem;
+}
+
+.step-deliverable {
+  font-size: 0.8rem;
+  color: var(--gray-400);
+  padding: 0.6rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.deliv-label {
+  font-weight: 700;
+  color: var(--white);
+  margin-right: 0.35rem;
+}

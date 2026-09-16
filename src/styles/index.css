@@ -1,0 +1,33 @@
+/* ==========================================================================
+   DHANUSH ATMAKURI — PORTFOLIO DESIGN SYSTEM (MODULAR STYLES)
+   ========================================================================== */
+
+/* 1. Core Tokens, Variables, Reset & Base */
+@import './variables.css';
+
+/* 2. Common Layout Elements, Cursor, Preloader & Section Headers */
+@import './common.css';
+@import './cursor.css';
+
+/* 3. Navigation & Header */
+@import './navbar.css';
+
+/* 4. Main Section Components */
+@import './hero.css';
+@import './statement.css';
+@import './trust-strip.css';
+@import './projects.css';
+@import './services.css';
+@import './about.css';
+@import './journey.css';
+@import './contact.css';
+@import './footer.css';
+
+/* 5. Modals & Drawers */
+@import './modal.css';
+
+/* 6. Responsive Breakpoints & Mobile Overrides */
+@import './responsive.css';
+
+/* 7. Light Theme Component Overrides */
+@import './theme-light.css';
