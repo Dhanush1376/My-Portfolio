@@ -74,6 +74,8 @@
   height: 48px;
   border-radius: 50%;
   background: #000000;
+  border: 3px solid var(--orange, #FF5520);
+  box-sizing: border-box;
   color: #FFFFFF;
   display: flex;
   align-items: center;
@@ -100,24 +102,44 @@
   will-change: width;
 }
 
-@keyframes success-glow {
-  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
-  70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+@keyframes success-glow-orange {
+  0% { box-shadow: 0 0 0 0 rgba(255, 77, 21, 0.65), 0 8px 24px rgba(0,0,0,0.2); }
+  70% { box-shadow: 0 0 0 20px rgba(255, 77, 21, 0), 0 8px 24px rgba(0,0,0,0.2); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 77, 21, 0), 0 8px 24px rgba(0,0,0,0.2); }
 }
 
 .swipe-container.success {
-  background: #10B981;
-  border-color: #10B981;
-  animation: success-glow 1.5s infinite;
+  background: linear-gradient(135deg, #FF5E1E 0%, #FF3D00 100%) !important;
+  border-color: #FF5E1E !important;
+  animation: success-glow-orange 1.6s infinite;
 }
 
+/* Home Page & Default: Pure Vibrant Orange (No Yellow) */
 .swipe-container.success .swipe-fill {
-  background: #10B981 !important;
+  background: linear-gradient(90deg, #FF5520 0%, #FF3D00 100%) !important;
   width: 100% !important;
-  transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.4s ease !important;
+  transition: width 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.4s ease !important;
+}
+
+/* About Page Only: Solar Yellow (#FFA820) to Fiery Orange (#FF3D00) */
+.swipe-container.variant-yellow.success .swipe-fill,
+.about-page-wrapper .swipe-container.success .swipe-fill {
+  background: linear-gradient(90deg, #FFA820 0%, #FF3D00 100%) !important;
+}
+
+.swipe-container.variant-yellow .swipe-knob,
+.about-page-wrapper .swipe-container .swipe-knob {
+  border-color: #FFA820;
 }
 
 .swipe-container.success .swipe-text-success {
-  color: #FFFFFF;
+  color: #FFFFFF !important;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.swipe-container.success .swipe-knob {
+  border-color: #FFFFFF !important;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.6), 0 4px 14px rgba(0, 0, 0, 0.3) !important;
 }

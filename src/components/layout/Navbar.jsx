@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function Navbar({ theme, toggleTheme, transparent = false }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,8 +37,18 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
   const closeMenu = () => setIsMobileMenuOpen(false);
 
   const handleNavClick = (e, targetId) => {
-    e.preventDefault();
     closeMenu();
+    if (targetId.startsWith('/')) {
+      e.preventDefault();
+      navigate(targetId);
+      return;
+    }
+    if (location.pathname !== '/') {
+      e.preventDefault();
+      navigate('/' + targetId);
+      return;
+    }
+    e.preventDefault();
     if (window.navigateToSection) {
       window.navigateToSection(targetId);
     } else {
@@ -47,9 +60,8 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
   const navItems = [
     { label: 'Work', href: '#work', num: '01' },
     { label: 'Capabilities', href: '#capabilities', num: '02' },
-    { label: 'About', href: '#about', num: '03' },
-    { label: 'Journey', href: '#journey', num: '04' },
-    { label: 'Contact', href: '#contact', num: '05' }
+    { label: 'About', href: '/about', num: '03' },
+    { label: 'Contact', href: '/contact', num: '04' }
   ];
 
   return (
@@ -68,7 +80,7 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
               <li key={item.num}>
                 <a
                   href={item.href}
-                  className="nav-link"
+                  className={`nav-link ${location.pathname === item.href ? 'active' : ''}`}
                   onClick={(e) => handleNavClick(e, item.href)}
                 >
                   {item.label}
@@ -105,9 +117,9 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
             </button>
 
             <a
-              href="#contact"
+              href="/contact"
               className="nav-cta-pill"
-              onClick={(e) => handleNavClick(e, '#contact')}
+              onClick={(e) => handleNavClick(e, '/contact')}
             >
               <span>Start a project</span>
               <span className="cta-arrow">↗</span>
@@ -155,7 +167,7 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
               <li key={item.num} className="drawer-nav-item">
                 <a
                   href={item.href}
-                  className="drawer-nav-link"
+                  className={`drawer-nav-link ${location.pathname === item.href ? 'active' : ''}`}
                   onClick={(e) => handleNavClick(e, item.href)}
                 >
                   <span className="drawer-num">{item.num}</span>

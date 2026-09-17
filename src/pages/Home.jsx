@@ -15,8 +15,6 @@ import StatementSection from '../components/sections/StatementSection';
 import TrustStrip from '../components/sections/TrustStrip';
 import Projects from '../components/sections/Projects';
 import Services from '../components/sections/Services';
-import About from '../components/sections/About';
-import Journey from '../components/sections/Journey';
 import Contact from '../components/sections/Contact';
 import CaseStudyModal from '../components/modals/CaseStudyModal';
 
@@ -51,6 +49,7 @@ export default function Home() {
     });
 
     lenis.on('scroll', ScrollTrigger.update);
+    window.lenis = lenis;
 
     const updateLenis = (time) => {
       lenis.raf(time * 1000);
@@ -200,9 +199,20 @@ export default function Home() {
     ScrollTrigger.refresh();
     setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 350);
+      const hash = window.location.hash;
+      if (hash) {
+        if (window.navigateToSection) {
+          window.navigateToSection(hash);
+        } else {
+          const el = document.querySelector(hash);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }, 450);
 
     return () => {
+      window.lenis = null;
+      window.navigateToSection = null;
       gsap.ticker.remove(updateLenis);
       window.removeEventListener('resize', handleResizeOrLoad);
       window.removeEventListener('load', handleResizeOrLoad);
@@ -220,7 +230,7 @@ export default function Home() {
       <Preloader onComplete={() => ScrollTrigger.refresh()} />
 
       {/* Navigation */}
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      <Navbar theme={theme} toggleTheme={toggleTheme} transparent />
 
       {/* Main Content Sections */}
       <main id="main-content">
@@ -229,8 +239,6 @@ export default function Home() {
         <TrustStrip />
         <Projects onOpenCaseStudy={openCaseStudy} />
         <Services />
-        <About />
-        <Journey />
         <Contact />
       </main>
 

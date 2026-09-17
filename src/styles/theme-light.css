@@ -1,40 +1,21 @@
-/* ---------- Light Theme Adjustments for New Components ---------- */
-[data-theme="light"] .trust-strip {
-  background: var(--bg);
-  border-color: rgba(0, 0, 0, 0.08);
+/* ---------- Light Theme Adjustments for Kinetic Marquee ---------- */
+[data-theme="light"] .trust-strip,
+.theme-light .trust-strip {
+  background: #FFFFFF !important;
+  border-top-color: rgba(0, 0, 0, 0.08) !important;
+  border-bottom-color: rgba(0, 0, 0, 0.08) !important;
 }
 
-[data-theme="light"] .trust-num,
-[data-theme="light"] .trust-title {
-  color: var(--black);
+[data-theme="light"] .ticker-phrase-text,
+.theme-light .ticker-phrase-text {
+  color: #0E0F12 !important;
 }
 
-[data-theme="light"] .trust-sub {
-  color: var(--gray-600);
+[data-theme="light"] .trust-ticker-item:hover .ticker-phrase-text,
+.theme-light .trust-ticker-item:hover .ticker-phrase-text {
+  color: var(--accent) !important;
 }
 
-[data-theme="light"] .trust-item:hover {
-  background: rgba(0, 0, 0, 0.045);
-  border-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
-}
-
-[data-theme="light"] .trust-item:hover .trust-num {
-  color: var(--black) !important;
-  text-shadow: none !important;
-}
-
-[data-theme="light"] .trust-item:hover .trust-title {
-  color: var(--black) !important;
-}
-
-[data-theme="light"] .trust-item:hover .trust-sub {
-  color: var(--gray-800) !important;
-}
-
-[data-theme="light"] .trust-divider {
-  background: rgba(0, 0, 0, 0.08);
-}
 
 [data-theme="light"] .services-section {
   border-top-color: rgba(0, 0, 0, 0.08);

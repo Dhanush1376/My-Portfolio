@@ -1,138 +1,223 @@
-/* ---------- Trust Strip (High-Class Kinetic Marquee & Proof Section) ---------- */
+/* ==========================================================================
+   HIGH-IMPACT KINETIC MARQUEE TICKER (Scale & Typography Matching Reference)
+   ========================================================================== */
+
 .trust-strip {
   position: relative;
   width: 100%;
   background: var(--bg);
-  border: 1px solid var(--surface-border);
-  border-radius: 24px;
-  height: 115px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: clamp(3rem, 5vw, 5.5rem) 0;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   overflow: hidden;
   box-sizing: border-box;
-  cursor: grab;
-  touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
   z-index: 11;
+  transition: background-color 0.4s ease, border-color 0.4s ease;
 }
 
-.trust-strip:active,
-.trust-strip.is-dragging {
-  cursor: grabbing !important;
+.trust-ticker-container {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.8vw, 2.25rem);
+  width: 100%;
 }
 
-.trust-marquee-viewport {
+.trust-ticker-viewport {
   width: 100%;
   overflow: hidden;
   position: relative;
-  /* Smooth luxury edge fade */
+  padding: 0.75rem 0;
+  margin: -0.5rem 0;
+  /* Luxurious feathered edge mask */
   mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+  outline: none;
 }
 
-@keyframes trustMarqueeFallback {
+.trust-ticker-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  padding: 0.5rem 0;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* When JS ticker loop is active, disable CSS animation to let scroll velocity drive motion */
+.trust-ticker-track.is-js-animated {
+  animation: none !important;
+}
+
+/* Fallback pure CSS animations if JS is not active */
+.track-left:not(.is-js-animated) {
+  animation: trustTickerScrollLeft 45s linear infinite;
+}
+
+.track-right:not(.is-js-animated) {
+  animation: trustTickerScrollRight 48s linear infinite;
+}
+
+@keyframes trustTickerScrollLeft {
   0% {
     transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translate3d(-33.3333%, 0, 0);
+    transform: translate3d(-33.333333%, 0, 0);
   }
 }
 
-.trust-marquee-track {
-  display: flex;
-  width: max-content;
-  align-items: center;
-  will-change: transform;
-  user-select: none;
-  -webkit-user-select: none;
-  animation: trustMarqueeFallback 42s linear infinite;
-  transform-origin: center center;
+@keyframes trustTickerScrollRight {
+  0% {
+    transform: translate3d(-33.333333%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
-.trust-marquee-track.is-js-animated {
-  animation: none !important;
-}
-
-.trust-marquee-group {
+.trust-ticker-group {
   display: flex;
   align-items: center;
-  gap: 2.75rem;
-  padding-right: 2.75rem;
   flex-shrink: 0;
+  padding: 0.25rem 0;
 }
 
-.trust-item {
-  display: flex;
+.trust-ticker-item {
+  display: inline-flex;
   align-items: center;
-  gap: 1.35rem;
-  padding: 0.75rem 1.35rem;
-  border-radius: 14px;
-  background: transparent;
-  border: 1px solid transparent;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   white-space: nowrap;
   flex-shrink: 0;
-  cursor: grab;
+  padding: 0.25rem 0;
+  cursor: default;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.trust-strip.is-dragging .trust-item {
-  cursor: grabbing !important;
-  pointer-events: none;
-}
-
-.trust-item:hover {
-  background: rgba(255, 255, 255, 0.045);
-  border-color: rgba(255, 255, 255, 0.12);
+.trust-ticker-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-.trust-num {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(2rem, 2.5vw, 2.55rem);
-  font-weight: 900;
+/* Massive Modern Grotesque Typography (Matching Reference 1 & 3) */
+.ticker-phrase-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: clamp(3.6rem, 7.8vw, 7.2rem);
+  font-weight: 400;
+  line-height: 1.25;
+  display: inline-block;
+  padding: 0.35rem 0;
   letter-spacing: -0.03em;
   color: var(--text);
-  line-height: 0.95;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
+  white-space: nowrap;
+  transition: color 0.25s ease, text-shadow 0.25s ease;
 }
 
-.trust-item:hover .trust-num {
-  color: var(--white);
-  text-shadow: 0 0 18px rgba(255, 255, 255, 0.45);
+.trust-ticker-item:hover .ticker-phrase-text {
+  color: var(--accent);
+  text-shadow: 0 0 32px rgba(255, 94, 58, 0.35);
 }
 
-.trust-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.trust-title {
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: 0.02em;
-  line-height: 1.25;
-}
-
-.trust-sub {
-  font-size: 0.76rem;
-  color: var(--text-muted);
-  line-height: 1.25;
-  transition: color 0.3s ease;
-}
-
-.trust-item:hover .trust-sub {
-  color: var(--gray-300);
-}
-
-.trust-divider {
-  width: 1px;
-  height: 52px;
-  background: var(--surface-border);
+/* Four-Point Star Curved Sparkle Separator */
+.ticker-star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(26px, 3.4vw, 44px);
+  height: clamp(26px, 3.4vw, 44px);
+  margin: 0 clamp(2rem, 3.6vw, 3.8rem);
   flex-shrink: 0;
-  opacity: 0.85;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.25s ease, filter 0.25s ease;
+}
+
+/* Accent Orange Star (Row 1) */
+.ticker-star.star-accent {
+  color: var(--accent, #FF5E3A);
+  filter: drop-shadow(0 0 12px rgba(255, 94, 58, 0.5));
+}
+
+/* Electric Sapphire Star (Row 2, matching Reference 3) */
+.ticker-star.star-blue {
+  color: #3B82F6;
+  filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.5));
+}
+
+.trust-ticker-item:hover .ticker-star {
+  transform: rotate(45deg) scale(1.22);
+}
+
+/* ---------- Light Theme Variant ---------- */
+[data-theme="light"] .trust-strip,
+.theme-light .trust-strip {
+  background: #FFFFFF;
+  border-top-color: rgba(0, 0, 0, 0.08);
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .ticker-phrase-text,
+.theme-light .ticker-phrase-text {
+  color: #0E0F12;
+}
+
+[data-theme="light"] .trust-ticker-item:hover .ticker-phrase-text,
+.theme-light .trust-ticker-item:hover .ticker-phrase-text {
+  color: var(--accent);
+  text-shadow: none;
+}
+
+[data-theme="light"] .ticker-star.star-accent,
+.theme-light .ticker-star.star-accent {
+  color: var(--accent, #FF5E3A);
+  filter: drop-shadow(0 0 6px rgba(255, 94, 58, 0.3));
+}
+
+[data-theme="light"] .ticker-star.star-blue,
+.theme-light .ticker-star.star-blue {
+  color: #2563EB;
+  filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.3));
+}
+
+/* ---------- Responsive Breakpoints ---------- */
+@media (max-width: 992px) {
+  .trust-strip {
+    padding: clamp(2.5rem, 4vw, 3.8rem) 0;
+  }
+
+  .ticker-phrase-text {
+    font-size: clamp(2.8rem, 7vw, 4.8rem);
+    letter-spacing: -0.035em;
+  }
+
+  .ticker-star {
+    width: clamp(22px, 3vw, 32px);
+    height: clamp(22px, 3vw, 32px);
+    margin: 0 clamp(1.5rem, 2.5vw, 2.5rem);
+  }
+
+  .trust-ticker-container {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .trust-strip {
+    padding: 2.25rem 0;
+  }
+
+  .ticker-phrase-text {
+    font-size: clamp(2.1rem, 8.5vw, 2.9rem);
+    letter-spacing: -0.03em;
+  }
+
+  .ticker-star {
+    width: 20px;
+    height: 20px;
+    margin: 0 1.25rem;
+  }
+
+  .trust-ticker-container {
+    gap: 1rem;
+  }
 }

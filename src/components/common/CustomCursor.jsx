@@ -4,11 +4,12 @@ import gsap from 'gsap';
 /**
  * CustomCursor Component
  * Seamlessly blends:
- * 1. Precision 7px dot tracking mouse instantly.
+ * 1. Precision 7px dot tracking pointer instantly.
  * 2. Butter-smooth trailing ring across standard site elements.
  * 3. Smooth magnetic expansion on interactive links/buttons.
  * 4. The signature WhyCreatives floating circular badge with diagonal arrow (↗)
- *    when hovering over project cards, with spring rotation & soft drop shadow.
+ *    when hovering/touching project cards, with spring rotation & soft drop shadow.
+ * 5. Full cross-device support (desktop mouse + mobile touch interaction).
  */
 export default function CustomCursor() {
   const dotRef = useRef(null);
@@ -16,9 +17,6 @@ export default function CustomCursor() {
   const arrowRef = useRef(null);
 
   useEffect(() => {
-    // Disable on touch devices
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-
     const dot = dotRef.current;
     const outline = outlineRef.current;
     const arrow = arrowRef.current;
@@ -36,13 +34,9 @@ export default function CustomCursor() {
     let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     let outlinePos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     let isVisible = true;
+    let touchFadeTimer = null;
 
-    const onMouseMove = (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-      setDotX(mouse.x);
-      setDotY(mouse.y);
-
+    const showCursor = () => {
       if (!isVisible) {
         isVisible = true;
         dot.classList.remove('cursor-hidden');
@@ -50,48 +44,7 @@ export default function CustomCursor() {
       }
     };
 
-    const onMouseLeave = () => {
-      isVisible = false;
-      dot.classList.add('cursor-hidden');
-      outline.classList.add('cursor-hidden');
-    };
-
-    const onMouseEnter = () => {
-      isVisible = true;
-      dot.classList.remove('cursor-hidden');
-      outline.classList.remove('cursor-hidden');
-    };
-
-    const onMouseDown = () => {
-      dot.classList.add('cursor-clicking');
-      outline.classList.add('cursor-clicking');
-    };
-
-    const onMouseUp = () => {
-      dot.classList.remove('cursor-clicking');
-      outline.classList.remove('cursor-clicking');
-    };
-
-    window.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseleave', onMouseLeave);
-    document.addEventListener('mouseenter', onMouseEnter);
-    window.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mouseup', onMouseUp);
-
-    // Smooth physics lerp ticker for outer circle badge
-    const updateOutline = () => {
-      const dt = 1.0 - Math.pow(1.0 - 0.22, gsap.ticker.deltaRatio());
-      outlinePos.x += (mouse.x - outlinePos.x) * dt;
-      outlinePos.y += (mouse.y - outlinePos.y) * dt;
-      setOutlineX(outlinePos.x);
-      setOutlineY(outlinePos.y);
-    };
-    
-    gsap.ticker.add(updateOutline);
-
-    // Intelligent element hover state detection
-    const handleMouseOver = (e) => {
-      const target = e.target;
+    const checkHoverTarget = (target) => {
       if (!target) return;
 
       // 1. Project Card detection (triggers the solid circular arrow badge)
@@ -112,7 +65,7 @@ export default function CustomCursor() {
 
       // 2. Standard Clickable Elements (triggers sleek ring expansion)
       const isClickable = target.closest(
-        'a, button, [role="button"], input, select, textarea, .nav-item, .studio-pill-btn, .why-case-btn, .why-link-btn, .trust-item, .accordion-item-head, .creds-toggle-btn'
+        'a, button, [role="button"], input, select, textarea, .nav-item, .studio-pill-btn, .why-case-btn, .why-link-btn, .trust-item, .accordion-item-head, .creds-toggle-btn, .service-pill-chip, .step-nav-tab, .hero-dock-btn'
       );
 
       if (isClickable) {
@@ -124,15 +77,132 @@ export default function CustomCursor() {
       }
     };
 
+    // Desktop Mouse Handlers
+    const onMouseMove = (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      setDotX(mouse.x);
+      setDotY(mouse.y);
+      showCursor();
+    };
+
+    const onMouseLeave = () => {
+      isVisible = false;
+      dot.classList.add('cursor-hidden');
+      outline.classList.add('cursor-hidden');
+    };
+
+    const onMouseEnter = () => {
+      showCursor();
+    };
+
+    const onMouseDown = () => {
+      dot.classList.add('cursor-clicking');
+      outline.classList.add('cursor-clicking');
+    };
+
+    const onMouseUp = () => {
+      dot.classList.remove('cursor-clicking');
+      outline.classList.remove('cursor-clicking');
+    };
+
+    const handleMouseOver = (e) => {
+      checkHoverTarget(e.target);
+    };
+
+    // Mobile Touch Handlers
+    const onTouchStart = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      if (touchFadeTimer) clearTimeout(touchFadeTimer);
+
+      const touch = e.touches[0];
+      mouse.x = touch.clientX;
+      mouse.y = touch.clientY;
+      setDotX(mouse.x);
+      setDotY(mouse.y);
+
+      // Snap outline position near touch immediately
+      outlinePos.x = mouse.x;
+      outlinePos.y = mouse.y;
+      setOutlineX(mouse.x);
+      setOutlineY(mouse.y);
+
+      showCursor();
+      dot.classList.add('cursor-clicking');
+      outline.classList.add('cursor-clicking');
+
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (target) checkHoverTarget(target);
+    };
+
+    const onTouchMove = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      if (touchFadeTimer) clearTimeout(touchFadeTimer);
+
+      const touch = e.touches[0];
+      mouse.x = touch.clientX;
+      mouse.y = touch.clientY;
+      setDotX(mouse.x);
+      setDotY(mouse.y);
+      showCursor();
+
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (target) checkHoverTarget(target);
+    };
+
+    const onTouchEnd = () => {
+      dot.classList.remove('cursor-clicking');
+      outline.classList.remove('cursor-clicking');
+      dot.classList.remove('cursor-hover');
+      outline.classList.remove('cursor-hover');
+      dot.classList.remove('cursor-project');
+      outline.classList.remove('cursor-project');
+
+      // Keep cursor briefly visible then smoothly fade
+      touchFadeTimer = setTimeout(() => {
+        isVisible = false;
+        dot.classList.add('cursor-hidden');
+        outline.classList.add('cursor-hidden');
+      }, 1200);
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseleave', onMouseLeave);
+    document.addEventListener('mouseenter', onMouseEnter);
+    window.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mouseup', onMouseUp);
     document.addEventListener('mouseover', handleMouseOver);
 
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
+    window.addEventListener('touchcancel', onTouchEnd, { passive: true });
+
+    // Smooth physics lerp ticker for outer circle badge
+    const updateOutline = () => {
+      const dt = 1.0 - Math.pow(1.0 - 0.22, gsap.ticker.deltaRatio());
+      outlinePos.x += (mouse.x - outlinePos.x) * dt;
+      outlinePos.y += (mouse.y - outlinePos.y) * dt;
+      setOutlineX(outlinePos.x);
+      setOutlineY(outlinePos.y);
+    };
+
+    gsap.ticker.add(updateOutline);
+
     return () => {
+      if (touchFadeTimer) clearTimeout(touchFadeTimer);
       window.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseleave', onMouseLeave);
       document.removeEventListener('mouseenter', onMouseEnter);
       window.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mouseup', onMouseUp);
       document.removeEventListener('mouseover', handleMouseOver);
+
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchcancel', onTouchEnd);
+
       gsap.ticker.remove(updateOutline);
     };
   }, []);

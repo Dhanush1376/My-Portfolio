@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
 import SwipeToConnect from '../ui/SwipeToConnect';
 
-export default function Contact() {
+export default function Contact({ variant = 'orange' }) {
   const buttonRef = useRef(null);
   const navigate = useNavigate();
   const { theme, isDark } = useTheme();
@@ -64,8 +64,8 @@ export default function Contact() {
         </div>
 
         <h2 className="contact-huge-headline">
-          TELL ME WHAT<br />
-          YOU'RE BUILDING<span className="title-accent">.</span>
+          WHAT ARE YOU<br />
+          WAITING FOR<span className="title-accent">?</span>
         </h2>
       </div>
 
@@ -86,7 +86,7 @@ export default function Contact() {
           ref={buttonRef}
           style={{ zIndex: 100 }} 
         >
-          <SwipeToConnect onConnect={handleOpenContact} />
+          <SwipeToConnect onConnect={handleOpenContact} variant={variant} />
         </div>
       </div>
     </section>

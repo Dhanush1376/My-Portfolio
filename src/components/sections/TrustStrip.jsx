@@ -1,204 +1,207 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { TRUST_ITEMS } from '../../data/trustItemsData';
+import { TICKER_ROW_1, TICKER_ROW_2 } from '../../data/trustItemsData';
+
+function FourPointStar({ className = "" }) {
+  return (
+    <svg 
+      className={`ticker-star ${className}`} 
+      width="36" 
+      height="36" 
+      viewBox="0 0 24 24" 
+      fill="currentColor" 
+      aria-hidden="true"
+    >
+      <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z" />
+    </svg>
+  );
+}
 
 export default function TrustStrip() {
   const stripRef = useRef(null);
-  const trackRef = useRef(null);
+  const track1Ref = useRef(null);
+  const track2Ref = useRef(null);
   const group1Ref = useRef(null);
+  const group2Ref = useRef(null);
 
   useEffect(() => {
-    const strip = stripRef.current;
-    const track = trackRef.current;
+    const track1 = track1Ref.current;
+    const track2 = track2Ref.current;
     const group1 = group1Ref.current;
-    if (!strip || !track || !group1) return;
+    const group2 = group2Ref.current;
+    const strip = stripRef.current;
 
-    track.classList.add('is-js-animated');
+    if (!track1 || !track2 || !group1 || !group2 || !strip) return;
 
-    let groupWidth = group1.getBoundingClientRect().width;
-    const updateWidth = () => {
+    track1.classList.add('is-js-animated');
+    track2.classList.add('is-js-animated');
+
+    let groupWidth1 = group1.getBoundingClientRect().width;
+    let groupWidth2 = group2.getBoundingClientRect().width;
+
+    const updateWidths = () => {
       if (group1) {
-        const w = group1.getBoundingClientRect().width;
-        if (w > 20) groupWidth = w;
+        const w1 = group1.getBoundingClientRect().width;
+        if (w1 > 50) groupWidth1 = w1;
+      }
+      if (group2) {
+        const w2 = group2.getBoundingClientRect().width;
+        if (w2 > 50) groupWidth2 = w2;
       }
     };
 
-    window.addEventListener('resize', updateWidth);
+    window.addEventListener('resize', updateWidths);
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(updateWidth);
+      document.fonts.ready.then(updateWidths);
     }
 
-    let xPos = 0;
-    const baseSpeed = 1.15;
-    let speedMultiplier = 1;
+    // Motion State
+    let xPos1 = 0;
+    let xPos2 = 0;
+    const baseSpeed = 1.35;
+    let scrollVelocityBonus = 0;
     let targetVelocityBonus = 0;
-    let velocityBonus = 0;
     let currentSkew = 0;
     let targetSkew = 0;
     let isHovered = false;
 
-    // Drag & Swipe Interaction State
-    let isDragging = false;
-    let startX = 0;
-    let lastX = 0;
-    let dragVelocity = 0;
-    let lastTime = 0;
-    let hasDragged = false;
-
+    // Hover slowdown
     const onMouseEnter = () => { isHovered = true; };
     const onMouseLeave = () => { isHovered = false; };
     strip.addEventListener('mouseenter', onMouseEnter);
     strip.addEventListener('mouseleave', onMouseLeave);
 
-    const onPointerDown = (e) => {
-      if (e.button !== undefined && e.button !== 0) return;
-      isDragging = true;
-      hasDragged = false;
-      startX = e.clientX;
-      lastX = e.clientX;
-      lastTime = performance.now();
-      dragVelocity = 0;
-      strip.classList.add('is-dragging');
-      try {
-        strip.setPointerCapture(e.pointerId);
-      } catch (err) {}
-    };
+    // Dynamic Scroll Speed Tracker
+    let lastScrollY = window.scrollY;
+    let lastScrollTime = performance.now();
 
-    const onPointerMove = (e) => {
-      if (!isDragging) return;
-      const currentX = e.clientX;
-      const dx = currentX - lastX;
-      const dist = Math.abs(currentX - startX);
-
-      if (dist > 5) {
-        hasDragged = true;
-      }
-
+    const onScroll = () => {
       const now = performance.now();
-      const dt = Math.max(now - lastTime, 8);
-      const instantVel = (dx / dt) * 16.67;
-      dragVelocity = dragVelocity * 0.4 + instantVel * 0.6;
-      lastTime = now;
-      lastX = currentX;
+      const currentScrollY = window.scrollY;
+      const dy = currentScrollY - lastScrollY;
+      const dt = Math.max(now - lastScrollTime, 8);
+      
+      // Calculate velocity (pixels per frame at 60fps)
+      const instantVelocity = (dy / dt) * 16.67;
+      
+      // Dynamic responsiveness: scrolling speeds up or reverses the ticker based on direction & speed
+      targetVelocityBonus = gsap.utils.clamp(-15, 20, instantVelocity * 0.45);
+      targetSkew = gsap.utils.clamp(-4.5, 4.5, instantVelocity * -0.08);
 
-      xPos += dx;
-      targetSkew = gsap.utils.clamp(-6.5, 6.5, -dx * 0.35);
-
-      if (groupWidth > 10) {
-        while (xPos <= -groupWidth) xPos += groupWidth;
-        while (xPos > 0) xPos -= groupWidth;
-      }
-
-      track.style.transform = `translate3d(${xPos.toFixed(2)}px, 0, 0) skewX(${targetSkew.toFixed(2)}deg)`;
+      lastScrollY = currentScrollY;
+      lastScrollTime = now;
     };
 
-    const onPointerUp = (e) => {
-      if (!isDragging) return;
-      isDragging = false;
-      strip.classList.remove('is-dragging');
-      try {
-        strip.releasePointerCapture(e.pointerId);
-      } catch (err) {}
+    window.addEventListener('scroll', onScroll, { passive: true });
 
-      if (Math.abs(dragVelocity) > 0.4) {
-        targetVelocityBonus = -dragVelocity * 1.35;
-      }
-    };
-
-    strip.addEventListener('pointerdown', onPointerDown);
-    strip.addEventListener('pointermove', onPointerMove);
-    strip.addEventListener('pointerup', onPointerUp);
-    strip.addEventListener('pointercancel', onPointerUp);
-
-    const onClick = (e) => {
-      if (hasDragged) {
-        e.preventDefault();
-        e.stopPropagation();
-        hasDragged = false;
-      }
-    };
-    strip.addEventListener('click', onClick, true);
-
-    const onWheel = (e) => {
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-        targetVelocityBonus += e.deltaX * 0.15;
-        targetSkew = gsap.utils.clamp(-6, 6, e.deltaX * -0.1);
-      }
-    };
-    strip.addEventListener('wheel', onWheel, { passive: true });
-
-    // GSAP Ticker for 60/120/144fps smooth animation
+    // GSAP 60/120fps Render Loop
     const ticker = gsap.ticker.add((time, deltaTime) => {
-      if (isDragging) return;
-
       const dt = Math.min(deltaTime / 16.667, 2.5);
-      const targetMult = isHovered ? 0.15 : 1.0;
-      speedMultiplier += (targetMult - speedMultiplier) * (0.09 * dt);
+      
+      // Speed multiplier when hovered
+      const hoverMult = isHovered ? 0.35 : 1.0;
 
-      velocityBonus += (targetVelocityBonus - velocityBonus) * (0.12 * dt);
-      targetVelocityBonus *= Math.pow(0.92, dt);
+      // Smooth decay of scroll acceleration (spring back to base speed)
+      scrollVelocityBonus += (targetVelocityBonus - scrollVelocityBonus) * (0.12 * dt);
+      targetVelocityBonus *= Math.pow(0.91, dt);
 
+      // Smooth decay of dynamic tilt/skew
       currentSkew += (targetSkew - currentSkew) * (0.14 * dt);
       targetSkew *= Math.pow(0.88, dt);
 
-      const moveStep = ((baseSpeed * speedMultiplier) + velocityBonus) * dt;
-      xPos -= moveStep;
+      // Total movement step
+      const step = ((baseSpeed * hoverMult) + scrollVelocityBonus) * dt;
 
-      if (groupWidth > 10) {
-        while (xPos <= -groupWidth) xPos += groupWidth;
-        while (xPos > 0) xPos -= groupWidth;
+      // Track 1 moves Left
+      xPos1 -= step;
+      if (groupWidth1 > 20) {
+        while (xPos1 <= -groupWidth1) xPos1 += groupWidth1;
+        while (xPos1 > 0) xPos1 -= groupWidth1;
       }
 
-      track.style.transform = `translate3d(${xPos.toFixed(2)}px, 0, 0) skewX(${currentSkew.toFixed(2)}deg)`;
+      // Track 2 moves Right (counter-motion)
+      xPos2 += step;
+      if (groupWidth2 > 20) {
+        while (xPos2 >= 0) xPos2 -= groupWidth2;
+        while (xPos2 < -groupWidth2) xPos2 += groupWidth2;
+      }
+
+      track1.style.transform = `translate3d(${xPos1.toFixed(2)}px, 0, 0) skewX(${currentSkew.toFixed(2)}deg)`;
+      track2.style.transform = `translate3d(${xPos2.toFixed(2)}px, 0, 0) skewX(${(-currentSkew).toFixed(2)}deg)`;
     });
 
-    setTimeout(updateWidth, 350);
+    setTimeout(updateWidths, 350);
 
     return () => {
-      window.removeEventListener('resize', updateWidth);
+      window.removeEventListener('resize', updateWidths);
+      window.removeEventListener('scroll', onScroll);
       strip.removeEventListener('mouseenter', onMouseEnter);
       strip.removeEventListener('mouseleave', onMouseLeave);
-      strip.removeEventListener('pointerdown', onPointerDown);
-      strip.removeEventListener('pointermove', onPointerMove);
-      strip.removeEventListener('pointerup', onPointerUp);
-      strip.removeEventListener('pointercancel', onPointerUp);
-      strip.removeEventListener('click', onClick, true);
-      strip.removeEventListener('wheel', onWheel);
       gsap.ticker.remove(ticker);
     };
   }, []);
 
-  const renderGroup = (ref, isAriaHidden = false) => (
-    <div className="trust-marquee-group" ref={ref} aria-hidden={isAriaHidden || undefined}>
-      {TRUST_ITEMS.map((item, idx) => (
-        <React.Fragment key={idx}>
-          <div className="trust-item">
-            <span className="trust-num">
-              {item.num.split('\n').map((line, i) => (
-                <React.Fragment key={i}>
-                  {line}
-                  {i < item.num.split('\n').length - 1 && <br />}
-                </React.Fragment>
+  return (
+    <section className="trust-strip" id="trustStrip" ref={stripRef} aria-label="Core Competencies & Engineering Rigor">
+      <div className="trust-ticker-container">
+        {/* Track 1: Moving Left with Accent Stars */}
+        <div className="trust-ticker-viewport">
+          <div className="trust-ticker-track" ref={track1Ref}>
+            <div className="trust-ticker-group" ref={group1Ref}>
+              {TICKER_ROW_1.map((text, idx) => (
+                <span key={`r1-a-${idx}`} className="trust-ticker-item">
+                  <span className="ticker-phrase-text">{text}</span>
+                  <FourPointStar className="star-accent" />
+                </span>
               ))}
-            </span>
-            <div className="trust-info">
-              <span className="trust-title">{item.title}</span>
-              <span className="trust-sub">{item.sub}</span>
+            </div>
+            <div className="trust-ticker-group" aria-hidden="true">
+              {TICKER_ROW_1.map((text, idx) => (
+                <span key={`r1-b-${idx}`} className="trust-ticker-item">
+                  <span className="ticker-phrase-text">{text}</span>
+                  <FourPointStar className="star-accent" />
+                </span>
+              ))}
+            </div>
+            <div className="trust-ticker-group" aria-hidden="true">
+              {TICKER_ROW_1.map((text, idx) => (
+                <span key={`r1-c-${idx}`} className="trust-ticker-item">
+                  <span className="ticker-phrase-text">{text}</span>
+                  <FourPointStar className="star-accent" />
+                </span>
+              ))}
             </div>
           </div>
-          <div className="trust-divider" />
-        </React.Fragment>
-      ))}
-    </div>
-  );
+        </div>
 
-  return (
-    <section className="trust-strip" id="trustStrip" ref={stripRef} aria-label="Key Proof and Capabilities">
-      <div className="trust-marquee-viewport">
-        <div className="trust-marquee-track" id="trustTrack" ref={trackRef}>
-          {renderGroup(group1Ref, false)}
-          {renderGroup(null, true)}
-          {renderGroup(null, true)}
+        {/* Track 2: Moving Right with Electric Blue Stars */}
+        <div className="trust-ticker-viewport">
+          <div className="trust-ticker-track" ref={track2Ref}>
+            <div className="trust-ticker-group" ref={group2Ref}>
+              {TICKER_ROW_2.map((text, idx) => (
+                <span key={`r2-a-${idx}`} className="trust-ticker-item">
+                  <span className="ticker-phrase-text">{text}</span>
+                  <FourPointStar className="star-blue" />
+                </span>
+              ))}
+            </div>
+            <div className="trust-ticker-group" aria-hidden="true">
+              {TICKER_ROW_2.map((text, idx) => (
+                <span key={`r2-b-${idx}`} className="trust-ticker-item">
+                  <span className="ticker-phrase-text">{text}</span>
+                  <FourPointStar className="star-blue" />
+                </span>
+              ))}
+            </div>
+            <div className="trust-ticker-group" aria-hidden="true">
+              {TICKER_ROW_2.map((text, idx) => (
+                <span key={`r2-c-${idx}`} className="trust-ticker-item">
+                  <span className="ticker-phrase-text">{text}</span>
+                  <FourPointStar className="star-blue" />
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

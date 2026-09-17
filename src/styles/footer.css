@@ -583,11 +583,13 @@
 /* --- Typewriter Animation --- */
 .typewriter-cursor {
   display: inline-block;
-  width: 4px;
-  height: 1em;
-  background-color: currentColor;
-  vertical-align: text-bottom;
-  margin-left: 8px;
+  width: 3.5px;
+  height: 1.1em;
+  background-color: #FF5E3A !important;
+  color: #FF5E3A !important;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-left: 6px;
   animation: blink-cursor 1s ease-in-out infinite;
 }
 

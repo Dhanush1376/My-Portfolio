@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import NotchedCard from '../common/NotchedCard';
+import KineticStage from '../common/KineticStage';
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -18,6 +20,7 @@ import {
   AlertCircle,
   User,
   Mail,
+  Phone,
   MessageSquare
 } from 'lucide-react';
 
@@ -90,7 +93,7 @@ function TypewriterTitle({ text, stepIndex, currentStep, speed = 30 }) {
   return (
     <h3 className="pane-title" ref={containerRef}>
       <span>{hasAnimatedRef.current ? (displayedText || text) : displayedText}</span>
-      <span className="typewriter-cursor">|</span>
+      <span className="typewriter-cursor" aria-hidden="true" />
     </h3>
   );
 }
@@ -516,7 +519,7 @@ export default function ContactForm() {
                         </label>
                         <div className="field-input-wrap">
                           <div className="input-icon-slot" aria-hidden="true">
-                            <Mail size={18} />
+                            <Phone size={18} />
                           </div>
                           <input
                             type="text"
@@ -525,7 +528,7 @@ export default function ContactForm() {
                             value={formData.contact}
                             onChange={handleChange}
                             className={`studio-card-input ${fieldErrors.contact ? 'has-field-error' : ''} ${formData.contact.trim() ? 'is-filled' : ''}`}
-                            autoComplete="email"
+                            autoComplete="tel"
                           />
                           {formData.contact.trim() && (
                             <div className="input-valid-indicator" aria-hidden="true">
@@ -655,23 +658,123 @@ export default function ContactForm() {
 
         </div>
 
-        {/* Alternative Guide: "Not sure what you need yet?" */}
-        <div className="studio-alt-guide">
-          <div className="alt-guide-divider" />
-          <div className="alt-guide-content">
-            <h3 className="alt-guide-heading">Not sure what you need yet?</h3>
-            <p className="alt-guide-desc">
-              Look through the work or the service breakdown first. Either one is a faster way to work out whether we are the right fit.
-            </p>
-            <div className="alt-guide-actions">
-              <a href="/#work" className="alt-btn-primary" data-cursor="project">
-                <span>See the work</span>
-                <ArrowUpRight size={17} strokeWidth={2.4} />
-              </a>
-              <a href="/#capabilities" className="alt-btn-secondary">
-                <span>View services</span>
-              </a>
+        {/* Alternative Discovery Hub */}
+        <div className="studio-alt-hub">
+          <div className="why-services-notched-grid">
+            {/* Card 1: Selected Works -> Redirects to /#work */}
+            <a
+              href="/#work"
+              className="why-service-card-group"
+              data-cursor="project"
+              role="button"
+              tabIndex={0}
+              aria-label="Selected works - View projects and case studies on home page"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = '/#work';
+              }}
+            >
+              <NotchedCard
+                bezelWidth={7}
+                bezelColor="#111111"
+                className="why-service-notched-wrapper"
+                surfaceClassName="why-service-surface-light"
+                tags={
+                  <div className="why-tags-row">
+                    <span className="why-tag-pill why-tag-pill-dark">Proof of Work</span>
+                    <span className="why-tag-pill why-tag-pill-dark">Live Apps</span>
+                  </div>
+                }
+                meta={
+                  <div className="why-meta-row">
+                    <span className="why-meta-year">2026</span>
+                    <span className="why-meta-sep">•</span>
+                    <span className="why-meta-cat">PROOF OF WORK</span>
+                  </div>
+                }
+                overlay={
+                  <div className="why-card-hover-drawer">
+                    <span>View projects</span>
+                    <ArrowUpRight size={16} strokeWidth={2.5} />
+                  </div>
+                }
+              >
+                <KineticStage
+                  tone="light"
+                  intervalMs={2200}
+                  phrases={[
+                    { words: ['Proof of', 'work'], color: '#6D5AE6' },
+                    { words: ['Real client', 'projects'], color: '#8B5CF6' },
+                    { words: ['Live web', 'apps'], color: '#3B82F6' },
+                    { words: ['Built to', 'deliver'], color: '#14B8A6' }
+                  ]}
+                />
+              </NotchedCard>
+              <div className="why-service-below-info">
+                <h4 className="why-service-headline">
+                  Check real proof of work &amp; live projects
+                </h4>
+              </div>
+            </a>
+
+            {/* Center: Editorial Heading between cards */}
+            <div className="alt-hub-center">
+              <h3 className="alt-hub-title">Still<br />not<br />sure?</h3>
+              <span className="alt-hub-badge">Proof of Work</span>
+              <p className="alt-hub-desc">Check the real things here — live projects, real clients, real results.</p>
             </div>
+
+            {/* Card 2: Web and Apps -> Redirects to /#capabilities */}
+            <a
+              href="/#capabilities"
+              className="why-service-card-group"
+              data-cursor="project"
+              role="button"
+              tabIndex={0}
+              aria-label="Web and apps - View technical capabilities on home page"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = '/#capabilities';
+              }}
+            >
+              <NotchedCard
+                bezelWidth={7}
+                bezelColor="#282a32"
+                className="why-service-notched-wrapper"
+                surfaceClassName="why-service-surface-dark"
+                tags={
+                  <div className="why-tags-row">
+                    <span className="why-tag-pill why-tag-pill-dark">Web</span>
+                    <span className="why-tag-pill why-tag-pill-dark">Apps</span>
+                    <span className="why-tag-pill why-tag-pill-dark">SEO</span>
+                  </div>
+                }
+                meta={
+                  <div className="why-meta-row">
+                    <span className="why-meta-year">2026</span>
+                    <span className="why-meta-sep">•</span>
+                    <span className="why-meta-cat">WEB, APPS &amp; SEARCH</span>
+                  </div>
+                }
+                overlay={
+                  <div className="why-card-hover-drawer">
+                    <span>View capabilities</span>
+                    <ArrowUpRight size={16} strokeWidth={2.5} />
+                  </div>
+                }
+              >
+                <div className="why-service-stage why-service-stage-dark">
+                  <span className="why-service-hero-text text-cyan">
+                    Web<br />and apps
+                  </span>
+                </div>
+              </NotchedCard>
+              <div className="why-service-below-info">
+                <h4 className="why-service-headline">
+                  Custom web &amp; mobile apps, built to scale and perform
+                </h4>
+              </div>
+            </a>
           </div>
         </div>
 

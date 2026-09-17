@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
 import '../../styles/swipe-btn.css';
 
-export default function SwipeToConnect({ onConnect }) {
+export default function SwipeToConnect({ onConnect, variant: propVariant }) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragX, setDragX] = useState(0);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -11,6 +11,21 @@ export default function SwipeToConnect({ onConnect }) {
   const knobRef = useRef(null);
   const startXRef = useRef(0);
   const currentXRef = useRef(0);
+
+  // Check if yellow theme is active (Only on About page)
+  const [isAboutVariant, setIsAboutVariant] = useState(propVariant === 'yellow');
+
+  useEffect(() => {
+    if (propVariant === 'yellow') {
+      setIsAboutVariant(true);
+    } else if (propVariant === 'orange') {
+      setIsAboutVariant(false);
+    } else if (containerRef.current?.closest('.about-page-wrapper')) {
+      setIsAboutVariant(true);
+    } else {
+      setIsAboutVariant(false);
+    }
+  }, [propVariant]);
   
   const MAX_DRAG = containerRef.current && knobRef.current 
     ? containerRef.current.offsetWidth - knobRef.current.offsetWidth - 16 // 8px padding each side
@@ -83,16 +98,45 @@ export default function SwipeToConnect({ onConnect }) {
     }
   };
 
+  const maxDragWidth = containerRef.current && knobRef.current 
+    ? containerRef.current.offsetWidth - knobRef.current.offsetWidth - 12
+    : 200;
+  const progress = maxDragWidth > 0 ? Math.min(1, Math.max(0, dragX / maxDragWidth)) : 0;
+
+  // Home Page: Pure Vibrant Orange (#FF5520 -> #FF3D00). ZERO YELLOW.
+  // About Page: Solar Yellow (#FFA820 -> #FF3D00).
+  let currentColor;
+  let fillGradient;
+
+  if (isAboutVariant) {
+    // About page: Solar Yellow rgb(255, 168, 32) -> Fiery Orange rgb(255, 61, 0)
+    const g = Math.round(168 - progress * 107);
+    const b = Math.round(32 - progress * 32);
+    currentColor = `rgb(255, ${g}, ${b})`;
+    fillGradient = isSuccess 
+      ? 'linear-gradient(90deg, #FFA820 0%, #FF3D00 100%)' 
+      : `linear-gradient(90deg, #FFA820 0%, ${currentColor} 100%)`;
+  } else {
+    // Home page: Pure Orange rgb(255, 85, 32) -> Fiery Orange rgb(255, 61, 0)
+    const g = Math.round(85 - progress * 24); // 85 -> 61
+    const b = Math.round(32 - progress * 32); // 32 -> 0
+    currentColor = `rgb(255, ${g}, ${b})`;
+    fillGradient = isSuccess 
+      ? 'linear-gradient(90deg, #FF5520 0%, #FF3D00 100%)' 
+      : `linear-gradient(90deg, #FF5520 0%, ${currentColor} 100%)`;
+  }
+
   return (
     <div 
-      className={`swipe-container ${isSuccess ? 'success' : ''}`} 
+      className={`swipe-container ${isAboutVariant ? 'variant-yellow' : 'variant-orange'} ${isSuccess ? 'success' : ''}`} 
       ref={containerRef}
     >
       <div 
         className="swipe-fill" 
         style={{ 
           width: `${dragX + 56}px`, // 48px knob + 8px padding
-          transition: isDragging ? 'none' : 'width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+          background: fillGradient,
+          transition: isDragging ? 'none' : 'width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease'
         }}
       />
       
@@ -110,7 +154,11 @@ export default function SwipeToConnect({ onConnect }) {
         onPointerDown={handlePointerDown}
         style={{ 
           transform: `translateX(${dragX}px)`,
-          transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+          borderColor: isSuccess ? '#FFFFFF' : currentColor,
+          boxShadow: isSuccess 
+            ? '0 0 20px rgba(255, 255, 255, 0.7), 0 4px 14px rgba(0, 0, 0, 0.3)' 
+            : `0 0 ${Math.round(progress * 14)}px ${currentColor}, 0 4px 12px rgba(0, 0, 0, 0.25)`,
+          transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.25s ease, box-shadow 0.25s ease',
           cursor: isSuccess ? 'default' : 'grab'
         }}
       >

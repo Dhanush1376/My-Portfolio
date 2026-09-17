@@ -57,6 +57,22 @@
   text-transform: uppercase;
 }
 
+.contact-huge-headline .title-accent {
+  color: var(--accent);
+  display: inline-block;
+  animation: question-blink-slow 2.4s ease-in-out infinite;
+  will-change: opacity;
+}
+
+@keyframes question-blink-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.12;
+  }
+}
+
 .connect-floating-pill {
   font-size: 1.25rem;
   font-weight: 800;

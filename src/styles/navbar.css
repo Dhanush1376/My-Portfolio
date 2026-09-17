@@ -17,7 +17,24 @@
 
 @media (max-width: 768px) {
   .navbar {
-    padding: 1rem 1.25rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .nav-container {
+    padding: 0.5rem 0.85rem;
+  }
+
+  .navbar.scrolled .nav-container {
+    padding: 0.5rem 0.85rem;
+    max-width: 100%;
+  }
+
+  .navbar--transparent {
+    padding: 0.85rem 1.15rem;
+  }
+
+  .navbar--transparent .nav-container {
+    padding: 0.25rem 0.15rem;
   }
 }
 
@@ -44,42 +61,65 @@
   max-width: 900px;
 }
 
-/* Transparent variant: blends into page background (e.g. contact page orange) */
+/* Transparent variant: sits seamlessly at the top of the page */
+.navbar--transparent {
+  padding: 1rem clamp(1.5rem, 3.5vw, 3rem);
+}
+
 .navbar--transparent .nav-container {
   background: transparent;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   border: 1px solid transparent;
   box-shadow: none;
+  max-width: 1400px;
+  padding: 0.5rem 0;
 }
 
-.navbar--transparent .nav-brand,
-.navbar--transparent .nav-link,
-.navbar--transparent .theme-toggle-btn,
-.navbar--transparent .nav-menu-btn,
-.navbar--transparent .cta-button {
-  color: #0d0d0d;
+.navbar--transparent .nav-brand {
+  color: var(--text);
+}
+
+.navbar--transparent .brand-slash,
+.navbar--transparent .brand-dot {
+  color: var(--accent);
+}
+
+.navbar--transparent .nav-link {
+  color: var(--text-secondary);
+}
+
+.navbar--transparent .nav-link:hover,
+.navbar--transparent .nav-link.active {
+  color: var(--text);
 }
 
 .navbar--transparent .theme-toggle-btn,
 .navbar--transparent .nav-menu-btn {
-  background: rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.navbar--transparent .theme-toggle-btn:hover,
+.navbar--transparent .nav-menu-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
 }
 
 .navbar--transparent .menu-icon-bars span {
   background: currentColor;
 }
 
-.navbar--transparent .brand-slash,
-.navbar--transparent .brand-dot {
-  color: #0d0d0d;
+.navbar--transparent .nav-cta-pill {
+  background: var(--pill-bg);
+  color: var(--pill-text);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
 
-.navbar--transparent .cta-button {
-  background: #0d0d0d;
-  color: #fff;
-  border-color: #0d0d0d;
+.navbar--transparent .nav-cta-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Brand */

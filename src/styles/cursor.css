@@ -121,11 +121,11 @@
   opacity: 0 !important;
 }
 
-/* Touch devices: disable custom cursor */
+/* Touch devices: ensure custom cursor stays visible and non-blocking */
 @media (pointer: coarse) {
   .cursor-dot,
   .cursor-outline {
-    display: none !important;
+    pointer-events: none !important;
   }
 }
 

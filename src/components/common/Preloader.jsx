@@ -1,10 +1,26 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 
 export default function Preloader({ onComplete }) {
   const preloaderRef = useRef(null);
+  const [hasSeen] = useState(() => {
+    try {
+      return Boolean(sessionStorage.getItem('portfolio_preloader_seen'));
+    } catch (e) {
+      return false;
+    }
+  });
 
   useEffect(() => {
+    if (hasSeen) {
+      if (onComplete) onComplete();
+      return;
+    }
+
+    try {
+      sessionStorage.setItem('portfolio_preloader_seen', 'true');
+    } catch (e) {}
+
     const preloader = preloaderRef.current;
     if (!preloader) return;
 
@@ -52,7 +68,11 @@ export default function Preloader({ onComplete }) {
       tl.kill();
       clearTimeout(fallbackTimer);
     };
-  }, [onComplete]);
+  }, [hasSeen, onComplete]);
+
+  if (hasSeen) {
+    return null;
+  }
 
   return (
     <div className="preloader" id="preloader" ref={preloaderRef}>

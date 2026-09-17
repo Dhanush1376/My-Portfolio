@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Linkedin, Mail } from 'lucide-react';
+import { Phone, Mail } from 'lucide-react';
 import '../styles/contact-page.css';
 import { useTheme } from '../hooks/useTheme';
 import Navbar from '../components/layout/Navbar';
@@ -300,18 +300,16 @@ export default function ContactPage() {
         {/* Vertical Contact Buttons at Bottom Right */}
         <aside className="hero-social-dock" ref={socialDockRef} aria-label="Direct contact links">
           <a
-            href="https://www.linkedin.com/in/dhanush1376/"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="tel:+919154691315"
             className="hero-dock-btn"
-            aria-label="LinkedIn"
+            aria-label="Call Directly"
           >
-            <Linkedin size={18} />
-            <span className="hero-dock-tooltip">LinkedIn</span>
+            <Phone size={18} />
+            <span className="hero-dock-tooltip">Call</span>
           </a>
 
           <a
-            href="https://wa.me/918210198880?text=Hi%20Dhanush!%20I'd%20like%20to%20discuss%20a%20project."
+            href="https://wa.me/919154691315?text=Hi%20Dhanush!%20I'd%20like%20to%20discuss%20a%20project."
             target="_blank"
             rel="noopener noreferrer"
             className="hero-dock-btn"

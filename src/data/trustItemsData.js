@@ -1,3 +1,21 @@
+export const TICKER_ROW_1 = [
+  "Full-Stack Architecture",
+  "AI & Intelligent Systems",
+  "UI/UX Design Craft",
+  "100% Production Grade",
+  "Turnkey Digital Products",
+  "Deterministic Engineering"
+];
+
+export const TICKER_ROW_2 = [
+  "React · Next.js · Node",
+  "Fluid 60FPS Motion",
+  "Zero Agency Bloat",
+  "3+ Shipped Platforms",
+  "Rapid 24h Delivery",
+  "Resilient Scalable Code"
+];
+
 export const TRUST_ITEMS = [
   {
     num: "3+",
