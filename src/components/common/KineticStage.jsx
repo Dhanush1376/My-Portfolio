@@ -82,12 +82,21 @@ export default function KineticStage({
         <div className="kinetic-preview-image-layer">
           {activeVideo ? (
             <video
-              ref={videoRef}
+              ref={(el) => {
+                videoRef.current = el;
+                if (el) {
+                  el.muted = true;
+                  el.defaultMuted = true;
+                }
+              }}
               src={activeVideo}
               autoPlay
               loop
               muted
               playsInline
+              webkit-playsinline="true"
+              preload="auto"
+              poster={activePreviewImg || "/assets/siriarts_poster.jpg"}
               className="kinetic-preview-video"
             />
           ) : (

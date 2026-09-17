@@ -11,7 +11,7 @@ export const PROJECTS_DATA = {
     title: "Siri Arts & Crafts",
     description: "Production client storefront featuring high-speed event visual galleries and direct 1-click WhatsApp customer bookings.",
     subtitle: "A production client website featuring high-speed event visual galleries and direct 1-click WhatsApp customer bookings.",
-    img: "/assets/siriarts_live.png",
+    img: "/assets/siriarts_poster.jpg",
     video: "/assets/Siri arts demo.mp4",
     liveUrl: "https://siriartsandcrafts.com/",
     stage: {
