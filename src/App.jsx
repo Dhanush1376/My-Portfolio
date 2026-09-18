@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Home from './pages/Home';
 import ContactPage from './pages/ContactPage';
 import AboutPage from './pages/AboutPage';
+import ServicesPage from './pages/ServicesPage';
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -22,6 +23,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/services" element={<ServicesPage />} />
+        <Route path="/what-we-do" element={<ServicesPage />} />
         <Route path="/contact" element={<ContactPage />} />
       </Routes>
     </Router>

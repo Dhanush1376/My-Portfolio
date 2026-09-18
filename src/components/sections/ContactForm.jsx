@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NotchedCard from '../common/NotchedCard';
 import KineticStage from '../common/KineticStage';
 import { 
@@ -18,10 +19,15 @@ import {
   CheckCircle2,
   Check,
   AlertCircle,
+  RotateCcw,
   User,
   Mail,
   Phone,
-  MessageSquare
+  MessageSquare,
+  ShoppingBag,
+  Zap,
+  BarChart3,
+  Layout
 } from 'lucide-react';
 
 function TypewriterTitle({ text, stepIndex, currentStep, speed = 30 }) {
@@ -99,24 +105,166 @@ function TypewriterTitle({ text, stepIndex, currentStep, speed = 30 }) {
 }
 
 const SERVICES = [
-  { id: 'web', label: 'Web Applications', icon: Globe },
-  { id: 'ai', label: 'AI & Systems', icon: Cpu },
-  { id: 'mobile', label: 'Mobile Apps', icon: Smartphone },
-  { id: 'design', label: 'UI/UX Design', icon: Palette },
-  { id: 'fullstack', label: 'Full-Stack Engineering', icon: Layers },
-  { id: 'consulting', label: 'Technical Consulting', icon: Lightbulb }
+  { id: 'general', label: 'General Conversation', icon: MessageSquare },
+  { id: 'ai-rag', label: 'AI & RAG', icon: Cpu },
+  { id: 'custom-software', label: 'Custom Software', icon: Layers },
+  { id: 'web-apps', label: 'Websites', icon: Globe },
+  { id: 'mobile-apps', label: 'Mobile Apps', icon: Smartphone },
+  { id: 'ecommerce', label: 'E-Commerce', icon: ShoppingBag },
+  { id: 'automation', label: 'AI Automation', icon: Zap },
+  { id: 'portfolio', label: 'Portfolio', icon: User },
+  { id: 'landing-pages', label: 'Landing Pages', icon: Layout },
+  { id: 'dashboards', label: 'Dashboards', icon: BarChart3 }
 ];
 
+const SERVICES_STAGE_PHRASES = [
+  { words: ['AI &', 'RAG'], color: '#E04420' },
+  { words: ['Web &', 'apps'], color: '#6D5AE6' },
+  { words: ['E-Com', 'stores'], color: '#D97706' },
+  { words: ['Smart', 'automation'], color: '#2563EB' },
+  { words: ['Landing', 'pages'], color: '#DB2777' },
+  { words: ['Live', 'dashboards'], color: '#059669' }
+];
+
+const trackAnalytics = (eventName, data = {}) => {
+  try {
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+      window.gtag('event', eventName, data);
+    } else if (typeof window !== 'undefined' && typeof window.va === 'function') {
+      window.va('event', { name: eventName, data });
+    }
+  } catch {
+    // Graceful no-op if analytics unavailable
+  }
+};
+
+/**
+ * HubDiscoveryCard
+ * Mirrors WhyCreatives' NotchedProjectCard:
+ * - 3D tilt perspective entrance with projectImageReveal
+ * - Responsive tag hover elevation
+ * - Tactile micro-press feedback
+ * - Fluid smooth navigation
+ */
+function HubDiscoveryCard({
+  tags,
+  meta,
+  drawerLabel,
+  phrases,
+  headline,
+  cardIndex = 0,
+  onCardClick,
+  ariaLabel,
+}) {
+  const [inView, setInView] = useState(false);
+  const cardRef = useRef(null);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.12 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={cardRef}
+      className={`why-service-card-group ${inView ? 'in-view' : ''}`}
+      style={{
+        transitionDelay: `${cardIndex * 0.14}s`,
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={ariaLabel}
+      onClick={onCardClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onCardClick();
+        }
+      }}
+    >
+      <div className="why-hub-card-inner">
+        <NotchedCard
+          bezelWidth={7}
+          bezelColor="#111111"
+          className="why-service-notched-wrapper"
+          surfaceClassName="why-service-surface-light"
+          tags={
+            <div className="why-tags-row">
+              {tags.map((tag, idx) => (
+                <span
+                  key={idx}
+                  className="why-tag-pill why-tag-pill-dark"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          }
+          meta={
+            <div className="why-meta-row">
+              <span className="why-meta-year">2026</span>
+              <span className="why-meta-sep">•</span>
+              <span className="why-meta-cat">{meta}</span>
+            </div>
+          }
+          overlay={
+            <div className="why-card-hover-drawer">
+              <span>{drawerLabel}</span>
+              <ArrowUpRight size={16} strokeWidth={2.5} />
+            </div>
+          }
+        >
+          <KineticStage
+            tone="light"
+            intervalMs={2200}
+            seed={cardIndex}
+            phrases={phrases}
+          />
+        </NotchedCard>
+      </div>
+
+      <div className="why-service-below-info">
+        <h4 className="why-service-headline">
+          {headline}
+        </h4>
+      </div>
+    </div>
+  );
+}
+
 export default function ContactForm() {
-  const [selectedServices, setSelectedServices] = useState(['Web Applications']);
+  const navigate = useNavigate();
+  const [selectedServices, setSelectedServices] = useState(['General Conversation']);
   const [step, setStep] = useState(1); // 1: Services, 2: Details, 3: Brief (mobile wizard)
   const [formData, setFormData] = useState({
     name: '',
-    contact: '',
-    message: ''
+    email: '',
+    phone: '',
+    message: '',
+    botcheck: false
   });
-  const [status, setStatus] = useState('idle'); // idle | sending | sent
+  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
   const [fieldErrors, setFieldErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState('');
+  const mountTimeRef = useRef(Date.now());
+  const hasStartedRef = useRef(false);
+
+  useEffect(() => {
+    trackAnalytics('contact_form_viewed');
+  }, []);
 
   const toggleService = (label) => {
     setSelectedServices(prev =>
@@ -126,9 +274,46 @@ export default function ContactForm() {
     );
   };
 
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'name':
+        if (!value || !value.trim()) return 'Please enter your name.';
+        if (value.trim().length < 2) return 'Name must be at least 2 characters.';
+        if (value.trim().length > 100) return 'Name must be under 100 characters.';
+        return null;
+      case 'email':
+        if (!value || !value.trim()) return 'Please enter your email address.';
+        {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(value.trim())) return 'Please enter a valid email address.';
+        }
+        if (value.trim().length > 150) return 'Email must be under 150 characters.';
+        return null;
+      case 'phone':
+        if (value && value.trim()) {
+          if (value.trim().length < 7) return 'Please enter a valid phone number (at least 7 digits).';
+          if (value.trim().length > 30) return 'Phone number must be under 30 characters.';
+        }
+        return null;
+      case 'message':
+        if (!value || !value.trim()) return 'Please describe your project brief or message.';
+        if (value.trim().length < 10) return 'Please share at least 10 characters about your project.';
+        if (value.trim().length > 5000) return 'Message must be under 5000 characters.';
+        return null;
+      default:
+        return null;
+    }
+  };
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+
+    if (!hasStartedRef.current) {
+      hasStartedRef.current = true;
+      trackAnalytics('contact_form_started');
+    }
+
     if (fieldErrors[name]) {
       setFieldErrors(prev => {
         const next = { ...prev };
@@ -136,23 +321,37 @@ export default function ContactForm() {
         return next;
       });
     }
+
+    if (status === 'error') {
+      setStatus('idle');
+      setErrorMessage('');
+    }
   };
 
   const handleNextStep = (targetStep) => {
     if (targetStep === 2) {
       if (selectedServices.length === 0) {
+        setFieldErrors({ services: 'Please select at least one service.' });
         return;
       }
     }
     if (targetStep === 3) {
-      if (!formData.name.trim()) {
-        setFieldErrors({ name: 'Please fill out this field.' });
+      const nameErr = validateField('name', formData.name);
+      if (nameErr) {
+        setFieldErrors({ name: nameErr });
         document.getElementById('form-name')?.focus();
         return;
       }
-      if (!formData.contact.trim()) {
-        setFieldErrors({ contact: 'Please fill out this field.' });
-        document.getElementById('form-contact')?.focus();
+      const emailErr = validateField('email', formData.email);
+      if (emailErr) {
+        setFieldErrors({ email: emailErr });
+        document.getElementById('form-email')?.focus();
+        return;
+      }
+      const phoneErr = validateField('phone', formData.phone);
+      if (phoneErr) {
+        setFieldErrors({ phone: phoneErr });
+        document.getElementById('form-phone')?.focus();
         return;
       }
     }
@@ -165,40 +364,147 @@ export default function ContactForm() {
     setStep(prev => Math.max(1, prev - 1));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.name.trim()) {
+  const handleSubmit = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    if (status === 'sending') return;
+
+    // Honeypot spam check
+    if (formData.botcheck) {
+      setStatus('sent');
+      return;
+    }
+
+    // Rate guard: automated bot submit under 1s from page load
+    if (Date.now() - mountTimeRef.current < 1000) {
+      console.warn('Bot guard triggered.');
+      return;
+    }
+
+    if (selectedServices.length === 0) {
+      setStep(1);
+      setFieldErrors({ services: 'Please select at least one service.' });
+      return;
+    }
+
+    const nameErr = validateField('name', formData.name);
+    if (nameErr) {
       setStep(2);
-      setFieldErrors({ name: 'Please fill out this field.' });
+      setFieldErrors({ name: nameErr });
       setTimeout(() => document.getElementById('form-name')?.focus(), 60);
       return;
     }
-    if (!formData.contact.trim()) {
+
+    const emailErr = validateField('email', formData.email);
+    if (emailErr) {
       setStep(2);
-      setFieldErrors({ contact: 'Please fill out this field.' });
-      setTimeout(() => document.getElementById('form-contact')?.focus(), 60);
+      setFieldErrors({ email: emailErr });
+      setTimeout(() => document.getElementById('form-email')?.focus(), 60);
       return;
     }
-    if (!formData.message.trim()) {
+
+    const phoneErr = validateField('phone', formData.phone);
+    if (phoneErr) {
+      setStep(2);
+      setFieldErrors({ phone: phoneErr });
+      setTimeout(() => document.getElementById('form-phone')?.focus(), 60);
+      return;
+    }
+
+    const messageErr = validateField('message', formData.message);
+    if (messageErr) {
       setStep(3);
-      setFieldErrors({ message: 'Please fill out this field.' });
+      setFieldErrors({ message: messageErr });
       setTimeout(() => document.getElementById('form-message')?.focus(), 60);
       return;
     }
 
     setFieldErrors({});
+    setErrorMessage('');
     setStatus('sending');
-    setTimeout(() => {
-      setStatus('sent');
-    }, 850);
+    trackAnalytics('contact_form_submitted', { services: selectedServices.join(', ') });
+
+    const web3formsKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+    const formspreeId = import.meta.env.VITE_FORMSPREE_FORM_ID;
+
+    try {
+      let response;
+      let result;
+
+      if (formspreeId) {
+        // Formspree static submission
+        response = await fetch(`https://formspree.io/f/${formspreeId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim() || 'Not specified',
+            services: selectedServices.join(', '),
+            message: formData.message.trim(),
+            _replyto: formData.email.trim(),
+            _subject: `New Project Inquiry — ${formData.name.trim()}`
+          })
+        });
+        result = await response.json().catch(() => ({}));
+        if (response.ok) {
+          setStatus('sent');
+          trackAnalytics('contact_form_success');
+          return;
+        }
+      } else {
+        // Web3Forms static submission (default)
+        const payload = {
+          access_key: web3formsKey || 'YOUR_ACCESS_KEY_HERE',
+          subject: `New Project Inquiry — ${formData.name.trim()}`,
+          from_name: 'Dhanush Portfolio Inquiries',
+          replyto: formData.email.trim(),
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim() || 'Not specified',
+          services: selectedServices.join(', '),
+          message: formData.message.trim(),
+          botcheck: formData.botcheck ? 'true' : ''
+        };
+
+        response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        result = await response.json().catch(() => ({}));
+        if (response.ok && result.success) {
+          setStatus('sent');
+          trackAnalytics('contact_form_success');
+          return;
+        }
+      }
+
+      setStatus('error');
+      trackAnalytics('contact_form_error', { reason: result?.message || result?.error || 'Submission failed' });
+      setErrorMessage('Something went wrong while delivering your message. Please try again in a moment or reach out directly.');
+    } catch (err) {
+      console.error('Contact form submission error:', err);
+      setStatus('error');
+      trackAnalytics('contact_form_error', { reason: 'Network error' });
+      setErrorMessage('Network error while transmitting. Please check your internet connection and try again.');
+    }
   };
 
   const handleReset = () => {
     setStatus('idle');
     setStep(1);
-    setFormData({ name: '', contact: '', message: '' });
-    setSelectedServices(['Web Applications']);
+    setFormData({ name: '', email: '', phone: '', message: '', botcheck: false });
+    setSelectedServices(['General Conversation']);
     setFieldErrors({});
+    setErrorMessage('');
+    mountTimeRef.current = Date.now();
   };
 
   return (
@@ -334,10 +640,17 @@ export default function ContactForm() {
                     </p>
 
                     <div className="success-meta-card">
-                      {formData.contact && (
+                      {formData.email && (
                         <div className="success-meta-row">
-                          <span className="meta-kicker">CONTACT</span>
-                          <span className="meta-pill">{formData.contact}</span>
+                          <span className="meta-kicker">EMAIL</span>
+                          <span className="meta-pill">{formData.email}</span>
+                        </div>
+                      )}
+
+                      {formData.phone && (
+                        <div className="success-meta-row">
+                          <span className="meta-kicker">PHONE</span>
+                          <span className="meta-pill">{formData.phone}</span>
                         </div>
                       )}
 
@@ -382,6 +695,18 @@ export default function ContactForm() {
               ) : (
                 <form onSubmit={handleSubmit} className="studio-inquiry-form" noValidate>
                   
+                  {/* Invisible Honeypot Spam Trap */}
+                  <input
+                    type="checkbox"
+                    name="botcheck"
+                    className="hidden"
+                    style={{ display: 'none' }}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    checked={formData.botcheck}
+                    onChange={(e) => setFormData(prev => ({ ...prev, botcheck: e.target.checked }))}
+                  />
+
                   {/* Mobile Step Navigation Header */}
                   <div className="mobile-step-header" aria-label="Form Progress">
                     <div className="studio-steps-nav">
@@ -458,6 +783,13 @@ export default function ContactForm() {
                       })}
                     </div>
 
+                    {fieldErrors.services && (
+                      <div className="studio-bubble-tooltip" style={{ position: 'static', marginTop: '1rem' }} role="alert">
+                        <span className="bubble-badge">!</span>
+                        <span className="bubble-text">{fieldErrors.services}</span>
+                      </div>
+                    )}
+
                     {/* Mobile Step 1 Navigation */}
                     <div className="mobile-step-nav">
                       <button
@@ -481,6 +813,7 @@ export default function ContactForm() {
                     </div>
 
                     <div className="form-fields-stack">
+                      {/* Name Field */}
                       <div className="field-group">
                         <label htmlFor="form-name" className="field-label">
                           <span>Name</span> <span className="req-star">*</span>
@@ -497,8 +830,10 @@ export default function ContactForm() {
                             onChange={handleChange}
                             className={`studio-card-input ${fieldErrors.name ? 'has-field-error' : ''} ${formData.name.trim() ? 'is-filled' : ''}`}
                             autoComplete="name"
+                            placeholder="e.g. Rahul Sharma"
+                            maxLength={100}
                           />
-                          {formData.name.trim() && (
+                          {formData.name.trim() && !fieldErrors.name && (
                             <div className="input-valid-indicator" aria-hidden="true">
                               <CheckCircle2 size={16} />
                             </div>
@@ -513,33 +848,71 @@ export default function ContactForm() {
                         </div>
                       </div>
 
+                      {/* Email Field */}
                       <div className="field-group">
-                        <label htmlFor="form-contact" className="field-label">
-                          <span>Phone</span> <span className="req-star">*</span>
+                        <label htmlFor="form-email" className="field-label">
+                          <span>Email</span> <span className="req-star">*</span>
+                        </label>
+                        <div className="field-input-wrap">
+                          <div className="input-icon-slot" aria-hidden="true">
+                            <Mail size={18} />
+                          </div>
+                          <input
+                            type="email"
+                            id="form-email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className={`studio-card-input ${fieldErrors.email ? 'has-field-error' : ''} ${formData.email.trim() ? 'is-filled' : ''}`}
+                            autoComplete="email"
+                            placeholder="e.g. rahul@example.com"
+                            maxLength={150}
+                          />
+                          {formData.email.trim() && !fieldErrors.email && (
+                            <div className="input-valid-indicator" aria-hidden="true">
+                              <CheckCircle2 size={16} />
+                            </div>
+                          )}
+                          {fieldErrors.email && (
+                            <div className="studio-bubble-tooltip" role="alert">
+                              <span className="bubble-pointer" />
+                              <span className="bubble-badge">!</span>
+                              <span className="bubble-text">{fieldErrors.email}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Phone Field */}
+                      <div className="field-group">
+                        <label htmlFor="form-phone" className="field-label">
+                          <span>Phone / WhatsApp</span> <span className="optional-badge">(Optional)</span>
                         </label>
                         <div className="field-input-wrap">
                           <div className="input-icon-slot" aria-hidden="true">
                             <Phone size={18} />
                           </div>
                           <input
-                            type="text"
-                            id="form-contact"
-                            name="contact"
-                            value={formData.contact}
+                            type="tel"
+                            id="form-phone"
+                            name="phone"
+                            value={formData.phone}
                             onChange={handleChange}
-                            className={`studio-card-input ${fieldErrors.contact ? 'has-field-error' : ''} ${formData.contact.trim() ? 'is-filled' : ''}`}
+                            className={`studio-card-input ${fieldErrors.phone ? 'has-field-error' : ''} ${formData.phone.trim() ? 'is-filled' : ''}`}
                             autoComplete="tel"
+                            placeholder="e.g. +1 (555) 000-0000"
+                            maxLength={30}
                           />
-                          {formData.contact.trim() && (
+                          {formData.phone.trim() && !fieldErrors.phone && (
                             <div className="input-valid-indicator" aria-hidden="true">
                               <CheckCircle2 size={16} />
                             </div>
                           )}
-                          {fieldErrors.contact && (
+                          {fieldErrors.phone && (
                             <div className="studio-bubble-tooltip" role="alert">
                               <span className="bubble-pointer" />
                               <span className="bubble-badge">!</span>
-                              <span className="bubble-text">{fieldErrors.contact}</span>
+                              <span className="bubble-text">{fieldErrors.phone}</span>
                             </div>
                           )}
                         </div>
@@ -591,9 +964,11 @@ export default function ContactForm() {
                             rows={4}
                             value={formData.message}
                             onChange={handleChange}
+                            placeholder="Tell me about your goals, timeline, and key requirements..."
                             className={`studio-card-textarea ${fieldErrors.message ? 'has-field-error' : ''} ${formData.message.trim() ? 'is-filled' : ''}`}
+                            maxLength={5000}
                           />
-                          {formData.message.trim() && (
+                          {formData.message.trim() && !fieldErrors.message && (
                             <div className="input-valid-indicator is-textarea" aria-hidden="true">
                               <CheckCircle2 size={16} />
                             </div>
@@ -609,12 +984,34 @@ export default function ContactForm() {
                       </div>
                     </div>
 
+                    {/* Submission Error Notice */}
+                    {status === 'error' && errorMessage && (
+                      <div className="studio-error-banner" role="alert">
+                        <div className="studio-error-icon" aria-hidden="true">
+                          <AlertCircle size={18} />
+                        </div>
+                        <div className="studio-error-body">
+                          <strong className="studio-error-title">Transmission Issue</strong>
+                          <p className="studio-error-desc">{errorMessage}</p>
+                          <button
+                            type="button"
+                            className="studio-error-retry-btn"
+                            onClick={handleSubmit}
+                          >
+                            <RotateCcw size={13} />
+                            <span>Retry Submission</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Mobile Step 3 Navigation */}
                     <div className="mobile-step-nav has-back">
                       <button
                         type="button"
                         className="studio-back-btn"
                         onClick={handlePrevStep}
+                        disabled={status === 'sending'}
                       >
                         <ArrowLeft size={16} strokeWidth={2.5} />
                         <span>Back</span>
@@ -661,120 +1058,50 @@ export default function ContactForm() {
         {/* Alternative Discovery Hub */}
         <div className="studio-alt-hub">
           <div className="why-services-notched-grid">
-            {/* Card 1: Selected Works -> Redirects to /#work */}
-            <a
-              href="/#work"
-              className="why-service-card-group"
-              data-cursor="project"
-              role="button"
-              tabIndex={0}
-              aria-label="Selected works - View projects and case studies on home page"
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href = '/#work';
+            {/* Card 1: Selected Works -> Smooth transition to /#work */}
+            <HubDiscoveryCard
+              cardIndex={0}
+              tags={['Proof of Work', 'Live Apps']}
+              meta="PROOF OF WORK"
+              drawerLabel="projects"
+              phrases={[
+                { words: ['Proof of', 'work'], color: '#6D5AE6' },
+                { words: ['Real client', 'projects'], color: '#8B5CF6' },
+                { words: ['Live web', 'apps'], color: '#3B82F6' },
+                { words: ['Built to', 'deliver'], color: '#14B8A6' }
+              ]}
+              headline="Check real proof of work & live projects"
+              ariaLabel="Selected works - View projects and case studies on home page"
+              onCardClick={() => {
+                setTimeout(() => {
+                  navigate('/#work');
+                }, 70);
               }}
-            >
-              <NotchedCard
-                bezelWidth={7}
-                bezelColor="#111111"
-                className="why-service-notched-wrapper"
-                surfaceClassName="why-service-surface-light"
-                tags={
-                  <div className="why-tags-row">
-                    <span className="why-tag-pill why-tag-pill-dark">Proof of Work</span>
-                    <span className="why-tag-pill why-tag-pill-dark">Live Apps</span>
-                  </div>
-                }
-                meta={
-                  <div className="why-meta-row">
-                    <span className="why-meta-year">2026</span>
-                    <span className="why-meta-sep">•</span>
-                    <span className="why-meta-cat">PROOF OF WORK</span>
-                  </div>
-                }
-                overlay={
-                  <div className="why-card-hover-drawer">
-                    <span>View projects</span>
-                    <ArrowUpRight size={16} strokeWidth={2.5} />
-                  </div>
-                }
-              >
-                <KineticStage
-                  tone="light"
-                  intervalMs={2200}
-                  phrases={[
-                    { words: ['Proof of', 'work'], color: '#6D5AE6' },
-                    { words: ['Real client', 'projects'], color: '#8B5CF6' },
-                    { words: ['Live web', 'apps'], color: '#3B82F6' },
-                    { words: ['Built to', 'deliver'], color: '#14B8A6' }
-                  ]}
-                />
-              </NotchedCard>
-              <div className="why-service-below-info">
-                <h4 className="why-service-headline">
-                  Check real proof of work &amp; live projects
-                </h4>
-              </div>
-            </a>
+            />
 
             {/* Center: Editorial Heading between cards */}
             <div className="alt-hub-center">
+              <span className="alt-hub-badge">Explore More</span>
               <h3 className="alt-hub-title">Still<br />not<br />sure?</h3>
-              <span className="alt-hub-badge">Proof of Work</span>
-              <p className="alt-hub-desc">Check the real things here — live projects, real clients, real results.</p>
+              <p className="alt-hub-desc">Check live client projects or explore our specialized engineering services.</p>
             </div>
 
-            {/* Card 2: Web and Apps -> Redirects to /#capabilities */}
-            <a
-              href="/#capabilities"
-              className="why-service-card-group"
-              data-cursor="project"
-              role="button"
-              tabIndex={0}
-              aria-label="Web and apps - View technical capabilities on home page"
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href = '/#capabilities';
+            {/* Card 2: Specialized Services -> Smooth transition to /services */}
+            <HubDiscoveryCard
+              cardIndex={1}
+              tags={['Services', 'Capabilities']}
+              meta="SPECIALIZED SERVICES"
+              drawerLabel="services"
+              phrases={SERVICES_STAGE_PHRASES}
+              headline="Explore all 6 specialized engineering services & capabilities"
+              ariaLabel="Explore all specialized engineering services and capabilities"
+              onCardClick={() => {
+                setTimeout(() => {
+                  navigate('/services');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 70);
               }}
-            >
-              <NotchedCard
-                bezelWidth={7}
-                bezelColor="#282a32"
-                className="why-service-notched-wrapper"
-                surfaceClassName="why-service-surface-dark"
-                tags={
-                  <div className="why-tags-row">
-                    <span className="why-tag-pill why-tag-pill-dark">Web</span>
-                    <span className="why-tag-pill why-tag-pill-dark">Apps</span>
-                    <span className="why-tag-pill why-tag-pill-dark">SEO</span>
-                  </div>
-                }
-                meta={
-                  <div className="why-meta-row">
-                    <span className="why-meta-year">2026</span>
-                    <span className="why-meta-sep">•</span>
-                    <span className="why-meta-cat">WEB, APPS &amp; SEARCH</span>
-                  </div>
-                }
-                overlay={
-                  <div className="why-card-hover-drawer">
-                    <span>View capabilities</span>
-                    <ArrowUpRight size={16} strokeWidth={2.5} />
-                  </div>
-                }
-              >
-                <div className="why-service-stage why-service-stage-dark">
-                  <span className="why-service-hero-text text-cyan">
-                    Web<br />and apps
-                  </span>
-                </div>
-              </NotchedCard>
-              <div className="why-service-below-info">
-                <h4 className="why-service-headline">
-                  Custom web &amp; mobile apps, built to scale and perform
-                </h4>
-              </div>
-            </a>
+            />
           </div>
         </div>
 

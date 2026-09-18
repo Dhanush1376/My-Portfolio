@@ -1,13 +1,101 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
 import SwipeToConnect from '../ui/SwipeToConnect';
 
-export default function Contact({ variant = 'orange' }) {
+gsap.registerPlugin(ScrollTrigger);
+
+export default function Contact({ 
+  variant = 'orange', 
+  tag = 'START A PROJECT', 
+  headline, 
+  subtitle 
+}) {
   const buttonRef = useRef(null);
+  const headerRef = useRef(null);
   const navigate = useNavigate();
   const { theme, isDark } = useTheme();
+
+  useEffect(() => {
+    if (!headerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const tagEl = headerRef.current.querySelector('.tilted-tag-wrapper');
+      const lines = headerRef.current.querySelectorAll('.contact-line-inner');
+
+      // 1. Tilted tape tag bounce-pop on scroll (triggers earlier at top 96%)
+      if (tagEl) {
+        gsap.fromTo(
+          tagEl,
+          { opacity: 0, scale: 0.65, y: 24, rotate: 8 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            rotate: 0,
+            duration: 0.65,
+            ease: 'back.out(2)',
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: 'top 96%',
+            },
+          }
+        );
+      }
+
+      // 2. Kinetic Headline Mask Reveal on scroll (triggers earlier at top 96%)
+      if (lines && lines.length > 0) {
+        gsap.fromTo(
+          lines,
+          {
+            yPercent: 125,
+            opacity: 0,
+            rotate: 2.2,
+            skewY: 1.2,
+            filter: 'blur(6px)',
+          },
+          {
+            yPercent: 0,
+            opacity: 1,
+            rotate: 0,
+            skewY: 0,
+            filter: 'blur(0px)',
+            duration: 0.8,
+            stagger: 0.08,
+            ease: 'power4.out',
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: 'top 96%',
+            },
+          }
+        );
+      } else {
+        // Fallback for custom headlines without line-mask wrapper
+        const headlineEl = headerRef.current.querySelector('.contact-huge-headline');
+        if (headlineEl) {
+          gsap.fromTo(
+            headlineEl,
+            { opacity: 0, y: 35, filter: 'blur(6px)' },
+            {
+              opacity: 1,
+              y: 0,
+              filter: 'blur(0px)',
+              duration: 0.8,
+              ease: 'power4.out',
+              scrollTrigger: {
+                trigger: headerRef.current,
+                start: 'top 96%',
+              },
+            }
+          );
+        }
+      }
+    }, headerRef);
+
+    return () => ctx.revert();
+  }, [headline, tag]);
 
   const handleOpenContact = () => {
     // Theme-dependent transition overlay: dark (#0A0A0D) or white/cream (#FBF9F5)
@@ -58,15 +146,29 @@ export default function Contact({ variant = 'orange' }) {
   return (
     <section className="section contact-editorial-section" id="contact">
       {/* Visual Climax Header (Inspired by WhyCreatives) */}
-      <div className="contact-climax-header">
+      <div className="contact-climax-header" ref={headerRef}>
         <div className="tilted-tag-wrapper">
-          <span className="tilted-tag">START A PROJECT</span>
+          <span className="tilted-tag">{tag}</span>
         </div>
 
         <h2 className="contact-huge-headline">
-          WHAT ARE YOU<br />
-          WAITING FOR<span className="title-accent">?</span>
+          {headline || (
+            <>
+              <div className="contact-line-mask">
+                <span className="contact-line-inner">WHAT ARE YOU</span>
+              </div>
+              <div className="contact-line-mask">
+                <span className="contact-line-inner">WAITING FOR<span className="title-accent">?</span></span>
+              </div>
+            </>
+          )}
         </h2>
+
+        {subtitle && (
+          <p className="contact-editorial-subtext">
+            {subtitle}
+          </p>
+        )}
       </div>
 
       {/* Infinite Outline Background Marquee & Center CTA */}

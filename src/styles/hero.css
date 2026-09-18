@@ -17,15 +17,25 @@
   --hero-btn-primary-badge-text: #FFFFFF;
   --hero-btn-secondary-text: #FFFFFF;
 
-  --hero-orange-1: #FF5520;
-  --hero-orange-2: #FF3800;
-  --hero-orange-glow: rgba(255, 85, 32, 0.35);
+  /* White canvas in Dark Mode */
+  --hero-orange-1: #FFFFFF;
+  --hero-orange-2: #F5F5F7;
+  --hero-orange-glow: rgba(255, 255, 255, 0.12);
+
+  --hero-stage-text: #0E0F12;
+  --hero-stage-pill-bg: rgba(0, 0, 0, 0.06);
+  --hero-stage-pill-border: rgba(0, 0, 0, 0.12);
+  --hero-stage-pill-text: #0E0F12;
+  --hero-stage-dot: #0E0F12;
+  --hero-stage-dot-glow: rgba(14, 15, 18, 0.3);
+  --hero-grid-color: rgba(0, 0, 0, 0.13);
 }
 
 /* --------------------------------------------------------------------------
    Light Theme Tokens
    -------------------------------------------------------------------------- */
-[data-theme="light"] {
+[data-theme="light"],
+.theme-light {
   --hero-bg: #FBF9F5;
   --hero-title: #0E0F12;
 
@@ -36,9 +46,18 @@
   --hero-btn-primary-badge-text: #0E0F12;
   --hero-btn-secondary-text: #0E0F12;
 
-  --hero-orange-1: #FF5520;
-  --hero-orange-2: #FF3800;
-  --hero-orange-glow: rgba(255, 85, 32, 0.22);
+  /* Dark bluish-black canvas in Light Mode */
+  --hero-orange-1: #161722;
+  --hero-orange-2: #0E0F12;
+  --hero-orange-glow: rgba(14, 15, 18, 0.18);
+
+  --hero-stage-text: #FFFFFF;
+  --hero-stage-pill-bg: rgba(255, 255, 255, 0.08);
+  --hero-stage-pill-border: rgba(255, 255, 255, 0.18);
+  --hero-stage-pill-text: #FFFFFF;
+  --hero-stage-dot: #FFFFFF;
+  --hero-stage-dot-glow: rgba(255, 255, 255, 0.6);
+  --hero-grid-color: rgba(255, 255, 255, 0.08);
 }
 
 /* --------------------------------------------------------------------------
@@ -69,6 +88,13 @@
   overflow: visible;
 }
 
+/* SVG Grid Lines inside the canvas shape */
+.hero-grid-line {
+  stroke: var(--hero-grid-color, rgba(0, 0, 0, 0.13));
+  stroke-width: 1;
+  transition: stroke 0.4s ease;
+}
+
 .hero-orange-card-svg {
   position: absolute;
   inset: 0;
@@ -76,6 +102,18 @@
   height: 100%;
   overflow: visible;
   pointer-events: none;
+}
+
+.hero-orange-card-svg stop {
+  transition: stop-color 0.4s ease;
+}
+
+.hero-orange-card-svg stop:first-child {
+  stop-color: var(--hero-orange-1);
+}
+
+.hero-orange-card-svg stop:last-child {
+  stop-color: var(--hero-orange-2);
 }
 
 /* Right Stage Showcase Content inside the Orange Canvas */
@@ -88,7 +126,7 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
-  color: #FFFFFF;
+  color: var(--hero-stage-text, #FFFFFF);
   text-align: right;
   pointer-events: none;
 }
@@ -98,24 +136,24 @@
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: rgba(0, 0, 0, 0.22);
+  background: var(--hero-stage-pill-bg, rgba(0, 0, 0, 0.22));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid var(--hero-stage-pill-border, rgba(255, 255, 255, 0.25));
   border-radius: 999px;
   font-family: var(--font-mono, monospace);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: #FFFFFF;
+  color: var(--hero-stage-pill-text, #FFFFFF);
 }
 
 .orange-pulse-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #FFFFFF;
-  box-shadow: 0 0 8px #FFFFFF;
+  background: var(--hero-stage-dot, #FFFFFF);
+  box-shadow: 0 0 8px var(--hero-stage-dot-glow, rgba(255,255,255,0.6));
 }
 
 .orange-stage-headline {
@@ -173,13 +211,25 @@
   display: flex;
   align-items: center;
   gap: clamp(14px, 1.8vw, 22px);
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   width: fit-content;
   padding-left: clamp(20px, 2.2vw, 34px);
   padding-right: clamp(20px, 2vw, 30px);
   padding-top: clamp(14px, 1.6vh, 22px);
   padding-bottom: clamp(16px, 2.2vh, 26px);
   margin-top: 2px;
+}
+
+@media (max-width: 768px) {
+  .hero-btn-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .hero-link-secondary {
+    margin-left: 18px; /* Indent to align with the text inside the pill button above it */
+  }
 }
 
 /* Primary Pill Button */

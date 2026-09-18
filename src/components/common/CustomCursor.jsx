@@ -47,10 +47,10 @@ export default function CustomCursor() {
     const checkHoverTarget = (target) => {
       if (!target) return;
 
-      // 1. Project Card detection (triggers the solid circular arrow badge)
-      const isProjectCard = target.closest(
-        '.why-project-interactive-group, .notched-card-wrapper, .kinetic-stage-root, [data-cursor="project"]'
-      );
+      // 1. Project Card detection (triggers the solid circular arrow badge only on featured work cards)
+      const isProjectCard =
+        target.closest('.why-project-card-item .why-project-interactive-group, [data-cursor="project"]') &&
+        !target.closest('.studio-alt-hub, .why-service-card-group');
 
       if (isProjectCard) {
         dot.classList.add('cursor-project');

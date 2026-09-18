@@ -68,6 +68,51 @@
   --hero-text: #FFFFFF;
   --hero-text-muted: rgba(255, 255, 255, 0.92);
   --hero-track: rgba(255, 255, 255, 0.28);
+  color: #FFFFFF;
+}
+
+/* Dark mode variant: text turns black/dark theme over the orange panel */
+[data-theme="dark"] .contact-hero-panel,
+.theme-dark .contact-hero-panel {
+  --hero-text: #0d0d0d;
+  --hero-text-muted: rgba(13, 13, 13, 0.82);
+  --hero-track: rgba(13, 13, 13, 0.25);
+  color: #0d0d0d;
+}
+
+[data-theme="dark"] .contact-hero-headline,
+.theme-dark .contact-hero-headline,
+[data-theme="dark"] .hero-line-inner,
+.theme-dark .hero-line-inner,
+[data-theme="dark"] .contact-hero-badge,
+.theme-dark .contact-hero-badge {
+  color: #0d0d0d;
+}
+
+[data-theme="dark"] .contact-hero-badge::before,
+.theme-dark .contact-hero-badge::before {
+  background: #0d0d0d;
+}
+
+[data-theme="dark"] .contact-hero-desc,
+.theme-dark .contact-hero-desc {
+  color: rgba(13, 13, 13, 0.85);
+  border-left-color: #0d0d0d;
+}
+
+[data-theme="dark"] .contact-scroll-indicator,
+.theme-dark .contact-scroll-indicator {
+  color: #0d0d0d;
+}
+
+[data-theme="dark"] .contact-scroll-indicator .scroll-line-runner,
+.theme-dark .contact-scroll-indicator .scroll-line-runner {
+  background-color: #0d0d0d;
+}
+
+[data-theme="dark"] .contact-scroll-indicator .scroll-line-track,
+.theme-dark .contact-scroll-indicator .scroll-line-track {
+  background-color: rgba(13, 13, 13, 0.25);
 }
 
 /* Hero Panel Grid Lines */
@@ -1027,6 +1072,99 @@
   font-weight: 800;
   font-size: 0.85rem;
   line-height: 1;
+}
+
+.optional-badge {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.8;
+}
+
+/* Submission Error Banner */
+.studio-error-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.15rem;
+  border-radius: 14px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: var(--text);
+  margin-top: 1.25rem;
+  animation: errorSlideDown 0.25s ease forwards;
+}
+
+[data-theme="dark"] .studio-error-banner,
+.theme-dark .studio-error-banner,
+:root:not([data-theme="light"]):not(.theme-light) .studio-error-banner {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
+.studio-error-icon {
+  color: #EF4444;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.studio-error-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.studio-error-title {
+  font-family: var(--font);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #EF4444;
+  margin: 0;
+}
+
+.studio-error-desc {
+  font-family: var(--font);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.studio-error-retry-btn {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #EF4444;
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.studio-error-retry-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  transform: translateY(-1px);
+}
+
+@keyframes errorSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Integrated Left Luxury Icon */
@@ -2332,36 +2470,81 @@
   width: 100%;
   cursor: pointer;
   outline: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  opacity: 0;
+  transform: translateY(70px) scale(0.97) rotateX(8deg);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.why-service-card-group.in-view {
+  opacity: 1;
+  transform: translateY(0) scale(1) rotateX(0deg);
+}
+
+.why-service-card-group .why-hub-card-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.why-service-card-group:hover {
+  transform: translateY(-6px);
+}
+
+.why-service-card-group:active {
+  transform: translateY(-2px) scale(0.985);
 }
 
 .why-service-card-group .notched-card-wrapper {
   aspect-ratio: 16 / 10.8;
   border-radius: 28px;
   isolation: isolate;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: none !important;
 }
 
-.why-service-card-group:hover .notched-card-wrapper {
-  transform: translateY(-5px);
+.why-service-card-group:hover .notched-card-wrapper,
+.why-service-card-group:active .notched-card-wrapper {
+  box-shadow: none !important;
+}
+
+.why-service-card-group .notched-shadow-layer {
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.08)) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.12));
+  transition: filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.why-service-card-group:hover .notched-shadow-layer {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12)) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.18));
+}
+
+[data-theme="dark"] .why-service-card-group:hover .notched-shadow-layer {
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6)) drop-shadow(0 28px 56px rgba(0, 0, 0, 0.75));
 }
 
 .why-service-surface-light {
   background: linear-gradient(180deg, #F1F1EF 25%, #767882 100%) !important;
-  transition: transform 0.4s ease;
 }
 
 .why-service-surface-dark {
   background: linear-gradient(180deg, #111215 25%, #050608 100%) !important;
-  transition: transform 0.4s ease;
 }
 
 .why-service-card-group .kinetic-stage-root {
   background-color: transparent !important;
 }
 
-/* Scale down kinetic text inside hub cards to match Card 2 */
+/* Scale down kinetic text inside hub cards */
 .why-service-card-group .kinetic-phrase-text {
   font-size: clamp(1.8rem, 3.2vw, 2.8rem) !important;
+  line-height: 0.92 !important;
+}
+
+.why-service-card-group .kinetic-word-span {
+  display: block;
+  white-space: nowrap;
 }
 
 .why-service-stage {
@@ -2414,8 +2597,8 @@
 }
 
 .why-service-card-group:hover .why-service-headline {
-  color: var(--text) !important;
-  opacity: 0.88;
+  color: var(--accent, #FF5E3A) !important;
+  opacity: 1;
 }
 
 .why-service-card-group .why-tags-row {
@@ -2452,11 +2635,90 @@
   display: inline !important;
 }
 
-/* Responsive Stacking */
+/* ============ DESKTOP: Subtle vertical divider hairlines flanking center column ============ */
+@media (min-width: 901px) {
+  .alt-hub-center {
+    padding: 1rem clamp(1.2rem, 2vw, 2.2rem);
+    position: relative;
+  }
+
+  .alt-hub-center::before,
+  .alt-hub-center::after {
+    content: '';
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.08) 25%,
+      rgba(0, 0, 0, 0.12) 50%,
+      rgba(0, 0, 0, 0.08) 75%,
+      transparent 100%
+    );
+  }
+
+  .alt-hub-center::before {
+    left: 0;
+  }
+
+  .alt-hub-center::after {
+    right: 0;
+  }
+
+  [data-theme="dark"] .alt-hub-center::before,
+  [data-theme="dark"] .alt-hub-center::after {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.06) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.06) 75%,
+      transparent 100%
+    );
+  }
+}
+
+/* ============ STACKED / MOBILE: Horizontal divider line between cards ============ */
 @media (max-width: 900px) {
   .why-services-notched-grid {
     grid-template-columns: 1fr !important;
     gap: 2.25rem !important;
+  }
+
+  /* Divider line between stacked Card 1 and Card 2 */
+  .why-services-notched-grid > .why-service-card-group:first-of-type {
+    position: relative;
+    padding-bottom: 2.25rem;
+  }
+
+  .why-services-notched-grid > .why-service-card-group:first-of-type::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 4%;
+    right: 4%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.1) 15%,
+      rgba(0, 0, 0, 0.18) 50%,
+      rgba(0, 0, 0, 0.1) 85%,
+      transparent 100%
+    );
+  }
+
+  [data-theme="dark"] .why-services-notched-grid > .why-service-card-group:first-of-type::after {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 15%,
+      rgba(255, 255, 255, 0.16) 50%,
+      rgba(255, 255, 255, 0.08) 85%,
+      transparent 100%
+    );
   }
 
   .why-service-hero-text {

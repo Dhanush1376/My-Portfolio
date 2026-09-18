@@ -2,13 +2,136 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Sparkles, Terminal, Cpu, Layers, ShieldCheck, ArrowUpRight, Compass, Code2, Phone, Mail } from 'lucide-react';
+import { Sparkles, Terminal, Cpu, Layers, ArrowUpRight, Compass, Code2, Phone, Mail, Plus } from 'lucide-react';
 import '../styles/about-page.css';
 import { useTheme } from '../hooks/useTheme';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import CustomCursor from '../components/common/CustomCursor';
 import Contact from '../components/sections/Contact';
+
+const FAQ_ITEMS = [
+  {
+    num: '01',
+    category: 'CAPABILITIES',
+    question: 'What types of systems and applications do you build?',
+    lead: 'End-to-end production systems engineered for measurable speed, utility, and scale:',
+    points: [
+      {
+        title: 'Full-Stack SaaS & Web Apps',
+        desc: 'Reactive Next.js & React frontends backed by high-concurrency Node.js & FastAPI architectures.'
+      },
+      {
+        title: 'AI & RAG Intelligence',
+        desc: 'Custom vector pipelines (ChromaDB, Pinecone) with verified zero-hallucination citations.'
+      },
+      {
+        title: 'Automated Checkout & APIs',
+        desc: 'Sub-second CDN storefronts, WhatsApp funnels, and enterprise Stripe payment flows.'
+      }
+    ]
+  },
+  {
+    num: '02',
+    category: 'AI & RAG',
+    question: 'How do you integrate AI or RAG into an existing product?',
+    lead: 'Securely and seamlessly, with zero disruption to your active operations:',
+    points: [
+      {
+        title: 'Proprietary Vector Search',
+        desc: 'Direct dense embeddings connected to your internal documentation, PDFs, or live SQL databases.'
+      },
+      {
+        title: 'Deterministic Guardrails',
+        desc: 'Strict source attribution and automated evaluation pipelines that eliminate AI hallucination.'
+      },
+      {
+        title: 'Sub-800ms Latency',
+        desc: 'Streaming response interfaces, autonomous agent tool-calling, and custom LangChain orchestration.'
+      }
+    ]
+  },
+  {
+    num: '03',
+    category: 'TIMELINES',
+    question: 'What is your typical turnaround time for a project?',
+    lead: 'Milestone-driven engineering with continuous staging releases:',
+    points: [
+      {
+        title: '2 to 4 Weeks',
+        desc: 'Production-ready MVPs, interactive storefronts, and focused client applications.'
+      },
+      {
+        title: '4 to 8 Weeks',
+        desc: 'Complex SaaS software, multi-tenant databases, and enterprise AI retrieval systems.'
+      },
+      {
+        title: 'Live Staging Demos',
+        desc: 'Bi-weekly builds deployed to private preview environments for continuous testing.'
+      }
+    ]
+  },
+  {
+    num: '04',
+    category: 'WORKFLOW',
+    question: 'How do we collaborate and track development progress?',
+    lead: 'Radical transparency with zero guesswork or radio silence:',
+    points: [
+      {
+        title: 'Private GitHub Access',
+        desc: 'Direct visibility into daily commits, branch workflows, and clean code architecture.'
+      },
+      {
+        title: 'Live Staging URLs',
+        desc: 'Private links updated on every push so you can test features on real devices.'
+      },
+      {
+        title: 'Instant Channels',
+        desc: 'Direct Slack, Discord, or WhatsApp access, plus asynchronous weekly Loom walkthroughs.'
+      }
+    ]
+  },
+  {
+    num: '05',
+    category: 'ENGAGEMENT',
+    question: 'How are project rates and contracts structured?',
+    lead: 'Predictable and transparent models tailored to your team’s velocity:',
+    points: [
+      {
+        title: 'Fixed-Scope Milestones',
+        desc: 'Locked deliverables and milestone pricing for well-scoped projects — no surprise bills.'
+      },
+      {
+        title: 'Dedicated Sprints',
+        desc: 'Weekly or monthly blocks for high-velocity startups needing continuous architectural evolution.'
+      },
+      {
+        title: 'Deliverable Verification',
+        desc: 'Milestone payments released only after your team reviews and approves live software.'
+      }
+    ]
+  },
+  {
+    num: '06',
+    category: 'SUPPORT',
+    question: 'Do you provide post-launch support and maintenance?',
+    lead: 'Every deployment is backed by post-launch reliability coverage:',
+    points: [
+      {
+        title: '30-Day Launch Warranty',
+        desc: 'Complimentary bug resolution, telemetry logging, and performance tuning post-deployment.'
+      },
+      {
+        title: 'Complete Architecture Handoff',
+        desc: 'Detailed documentation, video walkthroughs, and clean codebase transfer to your team.'
+      },
+      {
+        title: 'Ongoing Retainers',
+        desc: 'Flexible monthly agreements for security audits, continuous scaling, and feature additions.'
+      }
+    ]
+  }
+];
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,66 +146,52 @@ export default function AboutPage() {
 
   const { theme, toggleTheme, isDark } = useTheme();
   const navigate = useNavigate();
+  const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
-  // Interactive Tech Arsenal tab state
-  const [activeArsenalTab, setActiveArsenalTab] = useState('fullstack');
-
-  const arsenalCategories = {
-    fullstack: {
-      name: 'Frontend & UI',
-      desc: 'Sub-second reactive interfaces with fluid motion physics.',
-      chips: [
-        'React 18 / Vite',
-        'TypeScript',
-        'Vanilla CSS3',
-        'GSAP / Motion',
-        'State Engines',
-        'Web Vitals'
-      ]
-    },
-    ai: {
-      name: 'AI & Systems',
-      desc: 'Deterministic RAG pipelines & dense vector search.',
-      chips: [
-        'Python 3.11',
-        'LangChain',
-        'FastAPI',
-        'ChromaDB',
-        'Embeddings',
-        'Semantic Search'
-      ]
-    },
-    backend: {
-      name: 'Backend & APIs',
-      desc: 'Low-latency async microservices & databases.',
-      chips: [
-        'Node.js',
-        'FastAPI',
-        'PostgreSQL',
-        'MongoDB',
-        'WebSockets',
-        'Auth & JWT'
-      ]
-    },
-    infra: {
-      name: 'Cloud & DevOps',
-      desc: 'Containerization & production CDN pipelines.',
-      chips: [
-        'Docker',
-        'Cloudinary CDN',
-        'Vercel / Cloud Run',
-        'GitHub Actions',
-        'Linux / Bash',
-        'CI/CD'
-      ]
-    }
+  const toggleFaq = (index) => {
+    setOpenFaqIndex((prev) => (prev === index ? null : index));
   };
+
+  const row1Skills = [
+    'Hugging Face',
+    'NumPy',
+    'Pandas',
+    'Matplotlib',
+    'OpenCV',
+    'Machine Learning',
+    'Deep Learning',
+    'Neural Networks',
+    'NLP',
+    'Computer Vision',
+    'Reinforcement Learning',
+    'PyTorch',
+    'LangChain',
+    'ChromaDB'
+  ];
+
+  const row2Skills = [
+    'LBPH',
+    'Recommendation Systems',
+    'Signal Analysis',
+    'Data Pipelines',
+    'Model Training',
+    'API Integration',
+    'Claude AI',
+    'Backtesting',
+    'Model Deployment',
+    'FastAPI',
+    'React.js',
+    'Next.js',
+    'TypeScript',
+    'Node.js',
+    'Docker'
+  ];
 
   useEffect(() => {
     let ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      // 1. Theme portal atmosphere transition
+      // Theme portal atmosphere transition
       if (portalRef.current) {
         tl.fromTo(
           portalRef.current,
@@ -91,7 +200,7 @@ export default function AboutPage() {
         );
       }
 
-      // 2. The vibrant Solar Yellow hero panel descends with corner morph
+      // The vibrant Solar Yellow hero panel descends with corner morph (exact Contact Page motion)
       if (panelRef.current) {
         tl.fromTo(
           panelRef.current,
@@ -115,7 +224,7 @@ export default function AboutPage() {
         tl.addLabel('heroPanelArrived');
       }
 
-      // 3. Navbar drops down gracefully
+      // Navbar drops down gracefully
       const navEl = overlayRef.current?.querySelector('.navbar');
       if (navEl) {
         tl.fromTo(
@@ -126,7 +235,7 @@ export default function AboutPage() {
         );
       }
 
-      // 4. Badge enters with a sleek bounce-pop
+      // Badge enters with a sleek bounce-pop
       if (badgeRef.current) {
         tl.fromTo(
           badgeRef.current,
@@ -136,7 +245,7 @@ export default function AboutPage() {
         );
       }
 
-      // 5. Kinetic Headline Reveal with line masks and de-blur
+      // Kinetic Headline Reveal with line masks and de-blur
       const lines = panelRef.current?.querySelectorAll('.about-line-inner');
       if (lines && lines.length > 0) {
         tl.fromTo(
@@ -162,7 +271,7 @@ export default function AboutPage() {
         );
       }
 
-      // 6. Descriptive statement text wipes in smoothly
+      // Descriptive statement text wipes in smoothly
       if (descRef.current) {
         tl.fromTo(
           descRef.current,
@@ -172,7 +281,7 @@ export default function AboutPage() {
         );
       }
 
-      // 7. Scroll indicator slides up
+      // Scroll indicator slides up
       if (scrollRef.current) {
         tl.fromTo(
           scrollRef.current,
@@ -182,7 +291,7 @@ export default function AboutPage() {
         );
       }
 
-      // 8. Vertical contact buttons dock stagger-animates in from bottom right with spring pop
+      // Vertical contact buttons dock stagger-animates in from bottom right with spring pop
       const dockButtons = panelRef.current?.querySelectorAll('.hero-dock-btn');
       if (dockButtons && dockButtons.length > 0) {
         tl.fromTo(
@@ -201,41 +310,179 @@ export default function AboutPage() {
         );
       }
 
-
-
-      // 9. Bento Grid entrance animation strictly after hero landing
-      const bentoSection = overlayRef.current?.querySelector('.about-studio-section');
-      const bentoCards = overlayRef.current?.querySelectorAll('.bento-card');
-
-      if (bentoSection) {
-        gsap.set(bentoSection, { opacity: 0, y: 35 });
+      // Studio Section entrance strictly after hero panel arrived
+      const studioSection = overlayRef.current?.querySelector('.about-studio-section');
+      if (studioSection) {
+        gsap.set(studioSection, { opacity: 0, y: 35 });
         tl.to(
-          bentoSection,
+          studioSection,
           {
             opacity: 1,
             y: 0,
             duration: 0.85,
             ease: 'power3.out',
-            clearProps: 'all',
+            clearProps: 'opacity,transform',
           },
           'heroPanelArrived+=0.12'
         );
+      }
 
-        if (bentoCards && bentoCards.length > 0) {
-          tl.fromTo(
-            bentoCards,
-            { opacity: 0, y: 40, scale: 0.98, filter: 'blur(4px)' },
+      // =========================================================================
+      // SCROLL-TRIGGERED ANIMATIONS (FAQS & CONTENT SECTIONS)
+      // =========================================================================
+      if (bentoRef.current) {
+        // Section Dividers self-draw on scroll
+        const dividers = bentoRef.current.querySelectorAll('.about-section-divider');
+        dividers.forEach((divider) => {
+          gsap.fromTo(
+            divider,
+            { scaleX: 0, opacity: 0, transformOrigin: 'center center' },
+            {
+              scaleX: 1,
+              opacity: 1,
+              duration: 1.1,
+              ease: 'power4.out',
+              scrollTrigger: {
+                trigger: divider,
+                start: 'top 92%',
+              },
+            }
+          );
+        });
+
+        // =====================================================================
+        // WORLD-CLASS TECH STACK SECTION SCROLL ANIMATION
+        // =====================================================================
+        const techHeader = bentoRef.current.querySelector('.tech-stack-header');
+        const techTag = techHeader?.querySelector('.tilted-tag-wrapper');
+        const techLines = techHeader?.querySelectorAll('.tech-line-inner');
+
+        // 1. Tilted tape tag bounce-pop on scroll (triggers earlier at top 95%)
+        if (techTag) {
+          gsap.fromTo(
+            techTag,
+            { opacity: 0, scale: 0.65, y: 24, rotate: 8 },
+            {
+              opacity: 1,
+              scale: 1,
+              y: 0,
+              rotate: 0,
+              duration: 0.65,
+              ease: 'back.out(2)',
+              scrollTrigger: {
+                trigger: techHeader,
+                start: 'top 95%',
+              },
+            }
+          );
+        }
+
+        // 2. Kinetic Headline Mask Reveal on scroll (triggers earlier at top 95%)
+        if (techLines && techLines.length > 0) {
+          gsap.fromTo(
+            techLines,
+            {
+              yPercent: 125,
+              opacity: 0,
+              rotate: 2.2,
+              skewY: 1.2,
+              filter: 'blur(6px)',
+            },
+            {
+              yPercent: 0,
+              opacity: 1,
+              rotate: 0,
+              skewY: 0,
+              filter: 'blur(0px)',
+              duration: 0.8,
+              stagger: 0.08,
+              ease: 'power4.out',
+              scrollTrigger: {
+                trigger: techHeader,
+                start: 'top 95%',
+              },
+            }
+          );
+        }
+
+        // =====================================================================
+        // WORLD-CLASS FAQ SECTION SCROLL ANIMATION
+        // =====================================================================
+        const faqHeader = bentoRef.current.querySelector('.faq-section-header');
+        const faqTag = faqHeader?.querySelector('.tilted-tag-wrapper');
+        const faqLines = faqHeader?.querySelectorAll('.faq-line-inner');
+        const faqRows = bentoRef.current.querySelectorAll('.faq-editorial-row');
+
+        // 1. Tilted tape tag bounce-pop on scroll (triggers earlier at top 95%)
+        if (faqTag) {
+          gsap.fromTo(
+            faqTag,
+            { opacity: 0, scale: 0.65, y: 24, rotate: 8 },
+            {
+              opacity: 1,
+              scale: 1,
+              y: 0,
+              rotate: 0,
+              duration: 0.65,
+              ease: 'back.out(2)',
+              scrollTrigger: {
+                trigger: faqHeader,
+                start: 'top 95%',
+              },
+            }
+          );
+        }
+
+        // 2. Kinetic Headline Mask Reveal on scroll (triggers earlier at top 95%)
+        if (faqLines && faqLines.length > 0) {
+          gsap.fromTo(
+            faqLines,
+            {
+              yPercent: 125,
+              opacity: 0,
+              rotate: 2.2,
+              skewY: 1.2,
+              filter: 'blur(6px)',
+            },
+            {
+              yPercent: 0,
+              opacity: 1,
+              rotate: 0,
+              skewY: 0,
+              filter: 'blur(0px)',
+              duration: 0.8,
+              stagger: 0.08,
+              ease: 'power4.out',
+              scrollTrigger: {
+                trigger: faqHeader,
+                start: 'top 95%',
+              },
+            }
+          );
+        }
+
+        // 3. Cascading Editorial FAQ Rows with Staggered Entrance
+        if (faqRows && faqRows.length > 0) {
+          gsap.fromTo(
+            faqRows,
+            {
+              opacity: 0,
+              y: 35,
+              filter: 'blur(4px)',
+            },
             {
               opacity: 1,
               y: 0,
-              scale: 1,
               filter: 'blur(0px)',
-              duration: 0.9,
-              stagger: 0.1,
-              ease: 'power4.out',
-              clearProps: 'all',
-            },
-            'heroPanelArrived+=0.24'
+              duration: 0.8,
+              stagger: 0.08,
+              ease: 'power3.out',
+              clearProps: 'opacity,filter,transform',
+              scrollTrigger: {
+                trigger: '.faq-editorial-list',
+                start: 'top 85%',
+              },
+            }
           );
         }
       }
@@ -267,8 +514,8 @@ export default function AboutPage() {
       {/* Radiant Solar Yellow Architectural Hero Drop Panel */}
       <div className="about-hero-panel" ref={panelRef}>
         {/* Subtle Architectural Grid Pattern */}
-        <div className="about-grid-overlay" aria-hidden="true">
-          <div className="about-grid-pattern" />
+        <div className="hero-grid-overlay" aria-hidden="true">
+          <div className="hero-grid-pattern" />
         </div>
 
         <div className="about-hero-content">
@@ -279,24 +526,20 @@ export default function AboutPage() {
           </div>
 
           <h1 className="about-hero-headline">
-            <div className="about-line-mask">
+            <div className="hero-line-mask">
               <span className="about-line-inner">Systems architect.</span>
             </div>
-            <div className="about-line-mask">
+            <div className="hero-line-mask">
               <span className="about-line-inner">AI engineer.</span>
             </div>
-            <div className="about-line-mask">
+            <div className="hero-line-mask">
               <span className="about-line-inner">Built for utility.</span>
             </div>
           </h1>
 
-          <div className="about-hero-tags" ref={descRef}>
-            <span>Full-Stack</span>
-            <span className="tag-pipe">|</span>
-            <span>AI Systems</span>
-            <span className="tag-pipe">|</span>
-            <span>Production Software</span>
-          </div>
+          <p className="about-hero-desc" ref={descRef}>
+            Full-stack systems architect &amp; AI engineer crafting resilient software built for real utility.
+          </p>
         </div>
 
         {/* Scroll Indicator */}
@@ -308,7 +551,7 @@ export default function AboutPage() {
           tabIndex={0}
           aria-label="Scroll down to story"
         >
-          <span className="scroll-text">DISCOVER</span>
+          <span className="scroll-text">SCROLL</span>
           <span className="scroll-line-track">
             <span className="scroll-line-runner" />
           </span>
@@ -352,210 +595,143 @@ export default function AboutPage() {
 
       {/* Studio Story & Interactive Bento Narrative Matrix */}
       <section className="about-studio-section" id="aboutStory" ref={bentoRef}>
-        {/* Ambient Marquee Watermark */}
-        <div className="about-bg-marquee" aria-hidden="true">
-          <div className="about-marquee-track">
-            <span>ABOUT • STORY • ABOUT • STORY • ABOUT • STORY • ABOUT • STORY • </span>
-            <span>ABOUT • STORY • ABOUT • STORY • ABOUT • STORY • ABOUT • STORY • </span>
+        {/* Architectural Background Watermark on Left End */}
+        <div className="about-bg-watermark" aria-hidden="true">
+          <span>ABOUT</span>
+        </div>
+
+        {/* Unboxed Right-Aligned Manifesto Quote */}
+        <div className="about-quote-header">
+          <div className="about-quote-block">
+            <h2 className="about-manifesto-quote">
+              “I don’t build to compete. I architect systems that <span className="quote-accent">dominate</span>.”
+            </h2>
+            <div className="about-quote-author">
+              <span className="quote-author-dash" aria-hidden="true">—</span>
+              <span className="quote-author-name">Dhanush</span>
+            </div>
           </div>
         </div>
 
-        <div className="about-section-header">
-          <div className="tilted-tag-wrapper">
-            <span className="tilted-tag">01 / IDENTITY &amp; PHILOSOPHY</span>
-          </div>
-          <h2 className="about-header-title">
-            ENGINEERED WITH<br />
-            <span className="title-highlight">INTENTION.</span>
-          </h2>
-        </div>
+        {/* Thin Section Divider Line */}
+        <div className="about-section-divider" aria-hidden="true" />
 
-        {/* Bento Grid */}
-        <div className="about-bento-grid">
-          {/* Bento Card 1: Core Philosophy */}
-          <div className="bento-card bento-philosophy">
-            <div>
-              <div className="bento-card-top">
-                <span className="bento-card-tag">01 // MANIFESTO</span>
-                <div className="bento-card-icon">
-                  <Sparkles size={18} />
-                </div>
-              </div>
-
-              <h3 className="philosophy-title">
-                “Code is an outcome. If it doesn’t create <span className="quote-accent">real utility</span>, it’s not finished.”
-              </h3>
+        {/* Tech Stack Marquee Showcase (Clean, modern kinetic marquee matching reference image) */}
+        <div className="about-tech-stack-container">
+          <div className="tech-stack-header">
+            <div className="tilted-tag-wrapper">
+              <span className="tilted-tag">TECHNICAL ARSENAL</span>
             </div>
-
-            <div className="philosophy-pillars">
-              <div className="pillar-col">
-                <span className="pillar-num">01</span>
-                <span className="pillar-name">Zero Bloat</span>
-                <span className="pillar-desc">Lean bundles &amp; sub-second loads.</span>
+            <h2 className="tech-stack-huge-headline">
+              <div className="tech-line-mask">
+                <span className="tech-line-inner">TECH</span>
               </div>
-              <div className="pillar-col">
-                <span className="pillar-num">02</span>
-                <span className="pillar-name">Deterministic AI</span>
-                <span className="pillar-desc">Grounded RAG over hallucinations.</span>
+              <div className="tech-line-mask">
+                <span className="tech-line-inner">STACK<span className="title-accent">.</span></span>
               </div>
-              <div className="pillar-col">
-                <span className="pillar-num">03</span>
-                <span className="pillar-name">Product Mindset</span>
-                <span className="pillar-desc">Real business utility &amp; uptime.</span>
-              </div>
-            </div>
+            </h2>
           </div>
 
-          {/* Bento Card 2: Live Telemetry Metrics */}
-          <div className="bento-card bento-telemetry">
-            <div>
-              <div className="bento-card-top">
-                <span className="bento-card-tag">02 // TELEMETRY</span>
-                <div className="bento-card-icon">
-                  <ShieldCheck size={18} />
-                </div>
-              </div>
-
-              <h3 className="telemetry-header-title">Verified Benchmarks</h3>
-              <p className="telemetry-subtitle">Production telemetry across deployed systems</p>
-
-              <div className="telemetry-deck">
-                <div className="telemetry-row">
-                  <div className="telemetry-label-group">
-                    <span className="telemetry-label">API Median Latency</span>
-                    <span className="telemetry-sublabel">FastAPI &amp; Edge handlers</span>
-                  </div>
-                  <span className="telemetry-val">&lt; 18ms</span>
-                </div>
-
-                <div className="telemetry-row">
-                  <div className="telemetry-label-group">
-                    <span className="telemetry-label">Visual Load Time</span>
-                    <span className="telemetry-sublabel">Cloudinary CDN pipeline</span>
-                  </div>
-                  <span className="telemetry-val">&lt; 1.2s</span>
-                </div>
-
-                <div className="telemetry-row">
-                  <div className="telemetry-label-group">
-                    <span className="telemetry-label">Test Suite Reliability</span>
-                    <span className="telemetry-sublabel">Edge case coverage</span>
-                  </div>
-                  <span className="telemetry-val">99.2%</span>
-                </div>
-
-                <div className="telemetry-row">
-                  <div className="telemetry-label-group">
-                    <span className="telemetry-label">Hallucination Mitigation</span>
-                    <span className="telemetry-sublabel">ChromaDB semantic search</span>
-                  </div>
-                  <span className="telemetry-val">&lt; 2%</span>
-                </div>
+          {/* Continuous Smooth Horizontal Marquee Rows */}
+          <div className="tech-marquee-wrapper" aria-label="Interactive Tech Stack marquee">
+            {/* Row 1 - Sliding Left */}
+            <div className="tech-marquee-row">
+              <div className="tech-marquee-track track-left">
+                {row1Skills.concat(row1Skills, row1Skills).map((name, idx) => (
+                  <span key={`r1-${idx}`} className="tech-marquee-pill">
+                    {name}
+                  </span>
+                ))}
               </div>
             </div>
-          </div>
 
-          {/* Bento Card 3: Interactive Technical Arsenal */}
-          <div className="bento-card bento-arsenal">
-            <div>
-              <div className="bento-card-top">
-                <span className="bento-card-tag">03 // TECHNICAL ARSENAL</span>
-                <div className="bento-card-icon">
-                  <Terminal size={18} />
-                </div>
-              </div>
-
-              <div className="arsenal-header">
-                <h3 className="arsenal-title">{arsenalCategories[activeArsenalTab].name}</h3>
-                <p className="arsenal-desc">{arsenalCategories[activeArsenalTab].desc}</p>
-              </div>
-
-              {/* Category Switcher Tabs */}
-              <div className="arsenal-tabs" role="tablist">
-                <button
-                  className={`arsenal-tab-btn ${activeArsenalTab === 'fullstack' ? 'active' : ''}`}
-                  onClick={() => setActiveArsenalTab('fullstack')}
-                  role="tab"
-                  aria-selected={activeArsenalTab === 'fullstack'}
-                >
-                  Frontend &amp; UI
-                </button>
-                <button
-                  className={`arsenal-tab-btn ${activeArsenalTab === 'ai' ? 'active' : ''}`}
-                  onClick={() => setActiveArsenalTab('ai')}
-                  role="tab"
-                  aria-selected={activeArsenalTab === 'ai'}
-                >
-                  AI &amp; RAG Systems
-                </button>
-                <button
-                  className={`arsenal-tab-btn ${activeArsenalTab === 'backend' ? 'active' : ''}`}
-                  onClick={() => setActiveArsenalTab('backend')}
-                  role="tab"
-                  aria-selected={activeArsenalTab === 'backend'}
-                >
-                  Backend &amp; APIs
-                </button>
-                <button
-                  className={`arsenal-tab-btn ${activeArsenalTab === 'infra' ? 'active' : ''}`}
-                  onClick={() => setActiveArsenalTab('infra')}
-                  role="tab"
-                  aria-selected={activeArsenalTab === 'infra'}
-                >
-                  Cloud &amp; DevOps
-                </button>
-              </div>
-
-              {/* Dynamic Tech Chips */}
-              <div className="arsenal-chips-grid">
-                {arsenalCategories[activeArsenalTab].chips.map((chip, idx) => (
-                  <div key={idx} className="tech-chip">
-                    <span className="tech-chip-dot" />
-                    <span>{chip}</span>
-                  </div>
+            {/* Row 2 - Sliding Right */}
+            <div className="tech-marquee-row">
+              <div className="tech-marquee-track track-right">
+                {row2Skills.concat(row2Skills, row2Skills).map((name, idx) => (
+                  <span key={`r2-${idx}`} className="tech-marquee-pill">
+                    {name}
+                  </span>
                 ))}
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Bento Card 4: Trajectory & Milestones */}
-          <div className="bento-card bento-trajectory">
-            <div>
-              <div className="bento-card-top">
-                <span className="bento-card-tag">04 // TRAJECTORY</span>
-                <div className="bento-card-icon">
-                  <Compass size={18} />
-                </div>
-              </div>
+        {/* Thin Section Divider Line */}
+        <div className="about-section-divider" aria-hidden="true" />
 
-              <h3 className="trajectory-title">Milestones &amp; Work</h3>
-
-              <div className="milestones-timeline">
-                <div className="milestone-item">
-                  <span className="milestone-year">2026 // CURRENT</span>
-                  <h4 className="milestone-heading">Production Storefront</h4>
-                  <p className="milestone-desc">
-                    Siri Arts &amp; Crafts: sub-second CDN storefront &amp; WhatsApp funnel.
-                  </p>
-                </div>
-
-                <div className="milestone-item">
-                  <span className="milestone-year">2025</span>
-                  <h4 className="milestone-heading">RAG Intelligence</h4>
-                  <p className="milestone-desc">
-                    Tutorboard: ChromaDB semantic vector search &amp; zero-hallucination pipelines.
-                  </p>
-                </div>
-
-                <div className="milestone-item">
-                  <span className="milestone-year">2024</span>
-                  <h4 className="milestone-heading">Core Systems Architecture</h4>
-                  <p className="milestone-desc">
-                    High-concurrency microservices &amp; reactive editorial interfaces.
-                  </p>
-                </div>
-              </div>
+        {/* FAQs Section (Matching Tech Stack & Contact Climax Aesthetic) */}
+        <div className="about-faq-section" id="faq">
+          <div className="faq-section-header">
+            <div className="tilted-tag-wrapper">
+              <span className="tilted-tag">FREQUENTLY ASKED</span>
             </div>
+            <h2 className="faq-huge-headline">
+              <div className="faq-line-mask">
+                <span className="faq-line-inner">COMMON</span>
+              </div>
+              <div className="faq-line-mask">
+                <span className="faq-line-inner">QUESTIONS<span className="title-accent">.</span></span>
+              </div>
+            </h2>
+          </div>
+
+          {/* Architectural Editorial Accordion List */}
+          <div className="faq-editorial-list" role="region" aria-label="Frequently Asked Questions">
+            {FAQ_ITEMS.map((item, index) => {
+              const isOpen = openFaqIndex === index;
+              return (
+                <div
+                  key={item.num}
+                  className={`faq-editorial-row ${isOpen ? 'is-open' : ''}`}
+                  onClick={() => toggleFaq(index)}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isOpen}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      toggleFaq(index);
+                    }
+                  }}
+                >
+                  <div className="faq-row-header">
+                    <span className="faq-row-num">{item.num}</span>
+                    <div className="faq-row-title-wrap">
+                      <div className="faq-row-meta">
+                        <span className="faq-row-category">{item.category}</span>
+                      </div>
+                      <h3 className="faq-row-question">{item.question}</h3>
+                    </div>
+                    <div className="faq-row-toggle" aria-hidden="true">
+                      <span className="faq-toggle-icon">
+                        <Plus size={20} strokeWidth={2.5} />
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="faq-row-drawer">
+                    <div className="faq-drawer-inner">
+                      <div className="faq-answer-block">
+                        <p className="faq-answer-lead">{item.lead}</p>
+                        <div className="faq-answer-grid">
+                          {item.points.map((pt, pIdx) => (
+                            <div key={pIdx} className="faq-point-card">
+                              <div className="faq-point-header">
+                                <span className="faq-point-dot" aria-hidden="true" />
+                                <span className="faq-point-title">{pt.title}</span>
+                              </div>
+                              <p className="faq-point-desc">{pt.desc}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

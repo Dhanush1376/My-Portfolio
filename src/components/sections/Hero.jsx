@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import gsap from 'gsap';
+import { ArrowUpRight } from 'lucide-react';
 
 const De = (e) => Math.round(e * 100) / 100;
 const St = (e, t, n, r) => `A ${De(e)} ${De(e)} 0 0 ${t} ${De(n)} ${De(r)}`;
@@ -21,7 +23,7 @@ function generateStudioCanvasPath(cardWidth, cardHeight, lines, r, s, W_left = 0
     u.push(St(safeR, 0, W_left + safeR, o));
   } else {
     // MOBILE (WhyCreatives exact layout): Top of Line 1 -> top-right -> bottom-right -> bottom-left -> up to shelf
-    u.push(`M ${De(lines[0].right)} 0`);
+    u.push(`M ${De(lines[0].right + r)} 0`);
     u.push(`H ${De(cardWidth - r)}`);
     u.push(St(r, 1, cardWidth, r));
     u.push(`V ${De(cardHeight - r)}`);
@@ -54,7 +56,8 @@ function generateStudioCanvasPath(cardWidth, cardHeight, lines, r, s, W_left = 0
         u.push(St(r, 1, 0, cardHeight - r));
         u.push(`V ${De(r)}`);
       } else {
-        u.push("V 0");
+        u.push(`V ${De(r)}`);
+        u.push(St(r, 1, lines[0].right + r, 0));
       }
       break;
     }
@@ -100,6 +103,63 @@ export default function Hero() {
     W_left: 110,
   });
 
+  const liquidFillRef = useRef(null);
+  const stageContentRef = useRef(null);
+
+  // Entrance Animation: Liquid rising from the bottom
+  useEffect(() => {
+    if (liquidFillRef.current && layout.cardHeight > 0 && cardPath) {
+      // Set initial states
+      gsap.set(liquidFillRef.current, { y: layout.cardHeight });
+      if (stageContentRef.current) {
+        gsap.set(stageContentRef.current, { opacity: 0, y: 20 });
+      }
+      
+      const tl = gsap.timeline({ delay: 0.1 });
+      
+      // Liquid rushes up
+      tl.to(liquidFillRef.current, {
+        y: 0,
+        duration: 1.4,
+        ease: 'power4.out'
+      });
+      
+      // Stage content floats in as the liquid settles
+      if (stageContentRef.current) {
+        tl.to(stageContentRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out'
+        }, '-=0.6');
+      }
+
+      // Kinetic Headline Reveal with line masks and de-blur
+      if (controlsRef.current) {
+        const lines = controlsRef.current.querySelectorAll('.hero-anim-line');
+        if (lines.length > 0) {
+          tl.fromTo(
+            lines,
+            {
+              yPercent: 125,
+              opacity: 0,
+              filter: 'blur(5px)',
+            },
+            {
+              yPercent: 0,
+              opacity: 1,
+              filter: 'blur(0px)',
+              duration: 1.05,
+              stagger: 0.12,
+              ease: 'power4.out',
+            },
+            '-=1.2' // Start slightly after liquid begins rising
+          );
+        }
+      }
+    }
+  }, [layout.cardHeight, cardPath]);
+
   useEffect(() => {
     const updateDimensions = () => {
       if (!heroRef.current) return;
@@ -128,7 +188,11 @@ export default function Hero() {
       });
 
       if (wrapperRef.current && row1Ref.current && row2Ref.current && row3Ref.current && btnRowRef.current) {
-        const y = wrapperRef.current.getBoundingClientRect();
+        const heroRect = heroRef.current.getBoundingClientRect();
+        const y = {
+          left: heroRect.left + paddingLeft,
+          top: heroRect.top + cardTop
+        };
         const wMeasure = (el) => {
           const B = el.getBoundingClientRect();
           return {
@@ -251,17 +315,44 @@ export default function Hero() {
               <filter id="heroOrangeGlow" x="-4%" y="-4%" width="108%" height="112%">
                 <feDropShadow dx="0" dy="16" stdDeviation="20" floodColor="var(--hero-orange-glow, rgba(255, 85, 32, 0.35))" floodOpacity="0.35" />
               </filter>
+              {/* Grid pattern for architectural lines */}
+              <pattern id="heroGridPattern" width="48" height="48" patternUnits="userSpaceOnUse">
+                <line x1="48" y1="0" x2="48" y2="48" className="hero-grid-line" />
+                <line x1="0" y1="48" x2="48" y2="48" className="hero-grid-line" />
+              </pattern>
+              <clipPath id="heroCanvasClip">
+                <path d={cardPath} />
+              </clipPath>
             </defs>
+            
+            {/* Base shadow layer cast by the path shape */}
             <path
               d={cardPath}
-              fill="url(#heroOrangeGrad)"
+              fill="none"
               filter="url(#heroOrangeGlow)"
             />
+            
+            {/* Masked Liquid Fill Area */}
+            <g clipPath="url(#heroCanvasClip)">
+              <g ref={liquidFillRef}>
+                <rect
+                  width={cardWidth}
+                  height={cardHeight}
+                  fill="url(#heroOrangeGrad)"
+                />
+                {/* Grid overlay */}
+                <rect
+                  width={cardWidth}
+                  height={cardHeight}
+                  fill="url(#heroGridPattern)"
+                />
+              </g>
+            </g>
           </svg>
         )}
 
-        {/* Right Stage Showcase Content inside the Orange Canvas */}
-        <div className="hero-orange-stage-content">
+        {/* Stage Content */}
+        <div className="hero-orange-stage-content" ref={stageContentRef}>
           <div className="orange-stage-pill">
             <span className="orange-pulse-dot"></span>
             <span>STUDIO SPEC // DHANUSH</span>
@@ -282,9 +373,9 @@ export default function Hero() {
         }}
       >
         <h1 className="hero-studio-title hero-title-large">
-          <span ref={row1Ref} className="title-text-line">One stop solution for</span>
-          <span ref={row2Ref} className="title-text-line">all engineering needs</span>
-          <span ref={row3Ref} className="title-text-line">and AI systems</span>
+          <span ref={row1Ref} className="title-text-line hero-anim-line">One stop solution for</span>
+          <span ref={row2Ref} className="title-text-line hero-anim-line">all engineering needs</span>
+          <span ref={row3Ref} className="title-text-line hero-anim-line">and AI systems</span>
         </h1>
 
         <div ref={btnRowRef} className="hero-btn-row">
@@ -295,7 +386,9 @@ export default function Hero() {
             id="heroWorkBtn"
           >
             <span>View our work</span>
-            <span className="btn-arrow-badge">↗</span>
+            <span className="btn-arrow-badge">
+              <ArrowUpRight size={17} strokeWidth={2.2} />
+            </span>
           </a>
 
           <a
@@ -305,7 +398,9 @@ export default function Hero() {
             id="heroContactBtn"
           >
             <span>Start a project</span>
-            <span className="link-arrow">↗</span>
+            <span className="link-arrow">
+              <ArrowUpRight size={17} strokeWidth={2.2} />
+            </span>
           </a>
         </div>
       </div>

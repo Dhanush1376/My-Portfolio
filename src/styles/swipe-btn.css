@@ -121,6 +121,30 @@
   transition: width 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.4s ease !important;
 }
 
+/* Services Page Only: Studio Peach Red (#FF5E57) to Sunset Coral (#FF786B) */
+.swipe-container.variant-green.success .swipe-fill,
+.services-page-container .swipe-container.success .swipe-fill {
+  background: linear-gradient(90deg, #FF5E57 0%, #FF786B 100%) !important;
+}
+
+.swipe-container.variant-green .swipe-knob,
+.services-page-container .swipe-container .swipe-knob {
+  border-color: #FF5E57;
+}
+
+@keyframes success-glow-green {
+  0% { box-shadow: 0 0 0 0 rgba(255, 94, 87, 0.65), 0 8px 24px rgba(0,0,0,0.2); }
+  70% { box-shadow: 0 0 0 20px rgba(255, 94, 87, 0), 0 8px 24px rgba(0,0,0,0.2); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 94, 87, 0), 0 8px 24px rgba(0,0,0,0.2); }
+}
+
+.swipe-container.variant-green.success,
+.services-page-container .swipe-container.success {
+  background: linear-gradient(135deg, #FF5E57 0%, #FF786B 100%) !important;
+  border-color: #FF5E57 !important;
+  animation: success-glow-green 1.6s infinite !important;
+}
+
 /* About Page Only: Solar Yellow (#FFA820) to Fiery Orange (#FF3D00) */
 .swipe-container.variant-yellow.success .swipe-fill,
 .about-page-wrapper .swipe-container.success .swipe-fill {

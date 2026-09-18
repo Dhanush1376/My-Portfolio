@@ -12,18 +12,22 @@ export default function SwipeToConnect({ onConnect, variant: propVariant }) {
   const startXRef = useRef(0);
   const currentXRef = useRef(0);
 
-  // Check if yellow theme is active (Only on About page)
-  const [isAboutVariant, setIsAboutVariant] = useState(propVariant === 'yellow');
+  // Active variant: 'green' (Services page), 'yellow' (About page), or 'orange' (Home page/default)
+  const [activeVariant, setActiveVariant] = useState(
+    propVariant === 'green' || propVariant === 'yellow' || propVariant === 'orange'
+      ? propVariant
+      : 'orange'
+  );
 
   useEffect(() => {
-    if (propVariant === 'yellow') {
-      setIsAboutVariant(true);
-    } else if (propVariant === 'orange') {
-      setIsAboutVariant(false);
+    if (propVariant === 'green' || propVariant === 'yellow' || propVariant === 'orange') {
+      setActiveVariant(propVariant);
+    } else if (containerRef.current?.closest('.services-page-container')) {
+      setActiveVariant('green');
     } else if (containerRef.current?.closest('.about-page-wrapper')) {
-      setIsAboutVariant(true);
+      setActiveVariant('yellow');
     } else {
-      setIsAboutVariant(false);
+      setActiveVariant('orange');
     }
   }, [propVariant]);
   
@@ -103,12 +107,21 @@ export default function SwipeToConnect({ onConnect, variant: propVariant }) {
     : 200;
   const progress = maxDragWidth > 0 ? Math.min(1, Math.max(0, dragX / maxDragWidth)) : 0;
 
-  // Home Page: Pure Vibrant Orange (#FF5520 -> #FF3D00). ZERO YELLOW.
+  // Services Page: Vibrant Studio Peach Red (#FF5E57 -> #FF786B).
   // About Page: Solar Yellow (#FFA820 -> #FF3D00).
+  // Home Page: Pure Vibrant Orange (#FF5520 -> #FF3D00).
   let currentColor;
   let fillGradient;
 
-  if (isAboutVariant) {
+  if (activeVariant === 'green') {
+    // Services page: Vibrant Studio Peach Red rgb(255, 94, 87) -> Sunset Coral rgb(255, 120, 107)
+    const g = Math.round(94 + progress * 26);
+    const b = Math.round(87 + progress * 20);
+    currentColor = `rgb(255, ${g}, ${b})`;
+    fillGradient = isSuccess 
+      ? 'linear-gradient(90deg, #FF5E57 0%, #FF786B 100%)' 
+      : `linear-gradient(90deg, #FF5E57 0%, ${currentColor} 100%)`;
+  } else if (activeVariant === 'yellow') {
     // About page: Solar Yellow rgb(255, 168, 32) -> Fiery Orange rgb(255, 61, 0)
     const g = Math.round(168 - progress * 107);
     const b = Math.round(32 - progress * 32);
@@ -128,7 +141,7 @@ export default function SwipeToConnect({ onConnect, variant: propVariant }) {
 
   return (
     <div 
-      className={`swipe-container ${isAboutVariant ? 'variant-yellow' : 'variant-orange'} ${isSuccess ? 'success' : ''}`} 
+      className={`swipe-container variant-${activeVariant} ${isSuccess ? 'success' : ''}`} 
       ref={containerRef}
     >
       <div 

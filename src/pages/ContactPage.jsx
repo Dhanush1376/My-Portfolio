@@ -229,6 +229,59 @@ export default function ContactPage() {
           }
         }
       }
+
+      // 10. Alternative Discovery Hub ("STILL NOT SURE?") ScrollTrigger Reveal (Header elements)
+      const altHub = overlayRef.current?.querySelector('.studio-alt-hub');
+      if (altHub) {
+        const hubBadge = altHub.querySelector('.alt-hub-badge');
+        const hubTitle = altHub.querySelector('.alt-hub-title');
+        const hubDesc = altHub.querySelector('.alt-hub-desc');
+
+        if (hubBadge) gsap.set(hubBadge, { scale: 0, rotate: -15, opacity: 0 });
+        if (hubTitle) gsap.set(hubTitle, { y: 35, opacity: 0, filter: 'blur(4px)' });
+        if (hubDesc) gsap.set(hubDesc, { y: 20, opacity: 0 });
+
+        const hubTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: altHub,
+            start: 'top 85%',
+            once: true,
+          },
+          defaults: { ease: 'power4.out' }
+        });
+
+        // 1. Center badge pops in with playful spring
+        if (hubBadge) {
+          hubTl.to(hubBadge, {
+            scale: 1,
+            rotate: -3,
+            opacity: 1,
+            duration: 0.65,
+            ease: 'back.out(2.2)',
+            clearProps: 'transform'
+          });
+        }
+
+        // 2. Title & Description reveal smoothly
+        if (hubTitle) {
+          hubTl.to(hubTitle, {
+            y: 0,
+            opacity: 1,
+            filter: 'blur(0px)',
+            duration: 0.85,
+            clearProps: 'all'
+          }, '-=0.45');
+        }
+
+        if (hubDesc) {
+          hubTl.to(hubDesc, {
+            y: 0,
+            opacity: 1,
+            duration: 0.65,
+            clearProps: 'all'
+          }, '-=0.6');
+        }
+      }
     }, overlayRef);
 
     return () => ctx.revert();

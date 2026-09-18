@@ -197,7 +197,7 @@ export default function Home() {
     window.addEventListener('load', handleResizeOrLoad);
 
     ScrollTrigger.refresh();
-    setTimeout(() => {
+    const hashTimer = setTimeout(() => {
       ScrollTrigger.refresh();
       const hash = window.location.hash;
       if (hash) {
@@ -208,9 +208,10 @@ export default function Home() {
           if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
       }
-    }, 450);
+    }, 180);
 
     return () => {
+      clearTimeout(hashTimer);
       window.lenis = null;
       window.navigateToSection = null;
       gsap.ticker.remove(updateLenis);

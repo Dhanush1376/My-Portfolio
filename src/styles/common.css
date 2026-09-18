@@ -117,7 +117,25 @@
   text-transform: uppercase;
   border-radius: 0;
   transform: rotate(-3deg);
-  box-shadow: none; /* Flat sticky note look */
+  box-shadow: none;
+  /* Flat sticky note look */
+}
+
+/* Kinetic Title Mask Utilities */
+.title-line-mask,
+.tech-line-mask,
+.faq-line-mask,
+.contact-line-mask {
+  overflow: hidden;
+  display: block;
+}
+
+.title-line-inner,
+.tech-line-inner,
+.faq-line-inner,
+.contact-line-inner {
+  display: inline-block;
+  will-change: transform, opacity, filter;
 }
 
 /* Studio Pill Buttons */
@@ -270,9 +288,9 @@
   opacity: 1;
   clip-path: inset(-10% -10% -10% -10%);
   transform: translateX(0);
-  transition: clip-path 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0s, 
-              opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0s,
-              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0s;
+  transition: clip-path 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0s,
+    opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0s,
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0s;
 }
 
 @media (max-width: 768px) {
@@ -301,7 +319,7 @@
   position: relative;
 }
 
-.section > *:not(.stars-bg):not(.fixed-grid-canvas) {
+.section>*:not(.stars-bg):not(.fixed-grid-canvas) {
   position: relative;
   z-index: 2;
 }

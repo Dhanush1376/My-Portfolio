@@ -59,7 +59,7 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
 
   const navItems = [
     { label: 'Work', href: '#work', num: '01' },
-    { label: 'Capabilities', href: '#capabilities', num: '02' },
+    { label: 'Services', href: '/services', num: '02' },
     { label: 'About', href: '/about', num: '03' },
     { label: 'Contact', href: '/contact', num: '04' }
   ];
@@ -76,17 +76,21 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
 
           {/* Center: Desktop Nav Links */}
           <ul className="nav-links-desktop">
-            {navItems.map((item) => (
-              <li key={item.num}>
-                <a
-                  href={item.href}
-                  className={`nav-link ${location.pathname === item.href ? 'active' : ''}`}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.href || 
+                (item.href === '/services' && (location.pathname === '/services' || location.pathname === '/what-we-do'));
+              return (
+                <li key={item.num}>
+                  <a
+                    href={item.href}
+                    className={`nav-link ${isActive ? 'active' : ''}`}
+                    onClick={(e) => handleNavClick(e, item.href)}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
 
           {/* Right: Actions */}

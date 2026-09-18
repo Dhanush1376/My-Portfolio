@@ -40,7 +40,6 @@ export default function Projects({ onOpenCaseStudy }) {
             <span className="statement-eyebrow">
               <span className="eyebrow-bullet">•</span> 01 / SELECTED WORK
             </span>
-            <span className="statement-stamp">EST. 2024</span>
           </div>
 
           <div className="why-header-content-left">
