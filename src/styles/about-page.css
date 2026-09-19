@@ -1380,79 +1380,23 @@
 }
 
 .faq-answer-block {
-  padding: clamp(1.2rem, 2.2vh, 1.8rem) 0 0.5rem calc(80px + clamp(1rem, 2.5vw, 2.5rem));
-  max-width: 1040px;
+  padding: clamp(0.75rem, 1.5vh, 1.25rem) 0 clamp(0.4rem, 1vh, 0.75rem) calc(80px + clamp(1rem, 2.5vw, 2.5rem));
+  max-width: 860px;
 }
 
-.faq-answer-lead {
-  margin: 0 0 1.25rem 0;
-  font-size: clamp(0.96rem, 1.1vw, 1.06rem);
-  line-height: 1.65;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
-.faq-answer-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.faq-point-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding: 0;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.faq-point-header {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.faq-point-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #FFA820;
-  flex-shrink: 0;
-  box-shadow: 0 0 8px rgba(255, 168, 32, 0.7);
-}
-
-[data-theme="light"] .faq-point-dot,
-.theme-light .faq-point-dot {
-  background: #D97706;
-  box-shadow: 0 0 6px rgba(217, 119, 6, 0.5);
-}
-
-.faq-point-title {
-  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
-  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.015em;
-  line-height: 1.35;
-}
-
-.faq-point-desc {
+.faq-answer-simple-text {
   margin: 0;
-  padding-left: calc(7px + 0.6rem);
-  font-size: clamp(0.88rem, 1vw, 0.95rem);
-  line-height: 1.65;
+  font-family: var(--font);
+  font-size: clamp(0.98rem, 1.15vw, 1.12rem);
+  line-height: 1.75;
   color: var(--text-secondary);
   font-weight: 400;
+  letter-spacing: -0.005em;
 }
 
-@media (max-width: 900px) {
-  .faq-answer-grid {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
+[data-theme="light"] .faq-answer-simple-text,
+.theme-light .faq-answer-simple-text {
+  color: #4B5563;
 }
 
 @media (max-width: 768px) {
@@ -1504,31 +1448,12 @@
   }
 
   .faq-answer-block {
-    padding: 0.85rem 0 0.25rem 0;
+    padding: 0.65rem 0 0.25rem 0;
   }
 
-  .faq-answer-lead {
-    font-size: 0.92rem;
-    margin-bottom: 0.85rem;
-    line-height: 1.6;
-  }
-
-  .faq-answer-grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-
-  .faq-point-card {
-    padding: 0;
-  }
-
-  .faq-point-title {
-    font-size: 0.92rem;
-  }
-
-  .faq-point-desc {
-    font-size: 0.85rem;
-    padding-left: calc(7px + 0.6rem);
+  .faq-answer-simple-text {
+    font-size: 0.94rem;
+    line-height: 1.65;
   }
 }
 
@@ -1640,6 +1565,13 @@
   color: #0E0F12 !important;
   font-weight: 850 !important;
   box-shadow: 0 4px 14px rgba(255, 168, 32, 0.35);
+}
+
+.about-page-wrapper .alt-hub-badge {
+  background: #FFA820 !important;
+  color: #0E0F12 !important;
+  font-weight: 850 !important;
+  box-shadow: 0 4px 14px rgba(255, 168, 32, 0.35) !important;
 }
 
 .about-page-wrapper .title-accent {

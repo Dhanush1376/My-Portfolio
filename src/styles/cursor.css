@@ -121,16 +121,8 @@
   opacity: 0 !important;
 }
 
-/* Touch devices: ensure custom cursor stays visible and non-blocking */
-@media (pointer: coarse) {
-  .cursor-dot,
-  .cursor-outline {
-    pointer-events: none !important;
-  }
-}
-
-/* Desktop pointer devices: hide default system cursor so custom cursor takes over seamlessly */
-@media (pointer: fine) {
+/* Laptop / Desktop pointer devices: only hide default system cursor on laptop screens (> 1024px) with mouse/trackpad pointer */
+@media (min-width: 1025px) and (pointer: fine) {
   .contact-page-wrapper,
   .portfolio-app {
     cursor: none;
@@ -150,6 +142,38 @@
   .portfolio-app input,
   .portfolio-app textarea {
     cursor: none;
+  }
+}
+
+/* Mobile & Touch Devices: Completely disable and hide custom cursor, use normal default system cursors */
+@media (max-width: 1024px), (pointer: coarse) {
+  .cursor-dot,
+  .cursor-outline {
+    display: none !important;
+  }
+
+  html,
+  body,
+  .portfolio-app,
+  .contact-page-wrapper,
+  * {
+    cursor: auto !important;
+  }
+
+  a,
+  button,
+  [role="button"],
+  select {
+    cursor: pointer !important;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"],
+  textarea {
+    cursor: text !important;
   }
 }
 

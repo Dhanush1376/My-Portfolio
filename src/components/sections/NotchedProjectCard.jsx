@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import NotchedCard from '../common/NotchedCard';
 import KineticStage from '../common/KineticStage';
-import { ExternalLink, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 /**
  * NotchedProjectCard
  * Packages WhyCreatives' signature notched stepped card with:
- * - Top-right tag pills
- * - Bottom-left metadata & indicators
- * - Kinetic typography stage with cycling phrases
- * - On laptop: full editorial specifications beside the card
- * - Hover interactions and case study modal trigger
+ * - Top-right tag pills (tags on desktop, Website pill on mobile)
+ * - Bottom-left metadata & indicators (year + category)
+ * - Kinetic typography stage with cycling phrases and live preview
+ * - On laptop: full editorial specifications beside the card with watermark number
+ * - Hover interactions and direct live link
  */
 export default function NotchedProjectCard({
   project,
@@ -19,11 +19,10 @@ export default function NotchedProjectCard({
   className = '',
   style = {},
 }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [inView, setInView] = useState(false);
-  const cardRef = React.useRef(null);
+  const [inView, setInView] = useState(true);
+  const cardRef = useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -31,7 +30,7 @@ export default function NotchedProjectCard({
           observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.08, rootMargin: '120px 0px' }
     );
     if (cardRef.current) observer.observe(cardRef.current);
     return () => observer.disconnect();
@@ -61,8 +60,6 @@ export default function NotchedProjectCard({
           bezelWidth={8}
           bezelColor={bezelColor}
           className="why-project-notched-container"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
           tags={
             <div className="why-tags-row">
               <div className="why-tags-desktop">
@@ -70,10 +67,6 @@ export default function NotchedProjectCard({
                   <span
                     key={idx}
                     className="why-tag-pill"
-                    style={{
-                      transform: isHovered ? 'translateY(2px) scale(1.03)' : 'translateY(0) scale(1)',
-                      transition: `transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) ${idx * 40}ms`,
-                    }}
                   >
                     {tag}
                   </span>
@@ -95,14 +88,15 @@ export default function NotchedProjectCard({
             </div>
           }
           overlay={
-            <div className={`why-card-hover-drawer ${isHovered ? 'drawer-visible' : ''}`}>
-              <span className="why-drawer-label">Visit Live Website</span>
-              <ArrowUpRight className="why-drawer-icon" size={16} />
+            <div className="why-card-hover-drawer">
+              <span className="why-drawer-label">view</span>
+              <ArrowUpRight className="why-drawer-icon" size={18} strokeWidth={2.5} />
             </div>
           }
         >
           {/* Main Stage: Live Preview Showcase */}
           <KineticStage
+            projectId={project.id}
             phrases={project.stage?.phrases || []}
             tone={tone}
             seed={index}
@@ -120,7 +114,7 @@ export default function NotchedProjectCard({
         </div>
         <div className="why-beside-meta-row">
           <span className="why-beside-cat-pill">
-            {project.year || '2026'} • {project.category || project.service || 'FLAGSHIP PLATFORM'}
+            {project.year || '2026'} <span className="why-meta-dot" aria-hidden="true">•</span> {project.category || project.service || 'FLAGSHIP PLATFORM'}
           </span>
         </div>
 

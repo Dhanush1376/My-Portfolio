@@ -5,28 +5,32 @@
 .contact-editorial-section {
   position: relative;
   background: var(--bg);
-  padding: 8rem 4rem; /* Standard section padding */
-  overflow: hidden;
-  z-index: 20;
+  padding: 8.5rem 4rem 1.5rem 4rem; /* Balanced gap, sits snug directly above footer */
+  overflow-x: clip;
+  z-index: 60;
   transition: background 0.4s ease;
   margin-top: 0;
   border-radius: 0;
-  box-shadow: none; /* No shadow */
+  border-bottom: none !important;
   clip-path: none;
 }
 
 @media (max-width: 1024px) {
   .contact-editorial-section {
-    padding: 6rem 2.5rem;
+    padding: 6.5rem 2.5rem 1.25rem 2.5rem;
     margin-top: 0;
   }
 }
 
 @media (max-width: 768px) {
   .contact-editorial-section {
-    padding: 5rem 1.25rem;
+    padding: 5.5rem 1.25rem 0.75rem 1.25rem;
     margin-top: 0;
     border-radius: 0;
+  }
+
+  .contact-climax-header {
+    margin-top: 1.5rem !important;
   }
 
   .tilted-tag-wrapper {
@@ -40,7 +44,7 @@
   flex-direction: column;
   align-items: flex-start;
   max-width: 1360px;
-  margin: 0 auto 4rem auto;
+  margin: 1.75rem auto 4rem auto;
 }
 
 .tilted-tag-wrapper {
@@ -149,10 +153,11 @@
   white-space: nowrap;
   user-select: none;
   pointer-events: none;
-  padding: 1.5rem 0;
-  margin-bottom: 4rem;
-  border-top: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
+  padding: 1.5rem 0 0 0;
+  margin-bottom: 0;
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
 }
 
 .marquee-content-track, .marquee-content-track-reverse {

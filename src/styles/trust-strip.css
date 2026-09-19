@@ -8,7 +8,7 @@
   background: var(--bg);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  padding: clamp(3rem, 5vw, 5.5rem) 0;
+  padding: clamp(4.25rem, 6.5vw, 6.5rem) 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;

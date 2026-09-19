@@ -12,18 +12,21 @@ export default function SwipeToConnect({ onConnect, variant: propVariant }) {
   const startXRef = useRef(0);
   const currentXRef = useRef(0);
 
-  // Active variant: 'green' (Services page), 'yellow' (About page), or 'orange' (Home page/default)
-  const [activeVariant, setActiveVariant] = useState(
-    propVariant === 'green' || propVariant === 'yellow' || propVariant === 'orange'
-      ? propVariant
-      : 'orange'
-  );
+  // Active variant: 'peach' (Services page), 'yellow' (About page), or 'orange' (Home page/default)
+  const isPeach = (v) => v === 'peach' || v === 'peach-red' || v === 'green';
+  const resolveVariant = (v) => {
+    if (isPeach(v)) return 'peach';
+    if (v === 'yellow') return 'yellow';
+    return 'orange';
+  };
+
+  const [activeVariant, setActiveVariant] = useState(resolveVariant(propVariant));
 
   useEffect(() => {
-    if (propVariant === 'green' || propVariant === 'yellow' || propVariant === 'orange') {
-      setActiveVariant(propVariant);
+    if (propVariant) {
+      setActiveVariant(resolveVariant(propVariant));
     } else if (containerRef.current?.closest('.services-page-container')) {
-      setActiveVariant('green');
+      setActiveVariant('peach');
     } else if (containerRef.current?.closest('.about-page-wrapper')) {
       setActiveVariant('yellow');
     } else {
@@ -113,7 +116,7 @@ export default function SwipeToConnect({ onConnect, variant: propVariant }) {
   let currentColor;
   let fillGradient;
 
-  if (activeVariant === 'green') {
+  if (activeVariant === 'peach' || activeVariant === 'green') {
     // Services page: Vibrant Studio Peach Red rgb(255, 94, 87) -> Sunset Coral rgb(255, 120, 107)
     const g = Math.round(94 + progress * 26);
     const b = Math.round(87 + progress * 20);

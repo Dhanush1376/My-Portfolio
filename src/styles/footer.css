@@ -4,10 +4,14 @@
 
 .footer-redesign-wrapper {
   position: relative;
-  z-index: 18;
+  z-index: 60 !important;
   display: flex;
   padding: 0 1rem 1rem 1rem; /* Minimal outer padding */
   background: var(--bg);
+  border-top: none !important;
+  box-shadow: none !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
   overflow: hidden; /* Added to clip 100vw giant text and ensure no horizontal scrollbars */
   /* Footer Theme Variables - Dark Mode Default */
   --footer-panel-bg: #1C1E26; /* Distinctly lighter than #0A0A0D */
@@ -32,18 +36,53 @@
   --footer-pill-hover-text: #FFFFFF;
 }
 
+/* Ensure seamless blending with zero shadows, borders, or lines on the entire footer entrance */
+.footer-redesign-wrapper,
+.footer-main-block,
+.footer-left-column,
+.footer-social-bar,
+.footer-left-extension,
+.footer-right-column,
+.footer-right-extension,
+.footer-mobile-inverted-corner,
+.footer-inverted-corner,
+.footer-inverted-corner-right {
+  box-shadow: none !important;
+  border-top: none !important;
+  filter: none !important;
+}
+
+/* Non-Home Page Footers: Generous breathing room and zero overlapping */
+.contact-page-wrapper .footer-redesign-wrapper {
+  position: relative !important;
+  z-index: 20 !important;
+  margin-top: clamp(3.5rem, 6vw, 6rem) !important;
+  padding-top: 0 !important;
+}
+
+.services-page-container .footer-redesign-wrapper,
+.about-page-wrapper .footer-redesign-wrapper {
+  position: relative !important;
+  z-index: 20 !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
 @media (max-width: 1024px) {
   .footer-redesign-wrapper {
     padding: 0 1rem 1rem 1rem;
+    padding-top: 0 !important;
   }
 }
 
 @media (max-width: 768px) {
   .footer-redesign-wrapper {
-    padding: 0.75rem 0.5rem 0.75rem 0.5rem; /* Tighter outer padding on mobile */
+    padding: 0 0.5rem 0.75rem 0.5rem; /* No top gap: blends directly into contact */
     gap: 0;
     display: block; /* Disable flex row so main panel takes 100% width */
     position: relative;
+    box-shadow: none !important;
+    border-top: none !important;
   }
 }
 
@@ -53,6 +92,8 @@
   flex-direction: column;
   width: 80px; /* Fixed width for the sidebar */
   flex-shrink: 0;
+  box-shadow: none !important;
+  border: none !important;
 }
 
 .footer-mobile-inverted-corner {
@@ -62,7 +103,7 @@
 @media (max-width: 768px) {
   .footer-left-column {
     position: absolute;
-    top: 0.75rem;
+    top: 0;
     left: 0.5rem;
     width: auto;
     background: var(--bg);
@@ -71,6 +112,8 @@
     border-bottom-left-radius: 26px;
     border-bottom-right-radius: 26px;
     z-index: 20;
+    box-shadow: none !important;
+    border: none !important;
   }
 
   .footer-mobile-inverted-corner {
@@ -81,6 +124,8 @@
     width: 26px;
     height: 26px;
     pointer-events: none;
+    box-shadow: none !important;
+    filter: none !important;
   }
 }
 

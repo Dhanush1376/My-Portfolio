@@ -1,223 +1,501 @@
 /* ==========================================================================
-   CAPABILITIES / WHAT I BUILD EDITORIAL SECTION
+   OUR EXPERTISE / SERVICES EDITORIAL SECTION (Image 2 Card Layout)
+   Clean, tactile, modern editorial card layout with icons & descriptions
    ========================================================================== */
 
 .capabilities-editorial-section {
   position: relative;
-  background: var(--bg-alt);
-  padding: 8rem 4rem;
-  overflow: hidden;
-  z-index: 13;
+  background: var(--bg-alt, #0e0f13);
+  padding: clamp(5rem, 8vw, 8rem) clamp(1.5rem, 4vw, 3.5rem) clamp(240px, 30vh, 420px);
+  overflow-x: clip;
   transition: background 0.4s ease;
 }
 
 @media (max-width: 1024px) {
   .capabilities-editorial-section {
-    padding: 6rem 2.5rem;
+    padding: clamp(4.5rem, 7vw, 6.5rem) 2rem clamp(200px, 26vh, 360px) 2rem;
   }
 }
 
 @media (max-width: 768px) {
   .capabilities-editorial-section {
-    padding: 5rem 1.25rem;
+    padding: 4.5rem 1.25rem clamp(180px, 22vh, 300px) 1.25rem;
   }
 }
 
-.capabilities-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 3rem;
-  margin-bottom: 5rem;
-}
-
-@media (max-width: 900px) {
-  .capabilities-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
-    margin-bottom: 3.5rem;
-  }
-}
-
-.capabilities-header-desc {
-  max-width: 480px;
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-.capabilities-editorial-list {
-  max-width: 1360px;
+.expertise-container {
+  max-width: 1320px;
   margin: 0 auto;
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Header (Exact WhyCreatives 3-Column Layout on Laptop)
+   Left: Tag | Center: Centered Headline | Right: Subtitle + Button
+   -------------------------------------------------------------------------- */
+
+.expertise-header {
+  display: grid;
+  grid-template-columns: clamp(140px, 14vw, 190px) 1fr clamp(240px, 22vw, 290px);
+  align-items: start;
+  gap: clamp(1.5rem, 2.5vw, 3rem);
+  margin-bottom: clamp(3rem, 6vh, 4.8rem);
+  width: 100%;
+}
+
+.expertise-header-left {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 0.5rem;
+}
+
+.expertise-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono, monospace);
+  font-size: clamp(0.72rem, 0.8vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.expertise-tag-dot {
+  display: inline-block;
+  font-size: 1.15em;
+  line-height: 1;
+  color: var(--accent, #FF5520);
+}
+
+.expertise-header-center {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.expertise-title {
+  font-family: var(--font-display, 'Plus Jakarta Sans', -apple-system, sans-serif);
+  font-size: clamp(2rem, 3.4vw, 3.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--text, #ffffff);
+  margin: 0;
+  text-align: center;
+}
+
+.expertise-title .title-line {
+  display: block;
+}
+
+.expertise-header-right {
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--border);
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding-top: 0.35rem;
 }
 
-.capability-row {
-  border-bottom: 1px solid var(--border);
-  padding: 2.25rem 0;
-  transition: background 0.3s ease, border-color 0.3s ease;
-  cursor: pointer;
+.expertise-header-desc {
+  font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(0.82rem, 0.95vw, 0.92rem);
+  line-height: 1.5;
+  color: var(--text-secondary, #8E8EA0);
+  margin: 0;
+  max-width: 270px;
 }
 
-.capability-row:hover,
-.capability-row.expanded {
-  border-bottom-color: var(--border-strong);
-}
-
-.cap-row-top {
-  display: grid;
-  grid-template-columns: 80px 1fr 60px;
+/* See All Services Pill Button (Matching About Section Primary Button) */
+.see-all-services-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 2rem;
+  justify-content: center;
+  height: 48px;
+  gap: 0.85rem;
+  padding: 0 8px 0 1.45rem;
+  border-radius: 999px;
+  background: #FFFFFF;
+  color: #0E0F12;
+  font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: -0.012em;
+  text-decoration: none;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.22);
+  white-space: nowrap;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.see-all-services-btn:hover {
+  transform: translateY(-3px);
+  background: #F4F4F5;
+  box-shadow: 0 12px 30px rgba(255, 255, 255, 0.3);
+}
+
+.see-all-arrow-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #0E0F12;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 750;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.see-all-services-btn:hover .see-all-arrow-badge {
+  transform: translate(2px, -2px);
+}
+
+/* --------------------------------------------------------------------------
+   Services List & Big Editorial Rows (Exact WhyCreatives Structure)
+   -------------------------------------------------------------------------- */
+
+.expertise-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+}
+
+.expertise-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: clamp(1.4rem, 2.6vh, 2.3rem) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: border-bottom-color 0.25s ease;
+  position: relative;
+}
+
+.expertise-row:hover {
+  border-bottom-color: rgba(255, 255, 255, 0.28);
+}
+
+.expertise-row-left {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex: 1;
+}
+
+/* 1. Rounded Icon Tile (Expands on Hover matching WhyCreatives screenshot) */
+.expertise-icon-box {
+  width: 0;
+  height: clamp(52px, 4.8vw, 68px);
+  border-radius: clamp(14px, 1.3vw, 18px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 0 solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  flex-shrink: 0;
+  opacity: 0;
+  margin-right: 0;
+  transform: scale(0.6);
+  overflow: hidden;
+  pointer-events: none;
+  visibility: hidden;
+  box-sizing: border-box;
+  transition:
+    width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.25s ease,
+    margin-right 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.35s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.expertise-icon-box svg {
+  width: clamp(26px, 2.4vw, 32px);
+  height: clamp(26px, 2.4vw, 32px);
+  stroke-width: 2.2px;
+  color: #FFFFFF;
+  stroke: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.expertise-row:hover .expertise-icon-box {
+  width: clamp(52px, 4.8vw, 68px);
+  opacity: 1;
+  visibility: visible;
+  border-width: 1px;
+  margin-right: clamp(1.25rem, 2.2vw, 2.25rem);
+  transform: scale(1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* 2. Big Editorial Service Title (Matching Screenshot Typography) */
+.expertise-row-name {
+  font-family: var(--font-display, 'Plus Jakarta Sans', -apple-system, sans-serif);
+  font-size: clamp(2.4rem, 5.2vw, 4.65rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  color: #FFFFFF;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* When hovering over the list, the rest comes fade */
+.expertise-list:hover .expertise-row .expertise-row-name {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Actively hovered item stays bold pure white */
+.expertise-list .expertise-row:hover .expertise-row-name {
+  color: #FFFFFF;
+}
+
+/* 3. Right Interactive Arrow Button (Reveals on Hover matching screenshot) */
+.expertise-row-arrow {
+  width: clamp(44px, 4vw, 56px);
+  height: clamp(44px, 4vw, 56px);
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: #0E0F12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.65) translate(-10px, 10px);
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease,
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.expertise-row-arrow svg {
+  width: clamp(20px, 2vw, 26px);
+  height: clamp(20px, 2vw, 26px);
+  stroke-width: 2.4px;
+}
+
+.expertise-row:hover .expertise-row-arrow {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1) translate(0, 0);
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Light Theme Explicit Rules
+   -------------------------------------------------------------------------- */
+
+[data-theme="light"] .capabilities-editorial-section,
+body[data-theme="light"] .capabilities-editorial-section {
+  background: var(--bg-alt, #F2EFE8);
+}
+
+[data-theme="light"] .expertise-tag,
+body[data-theme="light"] .expertise-tag {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="light"] .expertise-title,
+body[data-theme="light"] .expertise-title {
+  color: #121217;
+}
+
+[data-theme="light"] .see-all-services-btn,
+body[data-theme="light"] .see-all-services-btn {
+  background: #0E0F12;
+  color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(14, 15, 18, 0.15);
+}
+
+[data-theme="light"] .see-all-services-btn:hover,
+body[data-theme="light"] .see-all-services-btn:hover {
+  background: #1C1E24;
+  box-shadow: 0 8px 22px rgba(14, 15, 18, 0.25);
+}
+
+[data-theme="light"] .see-all-services-btn .see-all-arrow-badge,
+body[data-theme="light"] .see-all-services-btn .see-all-arrow-badge {
+  background: #FFFFFF;
+  color: #0E0F12;
+}
+
+[data-theme="light"] .expertise-list,
+body[data-theme="light"] .expertise-list {
+  border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .expertise-row,
+body[data-theme="light"] .expertise-row {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .expertise-row:hover,
+body[data-theme="light"] .expertise-row:hover {
+  border-bottom-color: rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] .expertise-icon-box,
+body[data-theme="light"] .expertise-icon-box {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #121217;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .expertise-icon-box svg,
+body[data-theme="light"] .expertise-icon-box svg {
+  color: #121217;
+  stroke: #121217;
+}
+
+[data-theme="light"] .expertise-row:hover .expertise-icon-box,
+body[data-theme="light"] .expertise-row:hover .expertise-icon-box {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+[data-theme="light"] .expertise-row-name,
+body[data-theme="light"] .expertise-row-name {
+  color: #121217;
+}
+
+/* When list is hovered in light mode, the rest comes fade */
+[data-theme="light"] .expertise-list:hover .expertise-row .expertise-row-name,
+body[data-theme="light"] .expertise-list:hover .expertise-row .expertise-row-name {
+  color: rgba(18, 18, 23, 0.22);
+}
+
+/* Actively hovered item stays bold full dark in light mode */
+[data-theme="light"] .expertise-list .expertise-row:hover .expertise-row-name,
+body[data-theme="light"] .expertise-list .expertise-row:hover .expertise-row-name {
+  color: #121217;
+}
+
+[data-theme="light"] .expertise-header-desc,
+body[data-theme="light"] .expertise-header-desc {
+  color: #656877;
+}
+
+[data-theme="light"] .expertise-row-arrow,
+body[data-theme="light"] .expertise-row-arrow {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.09);
+  color: #121217;
+}
+
+[data-theme="light"] .expertise-row:hover .expertise-row-arrow,
+body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
+  background: #0E0F12;
+  border-color: #0E0F12;
+  color: #FFFFFF;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1024px) {
+  .expertise-header {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .expertise-header-left {
+    padding-top: 0;
+  }
+
+  .expertise-header-center {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .expertise-title {
+    text-align: left;
+    font-size: clamp(2rem, 4.5vw, 2.75rem);
+  }
+
+  .expertise-header-right {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1.5rem;
+    padding-top: 0;
+  }
+
+  .expertise-header-desc {
+    max-width: 360px;
+  }
 }
 
 @media (max-width: 768px) {
-  .cap-row-top {
-    grid-template-columns: 40px 1fr 30px;
-    gap: 1rem;
+  .expertise-row {
+    padding: 1.25rem 0;
   }
-}
 
-.cap-num {
-  font-family: var(--font-mono, monospace);
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.05em;
-}
-
-.cap-title-block {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.cap-name {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3.2vw, 2.5rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--text);
-  margin: 0;
-  transition: color 0.25s ease, transform 0.25s ease;
-}
-
-.capability-row:hover .cap-name,
-.capability-row.expanded .cap-name {
-  color: var(--accent);
-  transform: translateX(4px);
-}
-
-.cap-summary {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  margin: 0;
-  max-width: 800px;
-}
-
-.cap-indicator {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.cap-plus {
-  font-family: var(--font-mono, monospace);
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: var(--text-muted);
-  transition: color 0.25s ease, transform 0.25s ease;
-}
-
-.capability-row:hover .cap-plus,
-.capability-row.expanded .cap-plus {
-  color: var(--accent);
-}
-
-/* Detail Drawer */
-.cap-detail-drawer {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: max-height 0.45s var(--transition), opacity 0.4s ease, margin-top 0.3s ease;
-}
-
-.capability-row.expanded .cap-detail-drawer {
-  max-height: 400px;
-  opacity: 1;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.cap-detail-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1.2fr 0.8fr;
-  gap: 2.5rem;
-  padding-left: 80px;
-}
-
-@media (max-width: 950px) {
-  .cap-detail-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    padding-left: 0;
+  .expertise-row-name {
+    font-size: clamp(1.6rem, 6.5vw, 2.35rem);
   }
-}
 
-.cap-detail-label {
-  display: block;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--accent);
-  margin-bottom: 0.75rem;
-  text-transform: uppercase;
-}
+  /* Keep icon box compact & visible on mobile */
+  .expertise-icon-box {
+    width: 44px;
+    height: 44px;
+    opacity: 1;
+    margin-right: 0.85rem;
+    transform: scale(1);
+    border-radius: 12px;
+  }
 
-.cap-deliverables-text {
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  margin: 0;
-}
+  .expertise-icon-box svg {
+    width: 22px;
+    height: 22px;
+  }
 
-.cap-tech-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
+  .expertise-row:hover .expertise-icon-box {
+    width: 44px;
+    margin-right: 0.85rem;
+  }
 
-.cap-tech-pill {
-  padding: 0.3rem 0.7rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--text);
-}
+  .expertise-row-arrow {
+    width: 38px;
+    height: 38px;
+    opacity: 1;
+    transform: scale(1) translate(0, 0);
+  }
 
-.cap-proof-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-mono, monospace);
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--text);
-  text-decoration: none;
-  transition: color 0.2s ease, transform 0.2s ease;
-}
-
-.cap-proof-link:hover {
-  color: var(--accent);
-  transform: translateX(3px);
+  .expertise-row-arrow svg {
+    width: 17px;
+    height: 17px;
+  }
 }

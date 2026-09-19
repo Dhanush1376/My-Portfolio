@@ -6,6 +6,7 @@ import React, { useState, useEffect, useRef } from 'react';
  * with cycling animated phrase stages and bottom indicator dots.
  */
 export default function KineticStage({
+  projectId = '',
   phrases = [],
   tone = 'light',
   seed = 0,
@@ -43,9 +44,9 @@ export default function KineticStage({
     return () => observer.disconnect();
   }, []);
 
-  // Timer to rotate phrases
+  // Timer to rotate phrases (only when typography stage is active)
   useEffect(() => {
-    if (!isVisible || phrases.length < 2) return;
+    if (showImagePreview || !isVisible || phrases.length < 2) return;
 
     const interval = setInterval(() => {
       setIsTransitioning(true);
@@ -56,7 +57,7 @@ export default function KineticStage({
     }, intervalMs);
 
     return () => clearInterval(interval);
-  }, [isVisible, phrases.length, intervalMs]);
+  }, [showImagePreview, isVisible, phrases.length, intervalMs]);
 
   if (!phrases || phrases.length === 0) return null;
 
@@ -103,7 +104,7 @@ export default function KineticStage({
             <img
               src={activePreviewImg}
               alt="Project Preview"
-              className="kinetic-preview-img"
+              className={`kinetic-preview-img kinetic-img-${projectId || 'default'}`}
             />
           )}
           <div className="kinetic-preview-overlay" />

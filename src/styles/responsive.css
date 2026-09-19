@@ -701,10 +701,10 @@
     opacity: 0.3;
   }
 
-  /* Custom cursor enabled on touch devices */
+  /* Custom cursor completely disabled on mobile/touch devices */
   .cursor-dot,
   .cursor-outline {
-    pointer-events: none;
+    display: none !important;
   }
 
   html,

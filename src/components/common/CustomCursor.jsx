@@ -1,31 +1,53 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 
 /**
  * CustomCursor Component
- * Seamlessly blends:
- * 1. Precision 7px dot tracking pointer instantly.
- * 2. Butter-smooth trailing ring across standard site elements.
- * 3. Smooth magnetic expansion on interactive links/buttons.
- * 4. The signature WhyCreatives floating circular badge with diagonal arrow (↗)
- *    when hovering/touching project cards, with spring rotation & soft drop shadow.
- * 5. Full cross-device support (desktop mouse + mobile touch interaction).
+ * Strictly enabled on LAPTOP / DESKTOP devices with a mouse/trackpad.
+ * Completely disabled on mobile and touch devices, which use normal default cursor.
  */
 export default function CustomCursor() {
+  const [isLaptop, setIsLaptop] = useState(false);
   const dotRef = useRef(null);
   const outlineRef = useRef(null);
   const arrowRef = useRef(null);
 
+  // 1. Detect if current device is laptop/desktop with a fine mouse/trackpad pointer
   useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1025px) and (pointer: fine)');
+    
+    const updateDeviceMatch = () => {
+      setIsLaptop(mediaQuery.matches);
+    };
+
+    updateDeviceMatch();
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', updateDeviceMatch);
+    } else {
+      mediaQuery.addListener(updateDeviceMatch);
+    }
+
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', updateDeviceMatch);
+      } else {
+        mediaQuery.removeListener(updateDeviceMatch);
+      }
+    };
+  }, []);
+
+  // 2. Setup mouse cursor tracking on laptop only
+  useEffect(() => {
+    if (!isLaptop) return;
+
     const dot = dotRef.current;
     const outline = outlineRef.current;
-    const arrow = arrowRef.current;
     if (!dot || !outline) return;
 
-    // Offload centering to GSAP to avoid CSS transform conflicts
+    // Center elements with GSAP
     gsap.set([dot, outline], { xPercent: -50, yPercent: -50 });
 
-    // Fast GSAP quickSetters for high-refresh 120fps/144fps tracking
     const setDotX = gsap.quickSetter(dot, 'x', 'px');
     const setDotY = gsap.quickSetter(dot, 'y', 'px');
     const setOutlineX = gsap.quickSetter(outline, 'x', 'px');
@@ -34,7 +56,6 @@ export default function CustomCursor() {
     let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     let outlinePos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     let isVisible = true;
-    let touchFadeTimer = null;
 
     const showCursor = () => {
       if (!isVisible) {
@@ -47,7 +68,7 @@ export default function CustomCursor() {
     const checkHoverTarget = (target) => {
       if (!target) return;
 
-      // 1. Project Card detection (triggers the solid circular arrow badge only on featured work cards)
+      // 1. Project Card detection (circular arrow badge)
       const isProjectCard =
         target.closest('.why-project-card-item .why-project-interactive-group, [data-cursor="project"]') &&
         !target.closest('.studio-alt-hub, .why-service-card-group');
@@ -63,7 +84,15 @@ export default function CustomCursor() {
         outline.classList.remove('cursor-project');
       }
 
-      // 2. Standard Clickable Elements (triggers sleek ring expansion)
+      // 2. Editorial Expertise Row detection (keep cursor sleek & standard without 50px orange ring)
+      const isExpertiseRow = target.closest('.expertise-row');
+      if (isExpertiseRow) {
+        dot.classList.remove('cursor-hover', 'cursor-project');
+        outline.classList.remove('cursor-hover', 'cursor-project');
+        return;
+      }
+
+      // 3. Standard Clickable Elements
       const isClickable = target.closest(
         'a, button, [role="button"], input, select, textarea, .nav-item, .studio-pill-btn, .why-case-btn, .why-link-btn, .trust-item, .accordion-item-head, .creds-toggle-btn, .service-pill-chip, .step-nav-tab, .hero-dock-btn'
       );
@@ -77,7 +106,6 @@ export default function CustomCursor() {
       }
     };
 
-    // Desktop Mouse Handlers
     const onMouseMove = (e) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
@@ -110,73 +138,12 @@ export default function CustomCursor() {
       checkHoverTarget(e.target);
     };
 
-    // Mobile Touch Handlers
-    const onTouchStart = (e) => {
-      if (!e.touches || e.touches.length === 0) return;
-      if (touchFadeTimer) clearTimeout(touchFadeTimer);
-
-      const touch = e.touches[0];
-      mouse.x = touch.clientX;
-      mouse.y = touch.clientY;
-      setDotX(mouse.x);
-      setDotY(mouse.y);
-
-      // Snap outline position near touch immediately
-      outlinePos.x = mouse.x;
-      outlinePos.y = mouse.y;
-      setOutlineX(mouse.x);
-      setOutlineY(mouse.y);
-
-      showCursor();
-      dot.classList.add('cursor-clicking');
-      outline.classList.add('cursor-clicking');
-
-      const target = document.elementFromPoint(touch.clientX, touch.clientY);
-      if (target) checkHoverTarget(target);
-    };
-
-    const onTouchMove = (e) => {
-      if (!e.touches || e.touches.length === 0) return;
-      if (touchFadeTimer) clearTimeout(touchFadeTimer);
-
-      const touch = e.touches[0];
-      mouse.x = touch.clientX;
-      mouse.y = touch.clientY;
-      setDotX(mouse.x);
-      setDotY(mouse.y);
-      showCursor();
-
-      const target = document.elementFromPoint(touch.clientX, touch.clientY);
-      if (target) checkHoverTarget(target);
-    };
-
-    const onTouchEnd = () => {
-      dot.classList.remove('cursor-clicking');
-      outline.classList.remove('cursor-clicking');
-      dot.classList.remove('cursor-hover');
-      outline.classList.remove('cursor-hover');
-      dot.classList.remove('cursor-project');
-      outline.classList.remove('cursor-project');
-
-      // Keep cursor briefly visible then smoothly fade
-      touchFadeTimer = setTimeout(() => {
-        isVisible = false;
-        dot.classList.add('cursor-hidden');
-        outline.classList.add('cursor-hidden');
-      }, 1200);
-    };
-
     window.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseleave', onMouseLeave);
     document.addEventListener('mouseenter', onMouseEnter);
     window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mouseup', onMouseUp);
     document.addEventListener('mouseover', handleMouseOver);
-
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('touchend', onTouchEnd, { passive: true });
-    window.addEventListener('touchcancel', onTouchEnd, { passive: true });
 
     // Smooth physics lerp ticker for outer circle badge
     const updateOutline = () => {
@@ -190,22 +157,20 @@ export default function CustomCursor() {
     gsap.ticker.add(updateOutline);
 
     return () => {
-      if (touchFadeTimer) clearTimeout(touchFadeTimer);
       window.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseleave', onMouseLeave);
       document.removeEventListener('mouseenter', onMouseEnter);
       window.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mouseup', onMouseUp);
       document.removeEventListener('mouseover', handleMouseOver);
-
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('touchend', onTouchEnd);
-      window.removeEventListener('touchcancel', onTouchEnd);
-
       gsap.ticker.remove(updateOutline);
     };
-  }, []);
+  }, [isLaptop]);
+
+  // On mobile or non-laptop screens, render nothing so browser default cursor is active
+  if (!isLaptop) {
+    return null;
+  }
 
   return (
     <>

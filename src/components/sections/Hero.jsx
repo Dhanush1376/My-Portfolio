@@ -105,57 +105,74 @@ export default function Hero() {
 
   const liquidFillRef = useRef(null);
   const stageContentRef = useRef(null);
+  const hasAnimatedRef = useRef(false);
 
-  // Entrance Animation: Liquid rising from the bottom
+  // Entrance Animation: Runs strictly ONCE on mount, never repeats on layout recalculations
   useEffect(() => {
-    if (liquidFillRef.current && layout.cardHeight > 0 && cardPath) {
-      // Set initial states
-      gsap.set(liquidFillRef.current, { y: layout.cardHeight });
-      if (stageContentRef.current) {
-        gsap.set(stageContentRef.current, { opacity: 0, y: 20 });
-      }
-      
-      const tl = gsap.timeline({ delay: 0.1 });
-      
-      // Liquid rushes up
-      tl.to(liquidFillRef.current, {
-        y: 0,
-        duration: 1.4,
-        ease: 'power4.out'
-      });
-      
-      // Stage content floats in as the liquid settles
-      if (stageContentRef.current) {
-        tl.to(stageContentRef.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power2.out'
-        }, '-=0.6');
-      }
+    if (!liquidFillRef.current || !cardPath || layout.cardHeight <= 0) return;
 
-      // Kinetic Headline Reveal with line masks and de-blur
+    // If already animated once, ensure elements stay at full resting visibility and do not re-animate
+    if (hasAnimatedRef.current) {
+      gsap.set(liquidFillRef.current, { y: 0 });
+      if (stageContentRef.current) {
+        gsap.set(stageContentRef.current, { opacity: 1, y: 0 });
+      }
       if (controlsRef.current) {
         const lines = controlsRef.current.querySelectorAll('.hero-anim-line');
         if (lines.length > 0) {
-          tl.fromTo(
-            lines,
-            {
-              yPercent: 125,
-              opacity: 0,
-              filter: 'blur(5px)',
-            },
-            {
-              yPercent: 0,
-              opacity: 1,
-              filter: 'blur(0px)',
-              duration: 1.05,
-              stagger: 0.12,
-              ease: 'power4.out',
-            },
-            '-=1.2' // Start slightly after liquid begins rising
-          );
+          gsap.set(lines, { yPercent: 0, opacity: 1, filter: 'none', clearProps: 'all' });
         }
+      }
+      return;
+    }
+
+    // Mark as animated immediately to lock it to a single execution
+    hasAnimatedRef.current = true;
+
+    // Set initial states for the single coordinated entrance
+    gsap.set(liquidFillRef.current, { y: Math.min(layout.cardHeight, 160) });
+    if (stageContentRef.current) {
+      gsap.set(stageContentRef.current, { opacity: 0, y: 12 });
+    }
+
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    // 1. Single smooth card reveal
+    tl.to(liquidFillRef.current, {
+      y: 0,
+      duration: 0.75,
+      ease: 'power3.out',
+    });
+
+    // 2. Stage content spec pill
+    if (stageContentRef.current) {
+      tl.to(stageContentRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.55,
+      }, '-=0.55');
+    }
+
+    // 3. Clean, unified headline reveal without multiple separate staggered steps
+    if (controlsRef.current) {
+      const lines = controlsRef.current.querySelectorAll('.hero-anim-line');
+      if (lines.length > 0) {
+        tl.fromTo(
+          lines,
+          {
+            yPercent: 35,
+            opacity: 0,
+          },
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.65,
+            stagger: 0.08,
+            ease: 'power3.out',
+            clearProps: 'transform,opacity',
+          },
+          '-=0.65'
+        );
       }
     }
   }, [layout.cardHeight, cardPath]);
@@ -287,7 +304,7 @@ export default function Hero() {
   const { paddingLeft, cardTop, cardHeight, cardWidth, W_left } = layout;
 
   return (
-    <section className="hero-why" id="hero" ref={heroRef}>
+    <section className="hero-why stack-section" id="hero" ref={heroRef}>
       {/* Orange Container Canvas: Dynamic stepped studio layout */}
       <div
         ref={wrapperRef}
@@ -354,8 +371,8 @@ export default function Hero() {
         {/* Stage Content */}
         <div className="hero-orange-stage-content" ref={stageContentRef}>
           <div className="orange-stage-pill">
-            <span className="orange-pulse-dot"></span>
-            <span>STUDIO SPEC // DHANUSH</span>
+            <span className="orange-pulse-dot" aria-hidden="true">•</span>
+            <span>FULL STACK &amp; AI // DHANUSH</span>
           </div>
           <div className="orange-stage-headline">
             ENGINEERED FOR SCALE,<br />BUILT FOR UTILITY.

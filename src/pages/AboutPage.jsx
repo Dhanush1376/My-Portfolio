@@ -9,127 +9,44 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import CustomCursor from '../components/common/CustomCursor';
 import Contact from '../components/sections/Contact';
+import AlternativeDiscoveryHub from '../components/sections/AlternativeDiscoveryHub';
 
 const FAQ_ITEMS = [
   {
     num: '01',
-    category: 'CAPABILITIES',
-    question: 'What types of systems and applications do you build?',
-    lead: 'End-to-end production systems engineered for measurable speed, utility, and scale:',
-    points: [
-      {
-        title: 'Full-Stack SaaS & Web Apps',
-        desc: 'Reactive Next.js & React frontends backed by high-concurrency Node.js & FastAPI architectures.'
-      },
-      {
-        title: 'AI & RAG Intelligence',
-        desc: 'Custom vector pipelines (ChromaDB, Pinecone) with verified zero-hallucination citations.'
-      },
-      {
-        title: 'Automated Checkout & APIs',
-        desc: 'Sub-second CDN storefronts, WhatsApp funnels, and enterprise Stripe payment flows.'
-      }
-    ]
+    category: 'SERVICES',
+    question: 'What kind of projects do you work on?',
+    answer: 'I build custom full-stack web applications, modern responsive websites, mobile apps, and AI-powered tools. Whether you need a product built from scratch, a sleek redesign, or complex backend APIs, I handle everything from design to final deployment.'
   },
   {
     num: '02',
-    category: 'AI & RAG',
-    question: 'How do you integrate AI or RAG into an existing product?',
-    lead: 'Securely and seamlessly, with zero disruption to your active operations:',
-    points: [
-      {
-        title: 'Proprietary Vector Search',
-        desc: 'Direct dense embeddings connected to your internal documentation, PDFs, or live SQL databases.'
-      },
-      {
-        title: 'Deterministic Guardrails',
-        desc: 'Strict source attribution and automated evaluation pipelines that eliminate AI hallucination.'
-      },
-      {
-        title: 'Sub-800ms Latency',
-        desc: 'Streaming response interfaces, autonomous agent tool-calling, and custom LangChain orchestration.'
-      }
-    ]
+    category: 'PRICING',
+    question: 'How much do you charge for a project?',
+    answer: 'Pricing depends on the scope and features you need. I provide transparent, fixed-price quotes upfront with milestone-based payments, so you know the exact cost before work begins—with zero surprise fees.'
   },
   {
     num: '03',
-    category: 'TIMELINES',
-    question: 'What is your typical turnaround time for a project?',
-    lead: 'Milestone-driven engineering with continuous staging releases:',
-    points: [
-      {
-        title: '2 to 4 Weeks',
-        desc: 'Production-ready MVPs, interactive storefronts, and focused client applications.'
-      },
-      {
-        title: '4 to 8 Weeks',
-        desc: 'Complex SaaS software, multi-tenant databases, and enterprise AI retrieval systems.'
-      },
-      {
-        title: 'Live Staging Demos',
-        desc: 'Bi-weekly builds deployed to private preview environments for continuous testing.'
-      }
-    ]
+    category: 'TIMELINE',
+    question: 'How long does a typical project take?',
+    answer: 'Most standard projects take between 1 to 3 weeks. For urgent MVPs, landing pages, or prototypes, I can often turn around a working build in just a few days. We establish clear delivery milestones right from day one.'
   },
   {
     num: '04',
-    category: 'WORKFLOW',
-    question: 'How do we collaborate and track development progress?',
-    lead: 'Radical transparency with zero guesswork or radio silence:',
-    points: [
-      {
-        title: 'Private GitHub Access',
-        desc: 'Direct visibility into daily commits, branch workflows, and clean code architecture.'
-      },
-      {
-        title: 'Live Staging URLs',
-        desc: 'Private links updated on every push so you can test features on real devices.'
-      },
-      {
-        title: 'Instant Channels',
-        desc: 'Direct Slack, Discord, or WhatsApp access, plus asynchronous weekly Loom walkthroughs.'
-      }
-    ]
+    category: 'COMMUNICATION',
+    question: 'How will we communicate and track progress?',
+    answer: 'Direct 1-on-1 collaboration via WhatsApp, Slack, or email—no middlemen or delays. You also get private live preview links on every update so you can test features on your own devices in real time.'
   },
   {
     num: '05',
-    category: 'ENGAGEMENT',
-    question: 'How are project rates and contracts structured?',
-    lead: 'Predictable and transparent models tailored to your team’s velocity:',
-    points: [
-      {
-        title: 'Fixed-Scope Milestones',
-        desc: 'Locked deliverables and milestone pricing for well-scoped projects — no surprise bills.'
-      },
-      {
-        title: 'Dedicated Sprints',
-        desc: 'Weekly or monthly blocks for high-velocity startups needing continuous architectural evolution.'
-      },
-      {
-        title: 'Deliverable Verification',
-        desc: 'Milestone payments released only after your team reviews and approves live software.'
-      }
-    ]
+    category: 'AI & TECH',
+    question: 'Can you integrate AI or work with my existing code?',
+    answer: 'Yes, absolutely. I frequently connect custom AI assistants, automated workflows, smart search, and third-party APIs into existing websites or codebases smoothly, with zero downtime or disruption.'
   },
   {
     num: '06',
     category: 'SUPPORT',
-    question: 'Do you provide post-launch support and maintenance?',
-    lead: 'Every deployment is backed by post-launch reliability coverage:',
-    points: [
-      {
-        title: '30-Day Launch Warranty',
-        desc: 'Complimentary bug resolution, telemetry logging, and performance tuning post-deployment.'
-      },
-      {
-        title: 'Complete Architecture Handoff',
-        desc: 'Detailed documentation, video walkthroughs, and clean codebase transfer to your team.'
-      },
-      {
-        title: 'Ongoing Retainers',
-        desc: 'Flexible monthly agreements for security audits, continuous scaling, and feature additions.'
-      }
-    ]
+    question: 'Do you offer support after the project is delivered?',
+    answer: 'Yes! Every project includes dedicated post-launch support and bug fixes to ensure everything runs flawlessly. If you need ongoing maintenance, updates, or new features down the road, flexible retainers are also available.'
   }
 ];
 
@@ -325,7 +242,16 @@ export default function AboutPage() {
           },
           'heroPanelArrived+=0.12'
         );
+
+        tl.eventCallback('onComplete', () => {
+          ScrollTrigger.refresh();
+        });
       }
+
+      const handleResize = () => {
+        ScrollTrigger.refresh();
+      };
+      window.addEventListener('resize', handleResize);
 
       // =========================================================================
       // SCROLL-TRIGGERED ANIMATIONS (FAQS & CONTENT SECTIONS)
@@ -357,7 +283,7 @@ export default function AboutPage() {
         const techTag = techHeader?.querySelector('.tilted-tag-wrapper');
         const techLines = techHeader?.querySelectorAll('.tech-line-inner');
 
-        // 1. Tilted tape tag bounce-pop on scroll (triggers earlier at top 95%)
+        // 1. Tilted tape tag bounce-pop on scroll
         if (techTag) {
           gsap.fromTo(
             techTag,
@@ -371,13 +297,14 @@ export default function AboutPage() {
               ease: 'back.out(2)',
               scrollTrigger: {
                 trigger: techHeader,
-                start: 'top 95%',
+                start: 'top 92%',
+                once: true,
               },
             }
           );
         }
 
-        // 2. Kinetic Headline Mask Reveal on scroll (triggers earlier at top 95%)
+        // 2. Kinetic Headline Mask Reveal on scroll
         if (techLines && techLines.length > 0) {
           gsap.fromTo(
             techLines,
@@ -399,7 +326,8 @@ export default function AboutPage() {
               ease: 'power4.out',
               scrollTrigger: {
                 trigger: techHeader,
-                start: 'top 95%',
+                start: 'top 92%',
+                once: true,
               },
             }
           );
@@ -413,7 +341,7 @@ export default function AboutPage() {
         const faqLines = faqHeader?.querySelectorAll('.faq-line-inner');
         const faqRows = bentoRef.current.querySelectorAll('.faq-editorial-row');
 
-        // 1. Tilted tape tag bounce-pop on scroll (triggers earlier at top 95%)
+        // 1. Tilted tape tag bounce-pop on scroll
         if (faqTag) {
           gsap.fromTo(
             faqTag,
@@ -427,13 +355,14 @@ export default function AboutPage() {
               ease: 'back.out(2)',
               scrollTrigger: {
                 trigger: faqHeader,
-                start: 'top 95%',
+                start: 'top 92%',
+                once: true,
               },
             }
           );
         }
 
-        // 2. Kinetic Headline Mask Reveal on scroll (triggers earlier at top 95%)
+        // 2. Kinetic Headline Mask Reveal on scroll
         if (faqLines && faqLines.length > 0) {
           gsap.fromTo(
             faqLines,
@@ -455,7 +384,8 @@ export default function AboutPage() {
               ease: 'power4.out',
               scrollTrigger: {
                 trigger: faqHeader,
-                start: 'top 95%',
+                start: 'top 92%',
+                once: true,
               },
             }
           );
@@ -481,14 +411,17 @@ export default function AboutPage() {
               scrollTrigger: {
                 trigger: '.faq-editorial-list',
                 start: 'top 85%',
+                once: true,
               },
             }
           );
         }
       }
-    }, overlayRef);
+    }, overlayRef.current || undefined);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+    };
   }, []);
 
   const scrollToStory = () => {
@@ -714,18 +647,7 @@ export default function AboutPage() {
                   <div className="faq-row-drawer">
                     <div className="faq-drawer-inner">
                       <div className="faq-answer-block">
-                        <p className="faq-answer-lead">{item.lead}</p>
-                        <div className="faq-answer-grid">
-                          {item.points.map((pt, pIdx) => (
-                            <div key={pIdx} className="faq-point-card">
-                              <div className="faq-point-header">
-                                <span className="faq-point-dot" aria-hidden="true" />
-                                <span className="faq-point-title">{pt.title}</span>
-                              </div>
-                              <p className="faq-point-desc">{pt.desc}</p>
-                            </div>
-                          ))}
-                        </div>
+                        <p className="faq-answer-simple-text">{item.answer}</p>
                       </div>
                     </div>
                   </div>
@@ -734,6 +656,9 @@ export default function AboutPage() {
             })}
           </div>
         </div>
+
+        {/* Alternative Discovery Hub ("STILL NOT SURE?") */}
+        <AlternativeDiscoveryHub />
       </section>
 
       {/* Editorial Contact Section with Background Marquee & Swipe Button */}

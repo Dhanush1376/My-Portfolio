@@ -77,19 +77,20 @@ export default function NotchedCard({
     const metaEl = metaRef.current;
     if (!el || !tagsEl || !metaEl) return;
 
-    const L = el.clientWidth;
-    const H = el.clientHeight;
-    const W = { w: tagsEl.offsetWidth, h: tagsEl.offsetHeight };
-    const I = { w: metaEl.offsetWidth, h: metaEl.offsetHeight };
+    const L = Math.round(el.clientWidth);
+    const H = Math.round(el.clientHeight);
+    const W = { w: Math.round(tagsEl.offsetWidth), h: Math.round(tagsEl.offsetHeight) };
+    const I = { w: Math.round(metaEl.offsetWidth), h: Math.round(metaEl.offsetHeight) };
 
     // Default outer corner radius
     const computedRadius = parseFloat(window.getComputedStyle(el).borderTopLeftRadius);
     const P = !isNaN(computedRadius) && computedRadius > 0 ? computedRadius : 24;
 
-    setDimensions({ w: L, h: H });
+    setDimensions((prev) => (prev && prev.w === L && prev.h === H ? prev : { w: L, h: H }));
 
     if (L < 2 || H < 2 || W.w < 2 || W.h < 2 || I.w < 2 || I.h < 2) {
-      return setClipPath(null);
+      setClipPath((prev) => (prev === null ? prev : null));
+      return;
     }
 
     // Adaptive fillet radius matching WhyCreatives formula
@@ -104,11 +105,12 @@ export default function NotchedCard({
         W.h + I.h + 2 * A < H
       )
     ) {
-      return setClipPath(null);
+      setClipPath((prev) => (prev === null ? prev : null));
+      return;
     }
 
     const pathString = generateNotchedPath(L, H, W, I, P, A);
-    setClipPath(pathString);
+    setClipPath((prev) => (prev === pathString ? prev : pathString));
   }, [container]);
 
   useLayoutEffect(() => {
@@ -118,12 +120,21 @@ export default function NotchedCard({
     const metaEl = metaRef.current;
     if (!el || !tagsEl || !metaEl) return;
 
-    const ro = new ResizeObserver(() => updatePath());
+    let rafId = null;
+    const ro = new ResizeObserver(() => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        updatePath();
+      });
+    });
     ro.observe(el);
     ro.observe(tagsEl);
     ro.observe(metaEl);
 
-    return () => ro.disconnect();
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      ro.disconnect();
+    };
   }, [updatePath, container]);
 
   useEffect(() => {

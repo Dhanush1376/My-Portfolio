@@ -1322,7 +1322,8 @@
   -webkit-box-shadow: 0 0 0px 1000px #FFFFFF inset !important;
 }
 
-/* Valid Input Indicator (Emerald Checkmark on Right Edge) */
+/* Input Validation Status Indicators (Emerald Checkmark or Crimson Red X) */
+.input-status-indicator,
 .input-valid-indicator {
   position: absolute;
   right: 1.15rem;
@@ -1331,19 +1332,29 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #10B981;
   pointer-events: none;
-  animation: validCheckPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: statusIndicatorPop 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   z-index: 2;
+  transition: color 0.18s ease;
 }
 
+.input-status-indicator.is-valid,
+.input-valid-indicator {
+  color: #10B981;
+}
+
+.input-status-indicator.is-invalid {
+  color: #EF4444;
+}
+
+.input-status-indicator.is-textarea,
 .input-valid-indicator.is-textarea {
   top: 1.25rem;
   transform: none;
-  animation: validCheckPopTextarea 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: statusIndicatorPopTextarea 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-@keyframes validCheckPop {
+@keyframes statusIndicatorPop {
   0% {
     opacity: 0;
     transform: translateY(-50%) scale(0.6);
@@ -1354,7 +1365,7 @@
   }
 }
 
-@keyframes validCheckPopTextarea {
+@keyframes statusIndicatorPopTextarea {
   0% {
     opacity: 0;
     transform: scale(0.6);
@@ -1369,6 +1380,471 @@
 .field-input-wrap {
   position: relative;
   width: 100%;
+}
+
+/* --- Phone Composite Input Wrap with Integrated Country/Nationality Selector --- */
+.phone-composite-wrap {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
+  padding: 0 2.85rem 0 0.85rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  z-index: 5;
+}
+
+.phone-composite-wrap.is-dropdown-open {
+  z-index: 500 !important;
+}
+
+.phone-composite-wrap:hover:not(:focus-within) {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.phone-composite-wrap:focus-within {
+  border: 1px solid var(--accent) !important;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: none !important;
+}
+
+.phone-composite-wrap.is-filled:not(:focus-within) {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Light Theme Variant */
+[data-theme="light"] .phone-composite-wrap,
+.theme-light .phone-composite-wrap {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(0, 0, 0, 0.32) !important;
+}
+
+[data-theme="light"] .phone-composite-wrap:hover:not(:focus-within),
+.theme-light .phone-composite-wrap:hover:not(:focus-within) {
+  border-color: rgba(0, 0, 0, 0.65) !important;
+}
+
+[data-theme="light"] .phone-composite-wrap:focus-within,
+.theme-light .phone-composite-wrap:focus-within {
+  background: #FFFFFF !important;
+  border: 1px solid var(--accent) !important;
+  box-shadow: none !important;
+}
+
+/* Country Trigger inside Phone Input Wrap */
+.country-picker-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem 0.5rem;
+  border-radius: 9999px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+  user-select: none;
+  flex-shrink: 0;
+  outline: none;
+}
+
+.country-picker-trigger:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .country-picker-trigger,
+.theme-light .country-picker-trigger {
+  color: #0E0F12;
+}
+
+[data-theme="light"] .country-picker-trigger:hover,
+.theme-light .country-picker-trigger:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.country-flag-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.country-flag-img {
+  width: 22px;
+  height: 15px;
+  object-fit: cover;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+[data-theme="light"] .country-flag-img,
+.theme-light .country-flag-img {
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.country-flag-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 15px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  flex-shrink: 0;
+}
+
+[data-theme="light"] .country-flag-fallback,
+.theme-light .country-flag-fallback {
+  background: rgba(0, 0, 0, 0.08);
+  color: #0E0F12;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.country-dial-text {
+  font-size: 0.92rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.country-chevron-icon {
+  color: rgba(255, 255, 255, 0.5);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+}
+
+[data-theme="light"] .country-chevron-icon,
+.theme-light .country-chevron-icon {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.country-chevron-icon.is-rotated {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+
+.country-dial-separator {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.16);
+  margin: 0 0.55rem 0 0.3rem;
+  flex-shrink: 0;
+}
+
+[data-theme="light"] .country-dial-separator,
+.theme-light .country-dial-separator {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Local Phone Field inside Composite Wrap */
+.studio-card-input.phone-number-field {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 0.35rem !important;
+  border-radius: 0;
+  color: var(--text);
+}
+
+.studio-card-input.phone-number-field::placeholder {
+  color: rgba(255, 255, 255, 0.28) !important;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  opacity: 1;
+}
+
+[data-theme="light"] .studio-card-input.phone-number-field,
+.theme-light .studio-card-input.phone-number-field {
+  color: #0E0F12 !important;
+  background: transparent !important;
+}
+
+[data-theme="light"] .studio-card-input.phone-number-field::placeholder,
+.theme-light .studio-card-input.phone-number-field::placeholder {
+  color: rgba(0, 0, 0, 0.35) !important;
+  opacity: 1;
+}
+
+/* Country Popover Dropdown (Responsive placement: flips top or bottom) */
+.country-dropdown-popover {
+  position: absolute;
+  left: 0;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  background: #121316 !important;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  z-index: 1000 !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Placement Bottom: Opens downwards */
+.country-dropdown-popover.is-placement-bottom {
+  top: calc(100% + 8px);
+  bottom: auto;
+  transform-origin: top center;
+  animation: countryDropdownFadeInBottom 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Placement Top: Opens upwards when near bottom of viewport / taskbar */
+.country-dropdown-popover.is-placement-top {
+  bottom: calc(100% + 8px);
+  top: auto;
+  transform-origin: bottom center;
+  animation: countryDropdownFadeInTop 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes countryDropdownFadeInBottom {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes countryDropdownFadeInTop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+[data-theme="light"] .country-dropdown-popover,
+.theme-light .country-dropdown-popover {
+  background: #FFFFFF !important;
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.country-search-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: #181920 !important;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
+}
+
+[data-theme="light"] .country-search-header,
+.theme-light .country-search-header {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+  background: #F4F5F7 !important;
+}
+
+.country-search-icon {
+  color: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+}
+
+[data-theme="light"] .country-search-icon,
+.theme-light .country-search-icon {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.country-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font);
+  font-size: 0.88rem;
+  color: var(--text);
+  padding: 0;
+}
+
+[data-theme="light"] .country-search-input,
+.theme-light .country-search-input {
+  color: #0E0F12;
+}
+
+.country-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+[data-theme="light"] .country-search-input::placeholder,
+.theme-light .country-search-input::placeholder {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+/* Redesigned Custom Thin Minimalist Scrollbar */
+.country-list-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.35rem;
+  background: #121316;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+/* Completely remove/hide native scrollbar buttons & arrows in Chromium/WebKit */
+.country-list-scroll::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+.country-list-scroll::-webkit-scrollbar-button:single-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Thin sleek 4px scrollbar */
+.country-list-scroll::-webkit-scrollbar {
+  width: 4px !important;
+}
+
+.country-list-scroll::-webkit-scrollbar-track {
+  background: transparent !important;
+  margin: 6px 0;
+}
+
+/* Pill rounded thumb */
+.country-list-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22) !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  transition: background-color 0.2s ease;
+}
+
+.country-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent) !important;
+}
+
+/* Light Theme Scrollbar */
+[data-theme="light"] .country-list-scroll,
+.theme-light .country-list-scroll {
+  background: #FFFFFF;
+  scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
+}
+
+[data-theme="light"] .country-list-scroll::-webkit-scrollbar-thumb,
+.theme-light .country-list-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.22) !important;
+}
+
+[data-theme="light"] .country-list-scroll::-webkit-scrollbar-thumb:hover,
+.theme-light .country-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent) !important;
+}
+
+.country-option-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.65rem;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
+  font-family: var(--font);
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+[data-theme="light"] .country-option-row,
+.theme-light .country-option-row {
+  color: #0E0F12;
+}
+
+.country-option-row:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .country-option-row:hover,
+.theme-light .country-option-row:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.country-option-row.is-active {
+  background: rgba(255, 94, 58, 0.12);
+  color: var(--accent);
+}
+
+.option-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.option-name {
+  flex: 1;
+  font-size: 0.88rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.option-dial {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="light"] .option-dial,
+.theme-light .option-dial {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.country-option-row.is-active .option-dial {
+  color: var(--accent);
+}
+
+.option-check {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.country-no-results {
+  padding: 1.25rem 0.85rem;
+  font-size: 0.86rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+}
+
+[data-theme="light"] .country-no-results,
+.theme-light .country-no-results {
+  color: rgba(0, 0, 0, 0.45);
 }
 
 .studio-bubble-tooltip {
@@ -1922,6 +2398,8 @@
   margin-bottom: 1.75rem;
   padding-bottom: 0.35rem;
   border-bottom: none;
+  position: relative;
+  z-index: 2;
 }
 
 .studio-steps-nav {
@@ -2096,6 +2574,8 @@
   flex-direction: column;
   flex: 1;
   min-height: 250px;
+  position: relative;
+  z-index: 10;
   animation: stepFadeSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -2203,6 +2683,8 @@
     flex: 1;
     height: 100%;
     min-height: 0;
+    position: relative;
+    z-index: 10;
   }
 
   .studio-success-box {
@@ -2215,6 +2697,8 @@
 
   .mobile-step-header {
     margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 2;
   }
 
   .step-nav-index {
@@ -2384,7 +2868,8 @@
     left: 1rem;
   }
 
-  .input-valid-indicator {
+  .input-valid-indicator,
+  .input-status-indicator {
     right: 1rem;
   }
 }
@@ -2410,43 +2895,66 @@
   padding: 1rem 0.5rem;
 }
 
+.alt-hub-center .tilted-tag-wrapper {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.85rem;
+  order: -1;
+  z-index: 5;
+  will-change: transform, opacity;
+}
+
 .alt-hub-badge {
   display: inline-flex;
   align-items: center;
-  font-family: var(--font-display);
-  font-size: 0.6rem;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.65rem;
   font-weight: 800;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #fff;
-  background: var(--accent, #FF5E3A);
-  padding: 0.3em 0.65em;
-  border-radius: 3px;
+  background: var(--accent, #FF5520);
+  padding: 0.32em 0.72em;
+  border-radius: 4px;
   transform: rotate(-3deg);
-  box-shadow: 0 3px 12px rgba(255, 94, 58, 0.3);
+  box-shadow: 0 3px 12px rgba(255, 85, 32, 0.35);
   white-space: nowrap;
-  margin-bottom: 1rem;
-  order: -1;
 }
 
 .alt-hub-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(2.4rem, 3.8vw, 3.6rem);
   font-weight: 900;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.035em;
   color: var(--text);
-  line-height: 1.0;
+  line-height: 1.12;
   text-transform: uppercase;
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.85rem 0;
+}
+
+.alt-hub-title .title-line-mask {
+  overflow: hidden;
+  display: block;
+}
+
+.alt-hub-title .title-line-inner {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}
+
+.alt-hub-title .title-accent {
+  color: var(--accent, #FF5520);
 }
 
 .alt-hub-desc {
   font-family: var(--font, sans-serif);
   font-size: clamp(0.78rem, 0.9vw, 0.88rem);
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--text-secondary);
   margin: 0;
-  max-width: 200px;
+  max-width: 220px;
+  will-change: transform, opacity, filter;
 }
 
 /* ==========================================================================

@@ -12,7 +12,6 @@ import Footer from '../components/layout/Footer';
 
 import Hero from '../components/sections/Hero';
 import StatementSection from '../components/sections/StatementSection';
-import TrustStrip from '../components/sections/TrustStrip';
 import Projects from '../components/sections/Projects';
 import Services from '../components/sections/Services';
 import Contact from '../components/sections/Contact';
@@ -58,37 +57,100 @@ export default function Home() {
     // Smooth frame recovery without violent jumps on lag
     gsap.ticker.lagSmoothing(500, 33);
 
-    // 2. Section Stacking (Overlay Scroll)
-    const stackSections = gsap.utils.toArray('.hero, .section');
-
-    // Efficient, zero-reflow card-focus elevation via ScrollTrigger pre-calculated triggers
-    stackSections.forEach((sec, i) => {
-      if (i === 0) return; // Hero doesn't need card-focus
-      ScrollTrigger.create({
-        trigger: sec,
-        start: 'top 92%',
-        end: 'bottom top',
-        toggleClass: 'card-focus',
-        invalidateOnRefresh: true,
-      });
-    });
-
-    // 3. Stacking Cards Effect (Editorial pinning) - REMOVED due to severe scroll conflicts with Lenis
-
-    // 4. Hero Content Fade Out on Scroll
-    gsap.to('.hero-content', {
-      opacity: 0,
-      y: -80,
-      ease: 'power1.out',
-      scrollTrigger: {
-        trigger: '.hero',
-        start: 'top top',
-        end: '+=380',
-        scrub: true,
+    // 2. Physical Layer Stacking Setup
+    // #hero, #statement, and #contact are pinned at top: 0 in CSS.
+    // #work and #capabilities are dynamically set to Math.min(0, vh - sectionHeight) so that users
+    // can scroll naturally through all cards and capability rows, and as soon as the final content is reached,
+    // each layer smoothly holds as the next sheet slides up and overlays it!
+    const updateStickyOffsets = () => {
+      const vh = window.innerHeight;
+      const workSec = document.querySelector('#main-content > #work');
+      if (workSec) {
+        const h = workSec.offsetHeight;
+        const targetTop = Math.min(0, vh - h);
+        workSec.style.setProperty('top', `${targetTop}px`, 'important');
       }
-    });
 
-    // 5. Active Nav Link on Scroll
+      const capSec = document.querySelector('#main-content > #capabilities');
+      if (capSec) {
+        const h = capSec.offsetHeight;
+        const targetTop = Math.min(0, vh - h);
+        capSec.style.setProperty('top', `${targetTop}px`, 'important');
+      }
+    };
+
+    // Calculate immediately and at staggered intervals as media and web fonts finish loading
+    updateStickyOffsets();
+    const t1 = setTimeout(updateStickyOffsets, 80);
+    const t2 = setTimeout(updateStickyOffsets, 300);
+    const t3 = setTimeout(updateStickyOffsets, 700);
+    const t4 = setTimeout(updateStickyOffsets, 1500);
+
+    // 3. Kinetic 3D Layer Stacking Depth Scrub (Preceding sections gently anchor as next sheet overlays)
+    const heroCanvas = document.querySelector('#hero .hero-orange-wrapper');
+    const stmtSec = document.querySelector('#statement');
+    if (heroCanvas && stmtSec) {
+      gsap.to(heroCanvas, {
+        opacity: 0.88,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: stmtSec,
+          start: 'top bottom',
+          end: 'top top',
+          scrub: true,
+        },
+      });
+    }
+
+    const stmtContainer = document.querySelector('#statement .statement-container');
+    const workSec = document.querySelector('#work');
+    if (stmtContainer && workSec) {
+      gsap.to(stmtContainer, {
+        scale: 0.98,
+        transformOrigin: '50% 50%',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: workSec,
+          start: 'top bottom',
+          end: 'top top',
+          scrub: true,
+        },
+      });
+    }
+
+    const workContainer = document.querySelector('#work .why-projects-container');
+    const capSec = document.querySelector('#capabilities');
+    if (workContainer && capSec) {
+      gsap.to(workContainer, {
+        scale: 0.985,
+        transformOrigin: '50% 70%',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: capSec,
+          start: 'top bottom',
+          end: 'top top',
+          scrub: true,
+        },
+      });
+    }
+
+    const capContent = document.querySelectorAll('#capabilities .capabilities-header, #capabilities .capabilities-editorial-list');
+    const contactSec = document.querySelector('#contact');
+    if (capContent.length && contactSec) {
+      gsap.to(capContent, {
+        scale: 0.98,
+        transformOrigin: '50% 50%',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: contactSec,
+          start: 'top bottom',
+          end: 'top top',
+          scrub: true,
+        },
+      });
+    }
+
+    // 4. Active Nav Link on Scroll
     const navSections = document.querySelectorAll('.hero, .section');
     const navLinks = document.querySelectorAll('.nav-link');
     navSections.forEach((section) => {
@@ -212,6 +274,10 @@ export default function Home() {
 
     return () => {
       clearTimeout(hashTimer);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
       window.lenis = null;
       window.navigateToSection = null;
       gsap.ticker.remove(updateLenis);
@@ -237,7 +303,6 @@ export default function Home() {
       <main id="main-content">
         <Hero />
         <StatementSection />
-        <TrustStrip />
         <Projects onOpenCaseStudy={openCaseStudy} />
         <Services />
         <Contact />

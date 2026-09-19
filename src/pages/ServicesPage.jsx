@@ -10,6 +10,7 @@ import { useTheme } from '../hooks/useTheme';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import CustomCursor from '../components/common/CustomCursor';
+import AlternativeDiscoveryHub from '../components/sections/AlternativeDiscoveryHub';
 import Contact from '../components/sections/Contact';
 import '../styles/services-page.css';
 
@@ -34,6 +35,14 @@ export default function ServicesPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+      const match = WHY_SERVICES_DATA.find((s) => s.slug === hash);
+      if (match) {
+        setSelectedService(match);
+      }
+    }
 
     // Initialize Lenis smooth scroll for butter-fluid trackpad & mousewheel physics
     const lenis = new Lenis({
@@ -195,6 +204,10 @@ export default function ServicesPage() {
           },
           'heroPanelArrived+=0.06'
         );
+
+        tl.eventCallback('onComplete', () => {
+          ScrollTrigger.refresh();
+        });
       }
 
       // 2. PINNED 3D DECK-STACKING SCROLL ENGINE
@@ -458,8 +471,14 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* 3. EDITORIAL CONTACT SECTION (Matching Signature Editorial Architecture) */}
-      <Contact variant="yellow" />
+      {/* Architectural Section Divider Line */}
+      <div className="services-section-divider" aria-hidden="true" />
+
+      {/* Alternative Discovery Hub (Projects Only) */}
+      <AlternativeDiscoveryHub mode="projects-only" />
+
+      {/* Editorial Contact Section with Background Marquee & Swipe Button */}
+      <Contact variant="peach" />
 
       {/* 4. SERVICE DETAILS DRAWER / MODAL */}
       {selectedService && (

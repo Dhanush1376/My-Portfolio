@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import NotchedCard from '../common/NotchedCard';
-import KineticStage from '../common/KineticStage';
+import AlternativeDiscoveryHub from './AlternativeDiscoveryHub';
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -18,6 +17,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   Check,
+  XCircle,
   AlertCircle,
   RotateCcw,
   User,
@@ -27,7 +27,9 @@ import {
   ShoppingBag,
   Zap,
   BarChart3,
-  Layout
+  Layout,
+  ChevronDown,
+  Search
 } from 'lucide-react';
 
 function TypewriterTitle({ text, stepIndex, currentStep, speed = 30 }) {
@@ -104,6 +106,75 @@ function TypewriterTitle({ text, stepIndex, currentStep, speed = 30 }) {
   );
 }
 
+// Crisp Vector/PNG Flag renderer (Displays real national flags on Windows and all devices)
+function CountryFlag({ code, name, className = "country-flag-img" }) {
+  const [hasError, setHasError] = useState(false);
+  const lower = (code || '').toLowerCase();
+
+  if (hasError || !code) {
+    return <span className="country-flag-fallback">{code}</span>;
+  }
+
+  return (
+    <img
+      src={`https://flagcdn.com/w40/${lower}.png`}
+      srcSet={`https://flagcdn.com/w80/${lower}.png 2x`}
+      width="22"
+      height="15"
+      alt={`${name || code} flag`}
+      className={className}
+      loading="lazy"
+      onError={() => setHasError(true)}
+    />
+  );
+}
+
+// Worldwide Countries with Flags, Dial Codes, Target Local Digits Count, and Placeholder Formats (India default)
+const COUNTRIES = [
+  { code: 'IN', name: 'India', dial: '+91', flag: '🇮🇳', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' },
+  { code: 'US', name: 'United States', dial: '+1', flag: '🇺🇸', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' },
+  { code: 'GB', name: 'United Kingdom', dial: '+44', flag: '🇬🇧', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' },
+  { code: 'AE', name: 'United Arab Emirates', dial: '+971', flag: '🇦🇪', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'CA', name: 'Canada', dial: '+1', flag: '🇨🇦', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' },
+  { code: 'AU', name: 'Australia', dial: '+61', flag: '🇦🇺', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'SG', name: 'Singapore', dial: '+65', flag: '🇸🇬', minDigits: 8, maxDigits: 8, placeholder: '9876 5432' },
+  { code: 'DE', name: 'Germany', dial: '+49', flag: '🇩🇪', minDigits: 10, maxDigits: 11, placeholder: '98765 43210' },
+  { code: 'FR', name: 'France', dial: '+33', flag: '🇫🇷', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'SA', name: 'Saudi Arabia', dial: '+966', flag: '🇸🇦', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'QA', name: 'Qatar', dial: '+974', flag: '🇶🇦', minDigits: 8, maxDigits: 8, placeholder: '9876 5432' },
+  { code: 'KW', name: 'Kuwait', dial: '+965', flag: '🇰🇼', minDigits: 8, maxDigits: 8, placeholder: '9876 5432' },
+  { code: 'OM', name: 'Oman', dial: '+968', flag: '🇴🇲', minDigits: 8, maxDigits: 8, placeholder: '9876 5432' },
+  { code: 'BH', name: 'Bahrain', dial: '+973', flag: '🇧🇭', minDigits: 8, maxDigits: 8, placeholder: '9876 5432' },
+  { code: 'JP', name: 'Japan', dial: '+81', flag: '🇯🇵', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' },
+  { code: 'NL', name: 'Netherlands', dial: '+31', flag: '🇳🇱', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'CH', name: 'Switzerland', dial: '+41', flag: '🇨🇭', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'SE', name: 'Sweden', dial: '+46', flag: '🇸🇪', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'NO', name: 'Norway', dial: '+47', flag: '🇳🇴', minDigits: 8, maxDigits: 8, placeholder: '9876 5432' },
+  { code: 'DK', name: 'Denmark', dial: '+45', flag: '🇩🇰', minDigits: 8, maxDigits: 8, placeholder: '9876 5432' },
+  { code: 'FI', name: 'Finland', dial: '+358', flag: '🇫🇮', minDigits: 9, maxDigits: 10, placeholder: '98765 4321' },
+  { code: 'IE', name: 'Ireland', dial: '+353', flag: '🇮🇪', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'IT', name: 'Italy', dial: '+39', flag: '🇮🇹', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' },
+  { code: 'ES', name: 'Spain', dial: '+34', flag: '🇪🇸', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'NZ', name: 'New Zealand', dial: '+64', flag: '🇳🇿', minDigits: 9, maxDigits: 10, placeholder: '98765 4321' },
+  { code: 'MY', name: 'Malaysia', dial: '+60', flag: '🇲🇾', minDigits: 9, maxDigits: 10, placeholder: '98765 4321' },
+  { code: 'ID', name: 'Indonesia', dial: '+62', flag: '🇮🇩', minDigits: 10, maxDigits: 12, placeholder: '98765 43210' },
+  { code: 'PH', name: 'Philippines', dial: '+63', flag: '🇵🇭', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' },
+  { code: 'TH', name: 'Thailand', dial: '+66', flag: '🇹🇭', minDigits: 9, maxDigits: 10, placeholder: '98765 4321' },
+  { code: 'VN', name: 'Vietnam', dial: '+84', flag: '🇻🇳', minDigits: 9, maxDigits: 10, placeholder: '98765 4321' },
+  { code: 'ZA', name: 'South Africa', dial: '+27', flag: '🇿🇦', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'BR', name: 'Brazil', dial: '+55', flag: '🇧🇷', minDigits: 11, maxDigits: 11, placeholder: '98765 43210' },
+  { code: 'MX', name: 'Mexico', dial: '+52', flag: '🇲🇽', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' },
+  { code: 'NG', name: 'Nigeria', dial: '+234', flag: '🇳🇬', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' },
+  { code: 'EG', name: 'Egypt', dial: '+20', flag: '🇪🇬', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' },
+  { code: 'TR', name: 'Turkey', dial: '+90', flag: '🇹🇷', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' },
+  { code: 'KR', name: 'South Korea', dial: '+82', flag: '🇰🇷', minDigits: 9, maxDigits: 10, placeholder: '98765 4321' },
+  { code: 'PL', name: 'Poland', dial: '+48', flag: '🇵🇱', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'AT', name: 'Austria', dial: '+43', flag: '🇦🇹', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' },
+  { code: 'BE', name: 'Belgium', dial: '+32', flag: '🇧🇪', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'PT', name: 'Portugal', dial: '+351', flag: '🇵🇹', minDigits: 9, maxDigits: 9, placeholder: '98765 4321' },
+  { code: 'GR', name: 'Greece', dial: '+30', flag: '🇬🇷', minDigits: 10, maxDigits: 10, placeholder: '98765 43210' }
+];
+
 const SERVICES = [
   { id: 'general', label: 'General Conversation', icon: MessageSquare },
   { id: 'ai-rag', label: 'AI & RAG', icon: Cpu },
@@ -115,15 +186,6 @@ const SERVICES = [
   { id: 'portfolio', label: 'Portfolio', icon: User },
   { id: 'landing-pages', label: 'Landing Pages', icon: Layout },
   { id: 'dashboards', label: 'Dashboards', icon: BarChart3 }
-];
-
-const SERVICES_STAGE_PHRASES = [
-  { words: ['AI &', 'RAG'], color: '#E04420' },
-  { words: ['Web &', 'apps'], color: '#6D5AE6' },
-  { words: ['E-Com', 'stores'], color: '#D97706' },
-  { words: ['Smart', 'automation'], color: '#2563EB' },
-  { words: ['Landing', 'pages'], color: '#DB2777' },
-  { words: ['Live', 'dashboards'], color: '#059669' }
 ];
 
 const trackAnalytics = (eventName, data = {}) => {
@@ -138,113 +200,6 @@ const trackAnalytics = (eventName, data = {}) => {
   }
 };
 
-/**
- * HubDiscoveryCard
- * Mirrors WhyCreatives' NotchedProjectCard:
- * - 3D tilt perspective entrance with projectImageReveal
- * - Responsive tag hover elevation
- * - Tactile micro-press feedback
- * - Fluid smooth navigation
- */
-function HubDiscoveryCard({
-  tags,
-  meta,
-  drawerLabel,
-  phrases,
-  headline,
-  cardIndex = 0,
-  onCardClick,
-  ariaLabel,
-}) {
-  const [inView, setInView] = useState(false);
-  const cardRef = useRef(null);
-
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.12 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={cardRef}
-      className={`why-service-card-group ${inView ? 'in-view' : ''}`}
-      style={{
-        transitionDelay: `${cardIndex * 0.14}s`,
-      }}
-      role="button"
-      tabIndex={0}
-      aria-label={ariaLabel}
-      onClick={onCardClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onCardClick();
-        }
-      }}
-    >
-      <div className="why-hub-card-inner">
-        <NotchedCard
-          bezelWidth={7}
-          bezelColor="#111111"
-          className="why-service-notched-wrapper"
-          surfaceClassName="why-service-surface-light"
-          tags={
-            <div className="why-tags-row">
-              {tags.map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="why-tag-pill why-tag-pill-dark"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          }
-          meta={
-            <div className="why-meta-row">
-              <span className="why-meta-year">2026</span>
-              <span className="why-meta-sep">•</span>
-              <span className="why-meta-cat">{meta}</span>
-            </div>
-          }
-          overlay={
-            <div className="why-card-hover-drawer">
-              <span>{drawerLabel}</span>
-              <ArrowUpRight size={16} strokeWidth={2.5} />
-            </div>
-          }
-        >
-          <KineticStage
-            tone="light"
-            intervalMs={2200}
-            seed={cardIndex}
-            phrases={phrases}
-          />
-        </NotchedCard>
-      </div>
-
-      <div className="why-service-below-info">
-        <h4 className="why-service-headline">
-          {headline}
-        </h4>
-      </div>
-    </div>
-  );
-}
-
 export default function ContactForm() {
   const navigate = useNavigate();
   const [selectedServices, setSelectedServices] = useState(['General Conversation']);
@@ -256,6 +211,13 @@ export default function ContactForm() {
     message: '',
     botcheck: false
   });
+  const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]); // Default: India (+91)
+  const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
+  const [dropdownPlacement, setDropdownPlacement] = useState('bottom'); // 'bottom' or 'top'
+  const [maxDropdownHeight, setMaxDropdownHeight] = useState(280);
+  const [countrySearch, setCountrySearch] = useState('');
+  const countryDropdownRef = useRef(null);
+
   const [status, setStatus] = useState('idle'); // idle | sending | sent | error
   const [fieldErrors, setFieldErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
@@ -266,6 +228,56 @@ export default function ContactForm() {
     trackAnalytics('contact_form_viewed');
   }, []);
 
+  // Close country dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (countryDropdownRef.current && !countryDropdownRef.current.contains(e.target)) {
+        setCountryDropdownOpen(false);
+      }
+    };
+    if (countryDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [countryDropdownOpen]);
+
+  // Dynamically calculate page height & visibility: opens upward or downward with safe margin
+  useEffect(() => {
+    if (!countryDropdownOpen || !countryDropdownRef.current) return;
+
+    const updatePlacement = () => {
+      if (!countryDropdownRef.current) return;
+      const rect = countryDropdownRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      const spaceBelow = viewportHeight - rect.bottom - 12;
+      const spaceAbove = rect.top - 12;
+      const idealHeight = 280;
+
+      // Prefer downward if there's at least 190px below (clean fit for search + countries)
+      // Only flip upward when space below is truly constrained
+      if (spaceBelow < 190 && spaceAbove > spaceBelow) {
+        setDropdownPlacement('top');
+        setMaxDropdownHeight(Math.max(140, Math.min(idealHeight, spaceAbove - 20)));
+      } else {
+        setDropdownPlacement('bottom');
+        setMaxDropdownHeight(Math.max(140, Math.min(idealHeight, spaceBelow)));
+      }
+    };
+
+    updatePlacement();
+    window.addEventListener('resize', updatePlacement);
+    window.addEventListener('scroll', updatePlacement, true);
+
+    return () => {
+      window.removeEventListener('resize', updatePlacement);
+      window.removeEventListener('scroll', updatePlacement, true);
+    };
+  }, [countryDropdownOpen]);
+
   const toggleService = (label) => {
     setSelectedServices(prev =>
       prev.includes(label)
@@ -274,27 +286,42 @@ export default function ContactForm() {
     );
   };
 
-  const validateField = (name, value) => {
+  const isPhoneFormatAchieved = (val, country = selectedCountry) => {
+    if (!val) return false;
+    const digits = val.replace(/\D/g, '');
+    if (!digits) return false;
+    if (country.minDigits === country.maxDigits) {
+      return digits.length === country.minDigits;
+    }
+    return digits.length >= country.minDigits && digits.length <= country.maxDigits;
+  };
+
+  const validateField = (name, value, country = selectedCountry) => {
     switch (name) {
       case 'name':
         if (!value || !value.trim()) return 'Please enter your name.';
         if (value.trim().length < 2) return 'Name must be at least 2 characters.';
+        if (!/[\p{L}]/u.test(value.trim())) return 'Name must contain letters.';
         if (value.trim().length > 100) return 'Name must be under 100 characters.';
         return null;
-      case 'email':
-        if (!value || !value.trim()) return 'Please enter your email address.';
-        {
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(value.trim())) return 'Please enter a valid email address.';
+      case 'phone': {
+        if (!value || !value.trim()) return 'Please enter your Phone or WhatsApp number.';
+        const digits = value.replace(/\D/g, '');
+        if (!digits) return 'Please enter valid numbers.';
+        if (country.minDigits === country.maxDigits) {
+          if (digits.length !== country.minDigits) {
+            return `${country.name} numbers require ${country.minDigits} digits (entered ${digits.length}).`;
+          }
+        } else {
+          if (digits.length < country.minDigits) {
+            return `${country.name} numbers require at least ${country.minDigits} digits (entered ${digits.length}).`;
+          }
+          if (digits.length > country.maxDigits) {
+            return `${country.name} numbers cannot exceed ${country.maxDigits} digits.`;
+          }
         }
-        if (value.trim().length > 150) return 'Email must be under 150 characters.';
         return null;
-      case 'phone':
-        if (value && value.trim()) {
-          if (value.trim().length < 7) return 'Please enter a valid phone number (at least 7 digits).';
-          if (value.trim().length > 30) return 'Phone number must be under 30 characters.';
-        }
-        return null;
+      }
       case 'message':
         if (!value || !value.trim()) return 'Please describe your project brief or message.';
         if (value.trim().length < 10) return 'Please share at least 10 characters about your project.';
@@ -328,6 +355,94 @@ export default function ContactForm() {
     }
   };
 
+  const handlePhoneChange = (e) => {
+    let val = e.target.value;
+
+    // Auto-detect country if user typed or pasted an international number starting with + or 00
+    const trimmed = val.trim();
+    if (trimmed.startsWith('+') || trimmed.startsWith('00')) {
+      const normalized = trimmed.startsWith('00') ? '+' + trimmed.slice(2) : trimmed;
+      // Sort countries by dial code length descending so longer dial codes match first (+971 before +9)
+      const matched = [...COUNTRIES].sort((a, b) => b.dial.length - a.dial.length).find(c => normalized.startsWith(c.dial));
+      if (matched) {
+        setSelectedCountry(matched);
+        val = normalized.slice(matched.dial.length).trim();
+      }
+    } else if (val.trim().startsWith(selectedCountry.dial)) {
+      val = val.trim().slice(selectedCountry.dial.length).trim();
+    } else {
+      const dialDigits = selectedCountry.dial.replace(/\D/g, '');
+      const rawDigits = val.replace(/\D/g, '');
+      if (rawDigits.startsWith(dialDigits) && rawDigits.length === selectedCountry.minDigits + dialDigits.length) {
+        val = rawDigits.slice(dialDigits.length);
+      }
+    }
+
+    // Only allow numbers, spaces, dashes
+    const cleanPhone = val.replace(/[^\d\s-]/g, '');
+
+    setFormData(prev => ({ ...prev, phone: cleanPhone }));
+
+    if (!hasStartedRef.current) {
+      hasStartedRef.current = true;
+      trackAnalytics('contact_form_started');
+    }
+
+    if (fieldErrors.phone) {
+      setFieldErrors(prev => {
+        const next = { ...prev };
+        delete next.phone;
+        return next;
+      });
+    }
+
+    if (status === 'error') {
+      setStatus('idle');
+      setErrorMessage('');
+    }
+  };
+
+  const handleSelectCountry = (country) => {
+    setSelectedCountry(country);
+    setCountryDropdownOpen(false);
+    setCountrySearch('');
+    if (fieldErrors.phone) {
+      setFieldErrors(prev => {
+        const next = { ...prev };
+        delete next.phone;
+        return next;
+      });
+    }
+    setTimeout(() => {
+      document.getElementById('form-phone')?.focus();
+    }, 50);
+  };
+
+  const filteredCountries = COUNTRIES.filter(c =>
+    c.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
+    c.dial.includes(countrySearch) ||
+    c.code.toLowerCase().includes(countrySearch.toLowerCase())
+  );
+
+  // Strict format validation flags — tick marks only display when format is fully achieved!
+  const isNameAchieved = Boolean(
+    formData.name.trim() && 
+    formData.name.trim().length >= 2 && 
+    !validateField('name', formData.name)
+  );
+
+  const isPhoneAchieved = Boolean(
+    formData.phone.trim() && 
+    isPhoneFormatAchieved(formData.phone, selectedCountry) && 
+    !validateField('phone', formData.phone, selectedCountry)
+  );
+
+  const isMessageAchieved = Boolean(
+    formData.message.trim() && 
+    formData.message.trim().length >= 10 && 
+    !validateField('message', formData.message)
+  );
+
   const handleNextStep = (targetStep) => {
     if (targetStep === 2) {
       if (selectedServices.length === 0) {
@@ -342,13 +457,7 @@ export default function ContactForm() {
         document.getElementById('form-name')?.focus();
         return;
       }
-      const emailErr = validateField('email', formData.email);
-      if (emailErr) {
-        setFieldErrors({ email: emailErr });
-        document.getElementById('form-email')?.focus();
-        return;
-      }
-      const phoneErr = validateField('phone', formData.phone);
+      const phoneErr = validateField('phone', formData.phone, selectedCountry);
       if (phoneErr) {
         setFieldErrors({ phone: phoneErr });
         document.getElementById('form-phone')?.focus();
@@ -394,15 +503,7 @@ export default function ContactForm() {
       return;
     }
 
-    const emailErr = validateField('email', formData.email);
-    if (emailErr) {
-      setStep(2);
-      setFieldErrors({ email: emailErr });
-      setTimeout(() => document.getElementById('form-email')?.focus(), 60);
-      return;
-    }
-
-    const phoneErr = validateField('phone', formData.phone);
+    const phoneErr = validateField('phone', formData.phone, selectedCountry);
     if (phoneErr) {
       setStep(2);
       setFieldErrors({ phone: phoneErr });
@@ -423,6 +524,8 @@ export default function ContactForm() {
     setStatus('sending');
     trackAnalytics('contact_form_submitted', { services: selectedServices.join(', ') });
 
+    const fullPhone = `${selectedCountry.dial} ${formData.phone.trim()}`;
+    const countryInfo = `${selectedCountry.name} (${selectedCountry.dial})`;
     const web3formsKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
     const formspreeId = import.meta.env.VITE_FORMSPREE_FORM_ID;
 
@@ -440,12 +543,17 @@ export default function ContactForm() {
           },
           body: JSON.stringify({
             name: formData.name.trim(),
-            email: formData.email.trim(),
-            phone: formData.phone.trim() || 'Not specified',
+            country: countryInfo,
+            country_name: selectedCountry.name,
+            nationality: selectedCountry.name,
+            country_code: selectedCountry.code,
+            dial_code: selectedCountry.dial,
+            phone: fullPhone,
+            phone_number: fullPhone,
             services: selectedServices.join(', '),
             message: formData.message.trim(),
-            _replyto: formData.email.trim(),
-            _subject: `New Project Inquiry — ${formData.name.trim()}`
+            _replyto: 'no-reply@dhanush.dev',
+            _subject: `New Project Inquiry — ${formData.name.trim()} [Country: ${selectedCountry.name}] (${fullPhone})`
           })
         });
         result = await response.json().catch(() => ({}));
@@ -458,12 +566,17 @@ export default function ContactForm() {
         // Web3Forms static submission (default)
         const payload = {
           access_key: web3formsKey || 'YOUR_ACCESS_KEY_HERE',
-          subject: `New Project Inquiry — ${formData.name.trim()}`,
+          subject: `New Project Inquiry — ${formData.name.trim()} [Country: ${selectedCountry.name}] (${fullPhone})`,
           from_name: 'Dhanush Portfolio Inquiries',
-          replyto: formData.email.trim(),
           name: formData.name.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone.trim() || 'Not specified',
+          country: countryInfo,
+          country_name: selectedCountry.name,
+          nationality: selectedCountry.name,
+          country_code: selectedCountry.code,
+          dial_code: selectedCountry.dial,
+          email: 'no-reply@dhanush.dev', // Fallback for Web3Forms API schema
+          phone: fullPhone,
+          phone_number: fullPhone,
           services: selectedServices.join(', '),
           message: formData.message.trim(),
           botcheck: formData.botcheck ? 'true' : ''
@@ -501,6 +614,7 @@ export default function ContactForm() {
     setStatus('idle');
     setStep(1);
     setFormData({ name: '', email: '', phone: '', message: '', botcheck: false });
+    setSelectedCountry(COUNTRIES[0]);
     setSelectedServices(['General Conversation']);
     setFieldErrors({});
     setErrorMessage('');
@@ -647,10 +761,18 @@ export default function ContactForm() {
                         </div>
                       )}
 
+                      <div className="success-meta-row">
+                        <span className="meta-kicker">COUNTRY</span>
+                        <span className="meta-pill" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+                          <CountryFlag code={selectedCountry.code} name={selectedCountry.name} />
+                          <span>{selectedCountry.name} ({selectedCountry.dial})</span>
+                        </span>
+                      </div>
+
                       {formData.phone && (
                         <div className="success-meta-row">
                           <span className="meta-kicker">PHONE</span>
-                          <span className="meta-pill">{formData.phone}</span>
+                          <span className="meta-pill">{selectedCountry.dial} {formData.phone}</span>
                         </div>
                       )}
 
@@ -830,12 +952,19 @@ export default function ContactForm() {
                             onChange={handleChange}
                             className={`studio-card-input ${fieldErrors.name ? 'has-field-error' : ''} ${formData.name.trim() ? 'is-filled' : ''}`}
                             autoComplete="name"
-                            placeholder="e.g. Rahul Sharma"
                             maxLength={100}
                           />
-                          {formData.name.trim() && !fieldErrors.name && (
-                            <div className="input-valid-indicator" aria-hidden="true">
-                              <CheckCircle2 size={16} />
+                          {/* Live format validation indicator: Green check if format achieved, Red X if typed but format not supporting */}
+                          {(formData.name.trim().length > 0 || fieldErrors.name) && (
+                            <div 
+                              className={`input-status-indicator ${isNameAchieved && !fieldErrors.name ? 'is-valid' : 'is-invalid'}`} 
+                              aria-hidden="true"
+                            >
+                              {isNameAchieved && !fieldErrors.name ? (
+                                <CheckCircle2 size={16} strokeWidth={2.4} />
+                              ) : (
+                                <XCircle size={16} strokeWidth={2.4} />
+                              )}
                             </div>
                           )}
                           {fieldErrors.name && (
@@ -848,71 +977,116 @@ export default function ContactForm() {
                         </div>
                       </div>
 
-                      {/* Email Field */}
-                      <div className="field-group">
-                        <label htmlFor="form-email" className="field-label">
-                          <span>Email</span> <span className="req-star">*</span>
-                        </label>
-                        <div className="field-input-wrap">
-                          <div className="input-icon-slot" aria-hidden="true">
-                            <Mail size={18} />
-                          </div>
-                          <input
-                            type="email"
-                            id="form-email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            className={`studio-card-input ${fieldErrors.email ? 'has-field-error' : ''} ${formData.email.trim() ? 'is-filled' : ''}`}
-                            autoComplete="email"
-                            placeholder="e.g. rahul@example.com"
-                            maxLength={150}
-                          />
-                          {formData.email.trim() && !fieldErrors.email && (
-                            <div className="input-valid-indicator" aria-hidden="true">
-                              <CheckCircle2 size={16} />
-                            </div>
-                          )}
-                          {fieldErrors.email && (
-                            <div className="studio-bubble-tooltip" role="alert">
-                              <span className="bubble-pointer" />
-                              <span className="bubble-badge">!</span>
-                              <span className="bubble-text">{fieldErrors.email}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Phone Field */}
+                      {/* Phone / WhatsApp Field (Primary Contact Method with Country/Nationality Selector) */}
                       <div className="field-group">
                         <label htmlFor="form-phone" className="field-label">
-                          <span>Phone / WhatsApp</span> <span className="optional-badge">(Optional)</span>
+                          <span>Phone / WhatsApp</span> <span className="req-star">*</span>
                         </label>
-                        <div className="field-input-wrap">
-                          <div className="input-icon-slot" aria-hidden="true">
-                            <Phone size={18} />
-                          </div>
+                        <div 
+                          className={`field-input-wrap phone-composite-wrap ${countryDropdownOpen ? 'is-dropdown-open' : ''} ${fieldErrors.phone ? 'has-field-error' : ''} ${formData.phone.trim() ? 'is-filled' : ''}`}
+                          ref={countryDropdownRef}
+                        >
+                          {/* Country / Nationality Picker Trigger Button */}
+                          <button
+                            type="button"
+                            className="country-picker-trigger"
+                            onClick={() => setCountryDropdownOpen(prev => !prev)}
+                            aria-expanded={countryDropdownOpen}
+                            aria-label={`Nationality/Country: ${selectedCountry.name} (${selectedCountry.dial}). Click to switch.`}
+                          >
+                            <span className="country-flag-icon">
+                              <CountryFlag code={selectedCountry.code} name={selectedCountry.name} />
+                            </span>
+                            <span className="country-dial-text">{selectedCountry.dial}</span>
+                            <ChevronDown 
+                              size={14} 
+                              className={`country-chevron-icon ${countryDropdownOpen ? 'is-rotated' : ''}`} 
+                            />
+                          </button>
+
+                          <div className="country-dial-separator" aria-hidden="true" />
+
+                          {/* Phone number input with light format placeholder */}
                           <input
                             type="tel"
                             id="form-phone"
                             name="phone"
                             value={formData.phone}
-                            onChange={handleChange}
-                            className={`studio-card-input ${fieldErrors.phone ? 'has-field-error' : ''} ${formData.phone.trim() ? 'is-filled' : ''}`}
+                            onChange={handlePhoneChange}
+                            placeholder={selectedCountry.placeholder}
+                            className="studio-card-input phone-number-field"
                             autoComplete="tel"
-                            placeholder="e.g. +1 (555) 000-0000"
-                            maxLength={30}
+                            maxLength={25}
                           />
-                          {formData.phone.trim() && !fieldErrors.phone && (
-                            <div className="input-valid-indicator" aria-hidden="true">
-                              <CheckCircle2 size={16} />
+
+                          {/* Live format validation indicator: Green check if country format achieved, Red X if typed but format not supporting */}
+                          {(formData.phone.trim().length > 0 || fieldErrors.phone) && (
+                            <div 
+                              className={`input-status-indicator ${isPhoneAchieved && !fieldErrors.phone ? 'is-valid' : 'is-invalid'}`} 
+                              aria-hidden="true"
+                            >
+                              {isPhoneAchieved && !fieldErrors.phone ? (
+                                <CheckCircle2 size={16} strokeWidth={2.4} />
+                              ) : (
+                                <XCircle size={16} strokeWidth={2.4} />
+                              )}
                             </div>
                           )}
+
+                          {/* Custom validation speech bubble tooltip */}
                           {fieldErrors.phone && (
                             <div className="studio-bubble-tooltip" role="alert">
                               <span className="bubble-pointer" />
                               <span className="bubble-badge">!</span>
                               <span className="bubble-text">{fieldErrors.phone}</span>
+                            </div>
+                          )}
+
+                          {/* Country Search & Selection Popover (Smart Placement Up/Down) */}
+                          {countryDropdownOpen && (
+                            <div 
+                              className={`country-dropdown-popover is-placement-${dropdownPlacement}`} 
+                              style={{ maxHeight: `${maxDropdownHeight}px` }}
+                              role="dialog" 
+                              aria-label="Select Country"
+                            >
+                              <div className="country-search-header">
+                                <Search size={14} className="country-search-icon" aria-hidden="true" />
+                                <input
+                                  type="text"
+                                  className="country-search-input"
+                                  value={countrySearch}
+                                  onChange={(e) => setCountrySearch(e.target.value)}
+                                  placeholder="Search country or code..."
+                                  autoFocus
+                                />
+                              </div>
+                              <div className="country-list-scroll">
+                                {filteredCountries.length === 0 ? (
+                                  <div className="country-no-results">No countries found</div>
+                                ) : (
+                                  filteredCountries.map((c) => {
+                                    const isSelected = c.code === selectedCountry.code;
+                                    return (
+                                      <button
+                                        type="button"
+                                        key={c.code}
+                                        className={`country-option-row ${isSelected ? 'is-active' : ''}`}
+                                        onClick={() => handleSelectCountry(c)}
+                                      >
+                                        <span className="option-flag">
+                                          <CountryFlag code={c.code} name={c.name} />
+                                        </span>
+                                        <span className="option-name">{c.name}</span>
+                                        <span className="option-dial">{c.dial}</span>
+                                        {isSelected && (
+                                          <Check size={13} className="option-check" strokeWidth={3} />
+                                        )}
+                                      </button>
+                                    );
+                                  })
+                                )}
+                              </div>
                             </div>
                           )}
                         </div>
@@ -964,13 +1138,20 @@ export default function ContactForm() {
                             rows={4}
                             value={formData.message}
                             onChange={handleChange}
-                            placeholder="Tell me about your goals, timeline, and key requirements..."
                             className={`studio-card-textarea ${fieldErrors.message ? 'has-field-error' : ''} ${formData.message.trim() ? 'is-filled' : ''}`}
                             maxLength={5000}
                           />
-                          {formData.message.trim() && !fieldErrors.message && (
-                            <div className="input-valid-indicator is-textarea" aria-hidden="true">
-                              <CheckCircle2 size={16} />
+                          {/* Live format validation indicator: Green check if format achieved, Red X if typed but format not supporting */}
+                          {(formData.message.trim().length > 0 || fieldErrors.message) && (
+                            <div 
+                              className={`input-status-indicator is-textarea ${isMessageAchieved && !fieldErrors.message ? 'is-valid' : 'is-invalid'}`} 
+                              aria-hidden="true"
+                            >
+                              {isMessageAchieved && !fieldErrors.message ? (
+                                <CheckCircle2 size={16} strokeWidth={2.4} />
+                              ) : (
+                                <XCircle size={16} strokeWidth={2.4} />
+                              )}
                             </div>
                           )}
                           {fieldErrors.message && (
@@ -1056,54 +1237,7 @@ export default function ContactForm() {
         </div>
 
         {/* Alternative Discovery Hub */}
-        <div className="studio-alt-hub">
-          <div className="why-services-notched-grid">
-            {/* Card 1: Selected Works -> Smooth transition to /#work */}
-            <HubDiscoveryCard
-              cardIndex={0}
-              tags={['Proof of Work', 'Live Apps']}
-              meta="PROOF OF WORK"
-              drawerLabel="projects"
-              phrases={[
-                { words: ['Proof of', 'work'], color: '#6D5AE6' },
-                { words: ['Real client', 'projects'], color: '#8B5CF6' },
-                { words: ['Live web', 'apps'], color: '#3B82F6' },
-                { words: ['Built to', 'deliver'], color: '#14B8A6' }
-              ]}
-              headline="Check real proof of work & live projects"
-              ariaLabel="Selected works - View projects and case studies on home page"
-              onCardClick={() => {
-                setTimeout(() => {
-                  navigate('/#work');
-                }, 70);
-              }}
-            />
-
-            {/* Center: Editorial Heading between cards */}
-            <div className="alt-hub-center">
-              <span className="alt-hub-badge">Explore More</span>
-              <h3 className="alt-hub-title">Still<br />not<br />sure?</h3>
-              <p className="alt-hub-desc">Check live client projects or explore our specialized engineering services.</p>
-            </div>
-
-            {/* Card 2: Specialized Services -> Smooth transition to /services */}
-            <HubDiscoveryCard
-              cardIndex={1}
-              tags={['Services', 'Capabilities']}
-              meta="SPECIALIZED SERVICES"
-              drawerLabel="services"
-              phrases={SERVICES_STAGE_PHRASES}
-              headline="Explore all 6 specialized engineering services & capabilities"
-              ariaLabel="Explore all specialized engineering services and capabilities"
-              onCardClick={() => {
-                setTimeout(() => {
-                  navigate('/services');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 70);
-              }}
-            />
-          </div>
-        </div>
+        <AlternativeDiscoveryHub />
 
       </div>
     </section>

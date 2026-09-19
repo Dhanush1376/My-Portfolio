@@ -118,8 +118,9 @@ html {
   font-size: 16px;
   cursor: auto;
   /* Temporarily restored native cursor */
-  width: 100vw !important;
-  overflow-x: hidden !important;
+  width: 100% !important;
+  overflow-x: clip !important;
+  overflow-y: visible !important;
   /* Hide scrollbar */
   scrollbar-width: none;
   /* Firefox */
@@ -142,6 +143,7 @@ body {
   background: var(--bg);
   color: var(--text);
   overflow-x: clip !important;
+  overflow-y: visible !important;
   width: 100% !important;
   min-width: 100% !important;
   -webkit-font-smoothing: antialiased;
@@ -165,13 +167,15 @@ body::-webkit-scrollbar {
 a {
   color: inherit;
   text-decoration: none;
-  cursor: none;
 }
 
-button,
+button {
+  cursor: pointer;
+}
+
 input,
 textarea {
-  cursor: none;
+  cursor: text;
 }
 
 img {
@@ -197,8 +201,6 @@ img {
 
 .section {
   position: relative;
-  will-change: transform;
-  backface-visibility: hidden;
 }
 
 /* Ensure proper stacking for both GSAP spacer class names */

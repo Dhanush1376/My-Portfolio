@@ -142,7 +142,7 @@ export default function TrustStrip() {
   }, []);
 
   return (
-    <section className="trust-strip" id="trustStrip" ref={stripRef} aria-label="Core Competencies & Engineering Rigor">
+    <section className="trust-strip stack-section" id="trustStrip" ref={stripRef} aria-label="Core Competencies & Engineering Rigor">
       <div className="trust-ticker-container">
         {/* Track 1: Moving Left with Accent Stars */}
         <div className="trust-ticker-viewport">

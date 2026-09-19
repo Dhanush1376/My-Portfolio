@@ -13,6 +13,7 @@ export default function Contact({
   headline, 
   subtitle 
 }) {
+  const sectionRef = useRef(null);
   const buttonRef = useRef(null);
   const headerRef = useRef(null);
   const navigate = useNavigate();
@@ -24,8 +25,9 @@ export default function Contact({
     const ctx = gsap.context(() => {
       const tagEl = headerRef.current.querySelector('.tilted-tag-wrapper');
       const lines = headerRef.current.querySelectorAll('.contact-line-inner');
+      const triggerTarget = sectionRef.current || headerRef.current;
 
-      // 1. Tilted tape tag bounce-pop on scroll (triggers earlier at top 96%)
+      // 1. Tilted tape tag bounce-pop on scroll
       if (tagEl) {
         gsap.fromTo(
           tagEl,
@@ -38,14 +40,14 @@ export default function Contact({
             duration: 0.65,
             ease: 'back.out(2)',
             scrollTrigger: {
-              trigger: headerRef.current,
-              start: 'top 96%',
+              trigger: triggerTarget,
+              start: 'top 95%',
             },
           }
         );
       }
 
-      // 2. Kinetic Headline Mask Reveal on scroll (triggers earlier at top 96%)
+      // 2. Kinetic Headline Mask Reveal on scroll
       if (lines && lines.length > 0) {
         gsap.fromTo(
           lines,
@@ -66,8 +68,8 @@ export default function Contact({
             stagger: 0.08,
             ease: 'power4.out',
             scrollTrigger: {
-              trigger: headerRef.current,
-              start: 'top 96%',
+              trigger: triggerTarget,
+              start: 'top 95%',
             },
           }
         );
@@ -85,13 +87,36 @@ export default function Contact({
               duration: 0.8,
               ease: 'power4.out',
               scrollTrigger: {
-                trigger: headerRef.current,
-                start: 'top 96%',
+                trigger: triggerTarget,
+                start: 'top 95%',
               },
             }
           );
         }
       }
+
+      // 3. Safety Check: Guarantee headline is never left invisible
+      const safetyTimer = setTimeout(() => {
+        if (lines && lines.length > 0) {
+          lines.forEach((line) => {
+            if (parseFloat(window.getComputedStyle(line).opacity) < 0.2) {
+              gsap.to(line, {
+                opacity: 1,
+                yPercent: 0,
+                rotate: 0,
+                skewY: 0,
+                filter: 'blur(0px)',
+                duration: 0.4,
+              });
+            }
+          });
+        }
+        if (tagEl && parseFloat(window.getComputedStyle(tagEl).opacity) < 0.2) {
+          gsap.to(tagEl, { opacity: 1, scale: 1, y: 0, rotate: 0, duration: 0.4 });
+        }
+      }, 700);
+
+      return () => clearTimeout(safetyTimer);
     }, headerRef);
 
     return () => ctx.revert();
@@ -144,7 +169,7 @@ export default function Contact({
   };
 
   return (
-    <section className="section contact-editorial-section" id="contact">
+    <section ref={sectionRef} className="section contact-editorial-section stack-section" id="contact">
       {/* Visual Climax Header (Inspired by WhyCreatives) */}
       <div className="contact-climax-header" ref={headerRef}>
         <div className="tilted-tag-wrapper">

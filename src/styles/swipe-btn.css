@@ -123,11 +123,13 @@
 
 /* Services Page Only: Studio Peach Red (#FF5E57) to Sunset Coral (#FF786B) */
 .swipe-container.variant-green.success .swipe-fill,
+.swipe-container.variant-peach.success .swipe-fill,
 .services-page-container .swipe-container.success .swipe-fill {
   background: linear-gradient(90deg, #FF5E57 0%, #FF786B 100%) !important;
 }
 
 .swipe-container.variant-green .swipe-knob,
+.swipe-container.variant-peach .swipe-knob,
 .services-page-container .swipe-container .swipe-knob {
   border-color: #FF5E57;
 }
@@ -139,6 +141,7 @@
 }
 
 .swipe-container.variant-green.success,
+.swipe-container.variant-peach.success,
 .services-page-container .swipe-container.success {
   background: linear-gradient(135deg, #FF5E57 0%, #FF786B 100%) !important;
   border-color: #FF5E57 !important;

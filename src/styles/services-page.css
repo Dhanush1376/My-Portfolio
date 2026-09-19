@@ -977,7 +977,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   EDITORIAL CONTACT SECTION (SCOPED GREEN THEME ONLY FOR SERVICES PAGE)
+   EDITORIAL CONTACT & DISCOVERY SECTION (SCOPED PEACH RED THEME FOR SERVICES PAGE)
    -------------------------------------------------------------------------- */
 .services-page-container .contact-editorial-section {
   background: transparent;
@@ -986,15 +986,16 @@
   z-index: 25;
 }
 
-.services-page-container .tilted-tag {
-  background: #FFA820 !important;
-  color: #0E0F12 !important;
+.services-page-container .tilted-tag,
+.services-page-container .alt-hub-badge {
+  background: #FF5E57 !important;
+  color: #FFFFFF !important;
   font-weight: 850 !important;
-  box-shadow: 0 4px 14px rgba(255, 168, 32, 0.35) !important;
+  box-shadow: 0 4px 14px rgba(255, 94, 87, 0.38) !important;
 }
 
 .services-page-container .title-accent {
-  color: #FFA820 !important;
+  color: #FF5E57 !important;
 }
 
 .services-page-container .contact-huge-headline {

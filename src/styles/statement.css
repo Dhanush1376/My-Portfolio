@@ -5,10 +5,18 @@
 .statement-section {
   position: relative;
   width: 100%;
-  padding: clamp(6.5rem, 11vh, 9rem) clamp(2rem, 5vw, 4.5rem) clamp(5.5rem, 9vh, 8.5rem);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1.5rem, 3vh, 2.5rem);
+  padding-top: clamp(4rem, 6vh, 5.5rem);
+  padding-bottom: clamp(2rem, 3.5vh, 3rem);
+  padding-left: 0;
+  padding-right: 0;
   background: var(--bg);
   color: var(--text);
-  overflow: hidden;
+  overflow-x: clip;
   z-index: 12;
   box-sizing: border-box;
   transition: background 0.4s ease, color 0.4s ease;
@@ -36,20 +44,12 @@
 }
 
 .statement-ambient-glow {
-  position: absolute;
-  top: -15%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 900px;
-  height: 500px;
-  background: radial-gradient(ellipse at center, rgba(255, 168, 32, 0.07) 0%, rgba(255, 94, 87, 0.03) 40%, transparent 75%);
-  pointer-events: none;
-  filter: blur(40px);
+  display: none !important;
 }
 
 [data-theme="light"] .statement-ambient-glow,
 .theme-light .statement-ambient-glow {
-  background: radial-gradient(ellipse at center, rgba(255, 168, 32, 0.09) 0%, rgba(255, 94, 87, 0.04) 40%, transparent 75%);
+  display: none !important;
 }
 
 .statement-divider-top,
@@ -69,6 +69,8 @@
   max-width: 1360px;
   margin: 0 auto;
   width: 100%;
+  padding: 0 clamp(2rem, 5vw, 4.5rem);
+  box-sizing: border-box;
   position: relative;
   z-index: 2;
   display: flex;
@@ -76,50 +78,57 @@
 }
 
 /* --------------------------------------------------------------------------
-   Header Bar: Nostalgic Tilted Tape Sticker Badge
+   Header Bar: Minimalist Studio Bullet Label (matching WhyCreatives reference)
    -------------------------------------------------------------------------- */
 .statement-header-row {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  margin-bottom: 0.25rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
 }
 
-.statement-header-row .tilted-tag-wrapper {
+.statement-label-wrapper {
   display: inline-flex;
+  align-items: center;
   will-change: transform, opacity;
 }
 
-.statement-header-row .tilted-tag {
+.statement-studio-label {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.32rem 0.85rem;
-  background: var(--accent, #FFA820);
-  color: #0E0F12;
+  gap: 0.6rem;
   font-family: var(--font-mono, monospace);
-  font-size: clamp(0.68rem, 0.76vw, 0.74rem);
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-size: clamp(0.72rem, 0.8vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  border-radius: 0;
-  transform: rotate(-2.5deg);
-  box-shadow: 0 4px 14px rgba(255, 168, 32, 0.22);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  color: var(--text-muted, #94a3b8);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  padding: 0 !important;
   user-select: none;
+  transition: color 0.3s ease;
 }
 
-.statement-header-row .tilted-tag:hover {
-  transform: rotate(0deg) scale(1.04);
-  box-shadow: 0 6px 20px rgba(255, 168, 32, 0.35);
+[data-theme="dark"] .statement-studio-label,
+:root:not([data-theme="light"]) .statement-studio-label {
+  color: rgba(255, 255, 255, 0.75);
 }
 
-[data-theme="light"] .statement-header-row .tilted-tag,
-.theme-light .statement-header-row .tilted-tag {
-  background: var(--accent, #FF5520);
-  color: #FFFFFF;
-  box-shadow: 0 4px 14px rgba(255, 85, 32, 0.22);
+[data-theme="light"] .statement-studio-label,
+.theme-light .statement-studio-label {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.statement-label-dot {
+  display: inline-block;
+  font-size: 1.15em;
+  line-height: 1;
+  color: var(--accent, #FF5520);
 }
 
 /* --------------------------------------------------------------------------
@@ -147,12 +156,21 @@
   position: relative;
   margin-bottom: 0;
   max-width: 1240px;
-  margin-left: 0;
+  margin-left: auto;
+  margin-right: 0;
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.statement-quote-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
 }
 
 /* Kinetic Line Mask Reveal for Nostalgic Motion */
@@ -175,7 +193,7 @@
   letter-spacing: -0.035em;
   color: var(--text);
   margin: 0;
-  text-align: left;
+  text-align: right;
   max-width: 1200px;
 }
 
@@ -198,8 +216,8 @@
 }
 
 .statement-accent-tag.accent-utility {
-  color: #FFA820;
-  text-shadow: 0 0 24px rgba(255, 168, 32, 0.3);
+  color: #38BDF8;
+  text-shadow: 0 0 24px rgba(56, 189, 248, 0.25);
 }
 
 [data-theme="light"] .statement-accent-tag.accent-resilient,
@@ -216,7 +234,7 @@
 
 [data-theme="light"] .statement-accent-tag.accent-utility,
 .theme-light .statement-accent-tag.accent-utility {
-  color: #D97706;
+  color: #0284C7;
   text-shadow: none;
 }
 
@@ -226,30 +244,33 @@
 .statement-actions-row {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: clamp(18px, 2.2vw, 32px);
-  margin-top: clamp(2.6rem, 4.5vh, 3.75rem);
+  margin-top: clamp(1.4rem, 2.4vh, 2.2rem);
   flex-wrap: wrap;
   width: 100%;
 }
 
-/* Primary Studio Pill Button — Prominent on Laptop */
+/* Primary Studio Pill Button — Equal Height & Proportion with Secondary */
 .statement-btn-primary {
   display: inline-flex;
   align-items: center;
-  gap: clamp(0.85rem, 1.2vw, 1.2rem);
-  padding: clamp(0.72rem, 1.2vh, 0.95rem) clamp(0.75rem, 1.2vh, 0.95rem) clamp(0.72rem, 1.2vh, 0.95rem) clamp(1.5rem, 2vw, 2.2rem);
+  justify-content: center;
+  height: clamp(48px, 5.2vh, 52px);
+  min-width: clamp(165px, 14vw, 195px);
+  gap: 0.85rem;
+  padding: 0 8px 0 clamp(1.3rem, 1.6vw, 1.8rem);
   border-radius: 999px;
   background: #FFFFFF;
   color: #0E0F12;
   font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
-  font-size: clamp(1rem, 1.18vw, 1.18rem);
-  font-weight: 750;
-  letter-spacing: -0.015em;
+  font-size: clamp(0.95rem, 1.06vw, 1.05rem);
+  font-weight: 650;
+  letter-spacing: -0.012em;
   text-decoration: none;
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.22);
   white-space: nowrap;
-  width: auto;
+  box-sizing: border-box;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
               background 0.25s ease, 
               box-shadow 0.25s ease;
@@ -262,16 +283,17 @@
 }
 
 .statement-btn-arrow-badge {
-  width: clamp(30px, 2.3vw, 36px);
-  height: clamp(30px, 2.3vw, 36px);
+  width: clamp(32px, 3.4vh, 36px);
+  height: clamp(32px, 3.4vh, 36px);
   border-radius: 50%;
   background: #0E0F12;
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(14px, 1.1vw, 16px);
+  font-size: 14px;
   font-weight: 750;
+  flex-shrink: 0;
   transition: transform 0.25s ease;
 }
 
@@ -279,38 +301,47 @@
   transform: translate(2px, -2px);
 }
 
-/* Secondary Ghost Understated Link — Scaled & Bold */
+/* Secondary Outline Pill Link — Exactly Matches Primary in Height, Font & Proportions */
 .statement-link-secondary {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
+  justify-content: center;
+  height: clamp(48px, 5.2vh, 52px);
+  min-width: clamp(165px, 14vw, 195px);
+  gap: 0.65rem;
+  padding: 0 clamp(1.3rem, 1.6vw, 1.8rem);
   color: var(--text, #FFFFFF);
   font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
-  font-size: clamp(1rem, 1.18vw, 1.18rem);
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: clamp(0.95rem, 1.06vw, 1.05rem);
+  font-weight: 650;
+  letter-spacing: -0.012em;
   text-decoration: none;
-  opacity: 0.9;
   white-space: nowrap;
-  width: auto;
-  padding: clamp(0.6rem, 1vh, 0.8rem) clamp(0.75rem, 1.2vw, 1rem);
-  transition: opacity 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  background: transparent;
+  box-sizing: border-box;
+  transition: opacity 0.25s ease, border-color 0.25s ease, background-color 0.25s ease, transform 0.25s ease, color 0.25s ease;
 }
 
 .statement-link-secondary:hover {
-  opacity: 1;
-  color: var(--accent, #FFA820);
-  transform: translateX(2px);
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text, #FFFFFF);
+  transform: translateY(-2px);
 }
 
 .statement-link-arrow {
-  display: inline-block;
-  font-size: clamp(15px, 1.15vw, 18px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
   transition: transform 0.25s ease;
 }
 
 .statement-link-secondary:hover .statement-link-arrow {
-  transform: translate(3px, -3px);
+  transform: translate(2px, -2px);
 }
 
 /* Light Theme Overrides */
@@ -336,18 +367,30 @@
 [data-theme="light"] .statement-link-secondary,
 .theme-light .statement-link-secondary {
   color: #0E0F12;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 [data-theme="light"] .statement-link-secondary:hover,
 .theme-light .statement-link-secondary:hover {
-  color: #FF5520;
+  border-color: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.05);
+  color: #0E0F12;
 }
 
 @media (max-width: 640px) {
+  .statement-header-row {
+    justify-content: flex-start;
+  }
+
   .statement-hero-manifesto {
     align-items: flex-start;
     text-align: left;
     margin-bottom: 2.5rem;
+  }
+
+  .statement-quote-box {
+    align-items: flex-start;
+    text-align: left;
   }
 
   .statement-hairline {
@@ -359,5 +402,236 @@
     font-size: clamp(1.85rem, 7vw, 2.5rem);
     line-height: 1.2;
     text-align: left;
+  }
+
+  .statement-actions-row {
+    justify-content: flex-start;
+    gap: 0.85rem;
+  }
+
+  .statement-btn-primary,
+  .statement-link-secondary {
+    height: 46px;
+    min-width: 145px;
+    font-size: 0.92rem;
+    padding: 0 1.2rem;
+  }
+
+  .statement-btn-primary {
+    padding: 0 6px 0 1.2rem;
+  }
+
+  .statement-btn-arrow-badge {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Laptop & Desktop Layout: WhyCreatives Exact 2-Column Split
+   Left Column: Section Label / Tag
+   Right Column: Manifesto Quote + Action Buttons (Left-Aligned in Column 2)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1024px) {
+  .statement-section {
+    padding-top: clamp(4.5rem, 7vh, 6.5rem);
+    padding-bottom: clamp(2.5rem, 5vh, 4rem);
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .statement-container {
+    display: grid;
+    grid-template-columns: clamp(200px, 22vw, 290px) 1fr;
+    column-gap: clamp(2.5rem, 5vw, 5.5rem);
+    align-items: start;
+    max-width: 1380px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 clamp(2.5rem, 5vw, 5.5rem);
+    box-sizing: border-box;
+  }
+
+  .statement-header-row {
+    grid-column: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 0.75rem;
+    margin: 0;
+    width: 100%;
+  }
+
+  .statement-studio-label {
+    font-size: clamp(0.72rem, 0.8vw, 0.78rem);
+    letter-spacing: 0.18em;
+  }
+
+  .statement-hairline {
+    display: none; /* Clean 2-column spread without dividing line, matching reference */
+  }
+
+  .statement-hero-manifesto {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 1020px;
+    width: 100%;
+  }
+
+  .statement-quote-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    max-width: 100%;
+  }
+
+  .statement-display-text {
+    font-size: clamp(2.2rem, 3.4vw, 3.5rem);
+    line-height: 1.18;
+    letter-spacing: -0.035em;
+    color: var(--text);
+    text-align: left;
+    max-width: 960px;
+    margin: 0;
+  }
+
+  .statement-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.15rem;
+    margin-top: clamp(2.2rem, 4vh, 3.2rem);
+    width: 100%;
+  }
+
+  .statement-btn-primary,
+  .statement-link-secondary {
+    height: clamp(50px, 5.4vh, 54px);
+    min-width: clamp(170px, 14vw, 195px);
+    font-size: clamp(0.95rem, 1.06vw, 1.05rem);
+    padding: 0 clamp(1.3rem, 1.6vw, 1.8rem);
+  }
+
+  .statement-btn-primary {
+    padding: 0 8px 0 clamp(1.3rem, 1.6vw, 1.8rem);
+  }
+
+  .statement-btn-arrow-badge {
+    width: clamp(34px, 3.6vh, 38px);
+    height: clamp(34px, 3.6vh, 38px);
+  }
+}
+
+/* ==========================================================================
+   SERVICES SCROLLING MARQUEE — WHYCREATIVES STUDIO REFERENCE DESIGN
+   ========================================================================== */
+
+.statement-services-marquee {
+  width: 100%;
+  position: relative;
+  z-index: 3;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: clamp(1rem, 1.6vh, 1.4rem) 0;
+  background: #000000; /* Completely solid & opaque */
+  border-top: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+  overflow: hidden;
+  user-select: none;
+  box-sizing: border-box;
+  /* 100% Opaque: No edge mask fade */
+}
+
+[data-theme="light"] .statement-services-marquee,
+.theme-light .statement-services-marquee {
+  background: var(--bg);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.statement-marquee-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  will-change: transform;
+}
+
+.statement-marquee-group {
+  display: flex;
+  align-items: center;
+  gap: clamp(3.2rem, 4.8vw, 5.2rem);
+  padding-right: clamp(3.2rem, 4.8vw, 5.2rem);
+  flex-shrink: 0;
+}
+
+.statement-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-family: var(--font-sans, 'Plus Jakarta Sans', -apple-system, sans-serif);
+  font-size: clamp(1.02rem, 1.15vw, 1.22rem);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+  opacity: 1 !important; /* 100% solid opacity */
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+[data-theme="light"] .statement-marquee-item,
+.theme-light .statement-marquee-item {
+  color: #0E0F12;
+  opacity: 1 !important;
+}
+
+.statement-marquee-item:hover {
+  color: var(--accent, #FF5520);
+  transform: translateY(-1px);
+}
+
+.statement-marquee-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  opacity: 1 !important; /* 100% solid opacity */
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s ease;
+}
+
+.statement-marquee-item:hover .statement-marquee-icon {
+  transform: scale(1.12);
+  color: var(--accent, #FF5520);
+}
+
+.statement-marquee-text {
+  display: inline-block;
+  color: inherit;
+  opacity: 1 !important; /* 100% solid opacity */
+  transition: color 0.25s ease;
+}
+
+@media (max-width: 768px) {
+  .statement-services-marquee {
+    margin-top: clamp(2.5rem, 5vh, 3.5rem);
+    margin-bottom: clamp(2.5rem, 5vh, 3.5rem);
+    padding: clamp(0.95rem, 1.6vh, 1.25rem) 0;
+  }
+
+  .statement-marquee-group {
+    gap: 2.2rem;
+    padding-right: 2.2rem;
+  }
+
+  .statement-marquee-item {
+    font-size: clamp(0.92rem, 3.8vw, 1.05rem);
+    gap: 0.55rem;
   }
 }
