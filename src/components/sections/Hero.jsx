@@ -117,32 +117,80 @@ export default function Hero() {
   const hasAnimatedRef = useRef(false);
   const videoRef = useRef(null);
 
-  // Playback rate management: "make itt a littl a very little slow" (0.8x) & guaranteed loop
+  // Playback rate management: "make itt a littl a very little slow" (0.8x) & guaranteed infinite loop
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
     video.playbackRate = 0.8;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    video.setAttribute('x5-playsinline', '');
 
-    const enforcePlaybackRate = () => {
-      if (video) video.playbackRate = 0.8;
+    const kickstart = () => {
+      if (!video) return;
+      video.muted = true;
+      video.defaultMuted = true;
+      video.playbackRate = 0.8;
+      const p = video.play();
+      if (p !== undefined) {
+        p.catch(() => {
+          video.muted = true;
+          video.play().catch(() => {});
+        });
+      }
     };
 
-    video.addEventListener('play', enforcePlaybackRate);
-    video.addEventListener('loadedmetadata', enforcePlaybackRate);
+    kickstart();
 
-    // Guaranteed inline autoplay across mobile devices & desktop
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        video.muted = true;
-        video.play().catch(() => {});
-      });
-    }
+    // Loop fallback: ensures infinite seamless loop even if mobile buffer ends
+    const handleEnded = () => {
+      if (video) {
+        video.currentTime = 0;
+        kickstart();
+      }
+    };
+
+    video.addEventListener('play', kickstart);
+    video.addEventListener('loadedmetadata', kickstart);
+    video.addEventListener('loadeddata', kickstart);
+    video.addEventListener('canplay', kickstart);
+    video.addEventListener('canplaythrough', kickstart);
+    video.addEventListener('ended', handleEnded);
+
+    // Discrete user interactions to unlock playback if iOS Low Power Mode paused it
+    const interactionEvents = ['touchstart', 'pointerdown', 'click', 'scroll', 'keydown'];
+    const onUserInteraction = () => {
+      if (video && video.paused) {
+        kickstart();
+      }
+    };
+
+    interactionEvents.forEach((evt) => {
+      window.addEventListener(evt, onUserInteraction, { passive: true });
+    });
+
+    const onVisibilityChange = () => {
+      if (!document.hidden && video && video.paused) {
+        kickstart();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
-      video.removeEventListener('play', enforcePlaybackRate);
-      video.removeEventListener('loadedmetadata', enforcePlaybackRate);
+      video.removeEventListener('play', kickstart);
+      video.removeEventListener('loadedmetadata', kickstart);
+      video.removeEventListener('loadeddata', kickstart);
+      video.removeEventListener('canplay', kickstart);
+      video.removeEventListener('canplaythrough', kickstart);
+      video.removeEventListener('ended', handleEnded);
+      interactionEvents.forEach((evt) => {
+        window.removeEventListener(evt, onUserInteraction);
+      });
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [currentVideoSrc]);
 
@@ -405,13 +453,25 @@ export default function Hero() {
                 className="hero-media-inner"
               >
                 <video
-                  ref={videoRef}
+                  ref={(el) => {
+                    videoRef.current = el;
+                    if (el) {
+                      el.defaultMuted = true;
+                      el.muted = true;
+                      el.playsInline = true;
+                      el.playbackRate = 0.8;
+                    }
+                  }}
                   key={currentVideoSrc}
                   src={currentVideoSrc}
                   autoPlay
                   loop
                   muted
                   playsInline
+                  controls={false}
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  tabIndex={-1}
                   webkit-playsinline="true"
                   x5-playsinline="true"
                   preload="auto"

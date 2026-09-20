@@ -158,6 +158,27 @@
   will-change: transform;
   filter: brightness(1.05) contrast(1.02);
   opacity: 1;
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+/* Suppress all native mobile browser play buttons, overlays, and controls */
+.hero-canvas-video::-webkit-media-controls,
+.hero-canvas-video::-webkit-media-controls-start-playback-button,
+.hero-canvas-video::-webkit-media-controls-play-button,
+.hero-canvas-video::-webkit-media-controls-panel,
+.hero-canvas-video::-webkit-media-controls-enclosure,
+.hero-canvas-video::-webkit-media-controls-overlay-play-button,
+video.hero-canvas-video::-webkit-media-controls-start-playback-button,
+video.hero-canvas-video::-webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* Right Stage Showcase Content inside the Orange Canvas */
