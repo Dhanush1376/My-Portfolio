@@ -42,6 +42,7 @@ export default function StatementSection() {
 
     const ctx = gsap.context(() => {
       const tagEl = sectionRef.current.querySelector('.statement-studio-label, .statement-label-wrapper');
+      const manifestoEl = sectionRef.current.querySelector('.statement-hero-manifesto') || sectionRef.current.querySelector('.statement-quote-box');
       const lines = sectionRef.current.querySelectorAll('.statement-line-inner');
 
       // 1. Studio bullet label reveal on scroll
@@ -55,9 +56,9 @@ export default function StatementSection() {
             duration: 0.65,
             ease: 'power3.out',
             scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 92%',
-              once: true,
+              trigger: tagEl,
+              start: 'top 60%',
+              toggleActions: 'play none none reverse',
             },
           }
         );
@@ -80,8 +81,9 @@ export default function StatementSection() {
             stagger: 0.1,
             ease: 'power4.out',
             scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 96%',
+              trigger: manifestoEl || sectionRef.current,
+              start: 'top 55%',
+              toggleActions: 'play none none reverse',
             },
           }
         );
@@ -211,14 +213,20 @@ export default function StatementSection() {
         <div className="statement-hero-manifesto">
           <div className="statement-quote-box">
             <h2 className="statement-display-text">
-              <span className="statement-line-inner">“I don’t just write code.</span>
-              <span className="statement-line-inner">
-                I architect <span className="statement-accent-tag accent-resilient">resilient systems</span>, integrate{' '}
-                <span className="statement-accent-tag accent-ai">practical AI</span>,
-              </span>
-              <span className="statement-line-inner">
-                and ship products that deliver <span className="statement-accent-tag accent-utility">real utility</span>.”
-              </span>
+              <div className="statement-line-mask">
+                <span className="statement-line-inner">“I don’t just write code.</span>
+              </div>
+              <div className="statement-line-mask">
+                <span className="statement-line-inner">
+                  I architect <span className="statement-accent-tag accent-resilient">resilient systems</span>, integrate{' '}
+                  <span className="statement-accent-tag accent-ai">practical AI</span>,
+                </span>
+              </div>
+              <div className="statement-line-mask">
+                <span className="statement-line-inner">
+                  and ship products that deliver <span className="statement-accent-tag accent-utility">real utility</span>.”
+                </span>
+              </div>
             </h2>
           </div>
 

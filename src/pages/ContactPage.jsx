@@ -49,6 +49,7 @@ const contactSchema = {
         "sameAs": [
           "https://github.com/Dhanush1376",
           "https://linkedin.com/in/dhanush1376",
+          "https://x.com/Dhanush1376",
           "https://wa.me/919154691315"
         ]
       }

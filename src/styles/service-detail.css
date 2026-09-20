@@ -159,37 +159,24 @@ body[data-theme="dark"] .service-detail-page,
   color: #0E0F12 !important;
 }
 
-/* Kicker Badge visibility on Mobile vs Desktop */
-.mobile-only-kicker {
-  display: none;
+/* Service Kicker Badge on Top Bar */
+.service-kicker-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--sd-muted);
+  margin: 0;
+  white-space: nowrap;
+  text-align: right;
 }
 
-.desktop-only-kicker {
-  display: block;
-}
-
-@media (max-width: 1023px) {
-  .service-detail-top-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    width: 100%;
-    margin-bottom: 1.5rem;
-  }
-
-  .mobile-only-kicker {
-    display: inline-flex;
-    align-items: center;
-    margin: 0 !important;
+@media (max-width: 768px) {
+  .service-kicker-badge {
     font-size: 0.72rem;
     letter-spacing: 0.18em;
-    white-space: nowrap;
-    text-align: right;
-  }
-
-  .desktop-only-kicker {
-    display: none !important;
   }
 }
 
@@ -223,21 +210,6 @@ body[data-theme="dark"] .service-detail-page,
   }
 }
 
-.service-kicker-badge {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  color: var(--sd-muted);
-  margin-bottom: 1rem;
-}
-
-@media (min-width: 1024px) {
-  .service-kicker-badge {
-    margin-bottom: 1.25rem;
-  }
-}
 
 [data-theme="light"] .service-kicker-badge,
 .theme-light .service-kicker-badge {

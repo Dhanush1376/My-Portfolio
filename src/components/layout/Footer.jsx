@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowUp, Linkedin, Instagram, Phone, Mail, MapPin } from 'lucide-react';
+import { ArrowUp, Linkedin, Phone, Mail, MapPin } from 'lucide-react';
 
 const DEFAULT_QUESTIONS = [
   "Ready to build\nsomething great?",
@@ -113,13 +113,13 @@ export default function Footer() {
               <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
             </svg>
           </a>
-          <a href="#" className="social-pill" aria-label="X (Twitter)">
+          <a href="https://x.com/Dhanush1376" target="_blank" rel="noopener noreferrer" className="social-pill" aria-label="X (Twitter)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
             </svg>
           </a>
-          <a href="#" className="social-pill" aria-label="Instagram">
-            <Instagram size={18} />
+          <a href="tel:+919154691315" className="social-pill" aria-label="Phone">
+            <Phone size={18} />
           </a>
         </aside>
 

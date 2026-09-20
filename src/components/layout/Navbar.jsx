@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Mail, Linkedin, Phone } from 'lucide-react';
 
 export default function Navbar({ theme, toggleTheme, transparent = false }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -183,17 +184,72 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
           </ul>
 
           <div className="drawer-footer">
+            {/* Availability Status */}
             <div className="drawer-status">
               <span className="status-dot"></span>
-              <span>Available for select projects & contracts</span>
+              <span>Available for select projects &amp; contracts</span>
             </div>
-            <a href="mailto:dhanush1376@gmail.com" className="drawer-email">
-              dhanush1376@gmail.com
-            </a>
-            <div className="drawer-socials">
-              <a href="https://github.com/Dhanush1376" target="_blank" rel="noopener noreferrer">GitHub</a>
-              <span className="dot-sep">•</span>
-              <a href="https://www.linkedin.com/in/dhanush1376/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+
+            {/* Circular Social / Contact Pills */}
+            <div className="drawer-social-row">
+              <a
+                href="mailto:dhanush1376@gmail.com"
+                className="drawer-social-pill"
+                aria-label="Email Dhanush"
+              >
+                <Mail size={16} />
+              </a>
+
+              <a
+                href="https://linkedin.com/in/dhanush1376"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="drawer-social-pill"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={16} />
+              </a>
+
+              <a
+                href="https://wa.me/919154691315?text=Hi%20Dhanush!%20I'd%20like%20to%20discuss%20a%20project."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="drawer-social-pill"
+                aria-label="WhatsApp"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
+                  <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
+                </svg>
+              </a>
+
+              <a
+                href="https://x.com/Dhanush1376"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="drawer-social-pill"
+                aria-label="X (Twitter)"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+                </svg>
+              </a>
+
+              <a
+                href="tel:+919154691315"
+                className="drawer-social-pill"
+                aria-label="Phone"
+              >
+                <Phone size={16} />
+              </a>
+            </div>
+
+            {/* Footer-style Bottom Signature Bar */}
+            <div className="drawer-bottom-bar">
+              <span className="drawer-brand-logo">
+                DHANUSH<span className="brand-dot">.</span>
+              </span>
+              <span className="drawer-copyright">© 2026</span>
             </div>
           </div>
         </div>

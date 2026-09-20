@@ -73,6 +73,8 @@ export default function SEO({
     setMetaTag('name', 'twitter:title', title || 'Dhanush');
     setMetaTag('name', 'twitter:description', description || '');
     setMetaTag('name', 'twitter:image', image);
+    setMetaTag('name', 'twitter:site', '@Dhanush1376');
+    setMetaTag('name', 'twitter:creator', '@Dhanush1376');
 
     // 7. Structured Data (JSON-LD)
     let schemaScript = document.getElementById('seo-structured-data');

@@ -46,7 +46,8 @@ const aboutSchema = {
         "url": "https://dhanu.me/",
         "sameAs": [
           "https://github.com/Dhanush1376",
-          "https://linkedin.com/in/dhanush1376"
+          "https://linkedin.com/in/dhanush1376",
+          "https://x.com/Dhanush1376"
         ],
         "address": {
           "@type": "PostalAddress",

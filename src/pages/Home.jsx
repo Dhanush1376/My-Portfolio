@@ -37,7 +37,8 @@ const homeSchema = {
       "jobTitle": "Software Engineer & AI Systems Builder",
       "sameAs": [
         "https://github.com/Dhanush1376",
-        "https://linkedin.com/in/dhanush1376"
+        "https://linkedin.com/in/dhanush1376",
+        "https://x.com/Dhanush1376"
       ],
       "address": {
         "@type": "PostalAddress",
@@ -253,6 +254,12 @@ export default function Home() {
 
     window.addEventListener('resize', handleResizeOrLoad);
     window.addEventListener('load', handleResizeOrLoad);
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        ScrollTrigger.refresh();
+      });
+    }
 
     ScrollTrigger.refresh();
     const hashTimer = setTimeout(() => {

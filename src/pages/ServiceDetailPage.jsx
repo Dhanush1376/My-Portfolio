@@ -116,15 +116,11 @@ export default function ServiceDetailPage() {
         );
       }
 
-      // Top Bar Kickers (mobile & desktop)
-      const kickers = [
-        topBarRef.current?.querySelector('.mobile-only-kicker'),
-        headerRef.current?.querySelector('.desktop-only-kicker')
-      ].filter(Boolean);
-
-      if (kickers.length > 0) {
+      // Top Bar Kicker
+      const kickerBadge = topBarRef.current?.querySelector('.service-kicker-badge');
+      if (kickerBadge) {
         entranceTl.fromTo(
-          kickers,
+          kickerBadge,
           { x: 30, opacity: 0, letterSpacing: '0.34em' },
           { x: 0, opacity: 1, letterSpacing: '0.22em', duration: 0.55, ease: 'power3.out', clearProps: 'transform,opacity,letterSpacing' },
           '-=0.45'
@@ -641,7 +637,7 @@ export default function ServiceDetailPage() {
             <ArrowLeft className="back-icon" />
             <span>Back to services</span>
           </Link>
-          <span className="service-kicker-badge mobile-only-kicker">
+          <span className="service-kicker-badge">
             SERVICE / {serviceIndexStr} — {totalCount}
           </span>
         </div>
@@ -649,9 +645,6 @@ export default function ServiceDetailPage() {
         {/* 1. Header / Hero Section (12-Col Desktop, Stacked Mobile) */}
         <header className="service-detail-header" ref={headerRef}>
           <div className="service-detail-header-left">
-            <span className="service-kicker-badge desktop-only-kicker">
-              SERVICE / {serviceIndexStr} — {totalCount}
-            </span>
             <h1 className="service-hero-title">
               {service.title.split(' ').map((word, i) => (
                 <span key={i} className="service-title-word-mask">

@@ -25,7 +25,6 @@ export default function Contact({
     const ctx = gsap.context(() => {
       const tagEl = headerRef.current.querySelector('.tilted-tag-wrapper');
       const lines = headerRef.current.querySelectorAll('.contact-line-inner');
-      const triggerTarget = sectionRef.current || headerRef.current;
 
       // 1. Tilted tape tag bounce-pop on scroll
       if (tagEl) {
@@ -40,8 +39,9 @@ export default function Contact({
             duration: 0.65,
             ease: 'back.out(2)',
             scrollTrigger: {
-              trigger: triggerTarget,
-              start: 'top 95%',
+              trigger: headerRef.current,
+              start: 'top 55%',
+              toggleActions: 'play none none reverse',
             },
           }
         );
@@ -68,8 +68,9 @@ export default function Contact({
             stagger: 0.08,
             ease: 'power4.out',
             scrollTrigger: {
-              trigger: triggerTarget,
-              start: 'top 95%',
+              trigger: headerRef.current,
+              start: 'top 55%',
+              toggleActions: 'play none none reverse',
             },
           }
         );
@@ -87,36 +88,14 @@ export default function Contact({
               duration: 0.8,
               ease: 'power4.out',
               scrollTrigger: {
-                trigger: triggerTarget,
-                start: 'top 95%',
+                trigger: headerRef.current,
+                start: 'top 55%',
+                toggleActions: 'play none none reverse',
               },
             }
           );
         }
       }
-
-      // 3. Safety Check: Guarantee headline is never left invisible
-      const safetyTimer = setTimeout(() => {
-        if (lines && lines.length > 0) {
-          lines.forEach((line) => {
-            if (parseFloat(window.getComputedStyle(line).opacity) < 0.2) {
-              gsap.to(line, {
-                opacity: 1,
-                yPercent: 0,
-                rotate: 0,
-                skewY: 0,
-                filter: 'blur(0px)',
-                duration: 0.4,
-              });
-            }
-          });
-        }
-        if (tagEl && parseFloat(window.getComputedStyle(tagEl).opacity) < 0.2) {
-          gsap.to(tagEl, { opacity: 1, scale: 1, y: 0, rotate: 0, duration: 0.4 });
-        }
-      }, 700);
-
-      return () => clearTimeout(safetyTimer);
     }, headerRef);
 
     return () => ctx.revert();

@@ -17,7 +17,7 @@ export default function Projects({ onOpenCaseStudy }) {
       const tagEl = headerRef.current.querySelector('.tilted-tag-wrapper');
       const lines = headerRef.current.querySelectorAll('.title-line-inner');
 
-      // 1. Tilted tape tag bounce-pop on scroll (Third pic animation)
+      // 1. Tilted tape tag bounce-pop on scroll
       if (tagEl) {
         gsap.fromTo(
           tagEl,
@@ -31,14 +31,14 @@ export default function Projects({ onOpenCaseStudy }) {
             ease: 'back.out(2)',
             scrollTrigger: {
               trigger: headerRef.current,
-              start: 'top 92%',
-              once: true,
+              start: 'top 55%',
+              toggleActions: 'play none none reverse',
             },
           }
         );
       }
 
-      // 2. Kinetic Headline Mask Reveal on scroll (Third pic animation)
+      // 2. Kinetic Headline Mask Reveal on scroll
       if (lines && lines.length > 0) {
         gsap.fromTo(
           lines,
@@ -60,8 +60,8 @@ export default function Projects({ onOpenCaseStudy }) {
             ease: 'power4.out',
             scrollTrigger: {
               trigger: headerRef.current,
-              start: 'top 92%',
-              once: true,
+              start: 'top 55%',
+              toggleActions: 'play none none reverse',
             },
           }
         );
