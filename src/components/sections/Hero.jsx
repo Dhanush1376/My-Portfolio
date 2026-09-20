@@ -93,19 +93,58 @@ export default function Hero() {
   const navigate = useNavigate();
 
   const [cardPath, setCardPath] = useState('');
-  const [layout, setLayout] = useState({
-    w: 1400,
-    h: 750,
-    paddingLeft: 48,
-    cardTop: 96,
-    cardHeight: 600,
-    cardWidth: 1300,
-    W_left: 110,
+  const [layout, setLayout] = useState(() => {
+    const isClient = typeof window !== 'undefined';
+    const w = isClient ? window.innerWidth : 1400;
+    const h = isClient ? window.innerHeight : 750;
+    const isMobile = w < 768;
+    return {
+      w,
+      h,
+      paddingLeft: isMobile ? 12 : 48,
+      cardTop: isMobile ? 74 : 96,
+      cardHeight: 600,
+      cardWidth: isMobile ? w - 24 : 1300,
+      W_left: isMobile ? 0 : 110,
+    };
   });
+
+  const isMobile = layout.w < 768;
+  const currentVideoSrc = isMobile ? '/assets/mobile-hero.MP4' : '/assets/laptop-hero.MP4';
 
   const liquidFillRef = useRef(null);
   const stageContentRef = useRef(null);
   const hasAnimatedRef = useRef(false);
+  const videoRef = useRef(null);
+
+  // Playback rate management: "make itt a littl a very little slow" (0.8x) & guaranteed loop
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.playbackRate = 0.8;
+
+    const enforcePlaybackRate = () => {
+      if (video) video.playbackRate = 0.8;
+    };
+
+    video.addEventListener('play', enforcePlaybackRate);
+    video.addEventListener('loadedmetadata', enforcePlaybackRate);
+
+    // Guaranteed inline autoplay across mobile devices & desktop
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        video.muted = true;
+        video.play().catch(() => {});
+      });
+    }
+
+    return () => {
+      video.removeEventListener('play', enforcePlaybackRate);
+      video.removeEventListener('loadedmetadata', enforcePlaybackRate);
+    };
+  }, [currentVideoSrc]);
 
   // Entrance Animation: Runs strictly ONCE on mount, never repeats on layout recalculations
   useEffect(() => {
@@ -319,66 +358,72 @@ export default function Hero() {
         }}
       >
         {cardPath && (
-          <svg
-            className="hero-orange-card-svg"
-            viewBox={`0 0 ${cardWidth} ${cardHeight}`}
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="heroOrangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="var(--hero-orange-1, #FF5520)" />
-                <stop offset="100%" stopColor="var(--hero-orange-2, #FF3800)" />
-              </linearGradient>
-              <filter id="heroOrangeGlow" x="-4%" y="-4%" width="108%" height="112%">
-                <feDropShadow dx="0" dy="16" stdDeviation="20" floodColor="var(--hero-orange-glow, rgba(255, 85, 32, 0.35))" floodOpacity="0.35" />
-              </filter>
-              {/* Grid pattern for architectural lines */}
-              <pattern id="heroGridPattern" width="48" height="48" patternUnits="userSpaceOnUse">
-                <line x1="48" y1="0" x2="48" y2="48" className="hero-grid-line" />
-                <line x1="0" y1="48" x2="48" y2="48" className="hero-grid-line" />
-              </pattern>
-              <clipPath id="heroCanvasClip">
-                <path d={cardPath} />
-              </clipPath>
-            </defs>
-            
-            {/* Base shadow layer cast by the path shape */}
-            <path
-              d={cardPath}
-              fill="none"
-              filter="url(#heroOrangeGlow)"
-            />
-            
-            {/* Masked Liquid Fill Area */}
-            <g clipPath="url(#heroCanvasClip)">
-              <g ref={liquidFillRef}>
+          <>
+            <svg
+              className="hero-orange-card-svg"
+              viewBox={`0 0 ${cardWidth} ${cardHeight}`}
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <defs>
+                <filter id="heroOrangeGlow" x="-4%" y="-4%" width="108%" height="112%">
+                  <feDropShadow dx="0" dy="16" stdDeviation="20" floodColor="var(--hero-orange-glow, rgba(0, 0, 0, 0.25))" floodOpacity="0.35" />
+                </filter>
+                <clipPath id="heroCanvasClip">
+                  <path d={cardPath} />
+                </clipPath>
+              </defs>
+              
+              {/* Base shadow layer cast by the path shape */}
+              <path
+                d={cardPath}
+                fill="none"
+                filter="url(#heroOrangeGlow)"
+              />
+
+              {/* Base fallback fill in SVG */}
+              <g clipPath="url(#heroCanvasClip)">
                 <rect
                   width={cardWidth}
                   height={cardHeight}
-                  fill="url(#heroOrangeGrad)"
-                />
-                {/* Grid overlay */}
-                <rect
-                  width={cardWidth}
-                  height={cardHeight}
-                  fill="url(#heroGridPattern)"
+                  fill="var(--hero-canvas-bg, #0E0F12)"
                 />
               </g>
-            </g>
-          </svg>
+            </svg>
+
+            {/* Stepped Media Canvas Container - Clipped precisely to cardPath across all devices */}
+            <div
+              className="hero-canvas-media-layer"
+              style={{
+                clipPath: cardPath ? `path("${cardPath}")` : 'url(#heroCanvasClip)',
+                WebkitClipPath: cardPath ? `path("${cardPath}")` : 'url(#heroCanvasClip)',
+              }}
+              aria-hidden="true"
+            >
+              <div
+                ref={liquidFillRef}
+                className="hero-media-inner"
+              >
+                <video
+                  ref={videoRef}
+                  key={currentVideoSrc}
+                  src={currentVideoSrc}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  webkit-playsinline="true"
+                  x5-playsinline="true"
+                  preload="auto"
+                  className="hero-canvas-video"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
+          </>
         )}
 
         {/* Stage Content */}
-        <div className="hero-orange-stage-content" ref={stageContentRef}>
-          <div className="orange-stage-pill">
-            <span className="orange-pulse-dot" aria-hidden="true">•</span>
-            <span>FULL STACK &amp; AI // DHANUSH</span>
-          </div>
-          <div className="orange-stage-headline">
-            ENGINEERED FOR SCALE,<br />BUILT FOR UTILITY.
-          </div>
-        </div>
       </div>
 
       {/* Foreground Editorial Text Block */}

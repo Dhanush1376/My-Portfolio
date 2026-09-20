@@ -11,6 +11,7 @@ import CustomCursor from '../components/common/CustomCursor';
 import Contact from '../components/sections/Contact';
 import AlternativeDiscoveryHub from '../components/sections/AlternativeDiscoveryHub';
 import SEO from '../components/common/SEO';
+import { SOCIAL_LINKS } from '../data/socialLinks';
 
 const aboutSchema = {
   "@context": "https://schema.org",
@@ -547,20 +548,22 @@ export default function AboutPage() {
         {/* Vertical Contact Buttons at Bottom Right (like Contact Page) */}
         <aside className="hero-social-dock" aria-label="Direct contact links">
           <a
-            href="tel:+919154691315"
+            href={SOCIAL_LINKS.phone.telUrl}
             className="hero-dock-btn"
-            aria-label="Call Directly"
+            aria-label={`Call Directly (${SOCIAL_LINKS.phone.number})`}
+            title={`Call: ${SOCIAL_LINKS.phone.number}`}
           >
             <Phone size={18} />
             <span className="hero-dock-tooltip">Call</span>
           </a>
 
           <a
-            href="https://wa.me/919154691315?text=Hi%20Dhanush!%20I'd%20like%20to%20discuss%20a%20project."
+            href={SOCIAL_LINKS.whatsapp.url}
             target="_blank"
             rel="noopener noreferrer"
             className="hero-dock-btn"
-            aria-label="WhatsApp"
+            aria-label="WhatsApp Chat"
+            title="Chat on WhatsApp"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
@@ -570,9 +573,10 @@ export default function AboutPage() {
           </a>
 
           <a
-            href="mailto:dhanush1376@gmail.com"
+            href={SOCIAL_LINKS.email.mailtoUrl}
             className="hero-dock-btn"
-            aria-label="Email Directly"
+            aria-label={`Email Directly (${SOCIAL_LINKS.email.address})`}
+            title={`Email: ${SOCIAL_LINKS.email.address}`}
           >
             <Mail size={18} />
             <span className="hero-dock-tooltip">Email</span>

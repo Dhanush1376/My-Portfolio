@@ -57,8 +57,8 @@ export default function StatementSection() {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: tagEl,
-              start: 'top 60%',
-              toggleActions: 'play none none reverse',
+              start: 'top 85%',
+              once: true,
             },
           }
         );
@@ -82,8 +82,8 @@ export default function StatementSection() {
             ease: 'power4.out',
             scrollTrigger: {
               trigger: manifestoEl || sectionRef.current,
-              start: 'top 55%',
-              toggleActions: 'play none none reverse',
+              start: 'top 85%',
+              once: true,
             },
           }
         );

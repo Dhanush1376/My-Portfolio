@@ -31,8 +31,8 @@ export default function Projects({ onOpenCaseStudy }) {
             ease: 'back.out(2)',
             scrollTrigger: {
               trigger: headerRef.current,
-              start: 'top 55%',
-              toggleActions: 'play none none reverse',
+              start: 'top 88%',
+              once: true,
             },
           }
         );
@@ -60,15 +60,23 @@ export default function Projects({ onOpenCaseStudy }) {
             ease: 'power4.out',
             scrollTrigger: {
               trigger: headerRef.current,
-              start: 'top 55%',
-              toggleActions: 'play none none reverse',
+              start: 'top 88%',
+              once: true,
             },
           }
         );
       }
     }, headerRef);
 
-    return () => ctx.revert();
+    // Refresh ScrollTrigger to calculate accurate layout with pinned sheets
+    const refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
+
+    return () => {
+      clearTimeout(refreshTimer);
+      ctx.revert();
+    };
   }, []);
 
   return (

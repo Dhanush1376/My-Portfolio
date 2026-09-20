@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Linkedin, Phone } from 'lucide-react';
+import { SOCIAL_LINKS } from '../../data/socialLinks';
 
 export default function Navbar({ theme, toggleTheme, transparent = false }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -193,29 +194,32 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
             {/* Circular Social / Contact Pills */}
             <div className="drawer-social-row">
               <a
-                href="mailto:dhanush1376@gmail.com"
+                href={SOCIAL_LINKS.email.mailtoUrl}
                 className="drawer-social-pill"
-                aria-label="Email Dhanush"
+                aria-label={`Email Dhanush (${SOCIAL_LINKS.email.address})`}
+                title={`Email: ${SOCIAL_LINKS.email.address}`}
               >
                 <Mail size={16} />
               </a>
 
               <a
-                href="https://linkedin.com/in/dhanush1376"
+                href={SOCIAL_LINKS.linkedin.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="drawer-social-pill"
-                aria-label="LinkedIn"
+                aria-label="LinkedIn Profile"
+                title="LinkedIn Profile"
               >
                 <Linkedin size={16} />
               </a>
 
               <a
-                href="https://wa.me/919154691315?text=Hi%20Dhanush!%20I'd%20like%20to%20discuss%20a%20project."
+                href={SOCIAL_LINKS.whatsapp.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="drawer-social-pill"
-                aria-label="WhatsApp"
+                aria-label="WhatsApp Chat"
+                title="Direct WhatsApp Chat"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
@@ -224,11 +228,12 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
               </a>
 
               <a
-                href="https://x.com/Dhanush1376"
+                href={SOCIAL_LINKS.x.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="drawer-social-pill"
-                aria-label="X (Twitter)"
+                aria-label="X (Twitter) Profile"
+                title="X (Twitter) Profile"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
@@ -236,9 +241,10 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
               </a>
 
               <a
-                href="tel:+919154691315"
+                href={SOCIAL_LINKS.phone.telUrl}
                 className="drawer-social-pill"
-                aria-label="Phone"
+                aria-label={`Call Dhanush (${SOCIAL_LINKS.phone.number})`}
+                title={`Call: ${SOCIAL_LINKS.phone.number}`}
               >
                 <Phone size={16} />
               </a>

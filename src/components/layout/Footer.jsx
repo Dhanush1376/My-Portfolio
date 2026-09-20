@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowUp, Linkedin, Phone, Mail, MapPin } from 'lucide-react';
+import { SOCIAL_LINKS } from '../../data/socialLinks';
 
 const DEFAULT_QUESTIONS = [
   "Ready to build\nsomething great?",
@@ -104,21 +105,47 @@ export default function Footer() {
       {/* Left Column (Socials + Notch Extension) */}
       <div className="footer-left-column">
         <aside className="footer-social-bar">
-          <a href="https://linkedin.com/in/dhanush1376" target="_blank" rel="noopener noreferrer" className="social-pill" aria-label="LinkedIn">
+          <a
+            href={SOCIAL_LINKS.linkedin.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="social-pill"
+            aria-label="LinkedIn"
+            title="LinkedIn Profile"
+          >
             <Linkedin size={18} />
           </a>
-          <a href="https://wa.me/919154691315?text=Hi%20Dhanush!%20I'd%20like%20to%20discuss%20a%20project." target="_blank" rel="noopener noreferrer" className="social-pill" aria-label="WhatsApp">
+          <a
+            href={SOCIAL_LINKS.whatsapp.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="social-pill"
+            aria-label="WhatsApp"
+            title="WhatsApp Chat"
+          >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
               <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
             </svg>
           </a>
-          <a href="https://x.com/Dhanush1376" target="_blank" rel="noopener noreferrer" className="social-pill" aria-label="X (Twitter)">
+          <a
+            href={SOCIAL_LINKS.x.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="social-pill"
+            aria-label="X (Twitter)"
+            title="X (Twitter) Profile"
+          >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
             </svg>
           </a>
-          <a href="tel:+919154691315" className="social-pill" aria-label="Phone">
+          <a
+            href={SOCIAL_LINKS.phone.telUrl}
+            className="social-pill"
+            aria-label={`Call ${SOCIAL_LINKS.phone.number}`}
+            title={`Call: ${SOCIAL_LINKS.phone.number}`}
+          >
             <Phone size={18} />
           </a>
         </aside>
@@ -144,7 +171,7 @@ export default function Footer() {
           <div className="footer-brand-callout">
             <TypewriterText />
             <div className="footer-action-row">
-              <a href="mailto:dhanush1376@gmail.com" className="footer-start-btn">
+              <a href={SOCIAL_LINKS.email.mailtoUrl} className="footer-start-btn">
                 Start a project <span className="arrow-icon">↗</span>
               </a>
               <p className="footer-tiny-desc">
@@ -171,7 +198,7 @@ export default function Footer() {
               <ul>
                 <li>
                   <Phone size={14} /> 
-                  <a href="tel:+919154691315">+91 91546 91315</a>
+                  <a href={SOCIAL_LINKS.phone.telUrl}>{SOCIAL_LINKS.phone.number}</a>
                 </li>
                 <li>
                   <MapPin size={14} /> 
@@ -179,7 +206,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Mail size={14} /> 
-                  <a href="mailto:dhanush1376@gmail.com">dhanush1376@gmail.com</a>
+                  <a href={SOCIAL_LINKS.email.mailtoUrl}>{SOCIAL_LINKS.email.address}</a>
                 </li>
               </ul>
             </div>

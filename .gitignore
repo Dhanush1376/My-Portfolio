@@ -1,8 +1,13 @@
 # Dependencies
 node_modules/
+.pnp
+.pnp.js
 
-# Production build
+# Production build & cache
 dist/
+dist-ssr/
+.vite/
+coverage/
 
 # Editor & System files
 .vscode/
@@ -12,6 +17,10 @@ Thumbs.db
 *.bak
 *.tmp
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 *.local
 
 # Scratch and diagnostic scripts
@@ -20,7 +29,11 @@ extract*
 inspect*
 *.cjs
 
-# Environment variables
+# Environment variables & secrets (CRITICAL: Never commit secrets)
 .env
 .env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 !.env.example

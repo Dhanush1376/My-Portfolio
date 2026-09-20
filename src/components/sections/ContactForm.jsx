@@ -526,35 +526,38 @@ export default function ContactForm() {
 
     const fullPhone = `${selectedCountry.dial} ${formData.phone.trim()}`;
     const countryInfo = `${selectedCountry.name} (${selectedCountry.dial})`;
-    const web3formsKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+    const web3formsKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '1b7c64cf-872f-4a9a-8645-c94982d436d9';
     const formspreeId = import.meta.env.VITE_FORMSPREE_FORM_ID;
 
     try {
       let response;
       let result;
 
+      const cleanDial = selectedCountry.dial.replace(/[^0-9]/g, '');
+      const cleanPhoneDigits = formData.phone.replace(/[^0-9]/g, '');
+      const whatsappQuickLink = `https://wa.me/${cleanDial}${cleanPhoneDigits}`;
+
       if (formspreeId) {
-        // Formspree static submission
+        // Formspree static submission (clean & studio-branded)
+        const formspreePayload = {
+          name: formData.name.trim(),
+          phone: fullPhone,
+          country: `${selectedCountry.name} (${selectedCountry.dial})`,
+          services: selectedServices.join(', '),
+          message: formData.message.trim(),
+          _subject: `✦ You Got a New Lead from Dhanu.me: ${formData.name.trim()} (${selectedCountry.name})`
+        };
+        if (formData.email && formData.email.trim()) {
+          formspreePayload.email = formData.email.trim();
+        }
+
         response = await fetch(`https://formspree.io/f/${formspreeId}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          body: JSON.stringify({
-            name: formData.name.trim(),
-            country: countryInfo,
-            country_name: selectedCountry.name,
-            nationality: selectedCountry.name,
-            country_code: selectedCountry.code,
-            dial_code: selectedCountry.dial,
-            phone: fullPhone,
-            phone_number: fullPhone,
-            services: selectedServices.join(', '),
-            message: formData.message.trim(),
-            _replyto: 'no-reply@dhanush.dev',
-            _subject: `New Project Inquiry — ${formData.name.trim()} [Country: ${selectedCountry.name}] (${fullPhone})`
-          })
+          body: JSON.stringify(formspreePayload)
         });
         result = await response.json().catch(() => ({}));
         if (response.ok) {
@@ -563,24 +566,22 @@ export default function ContactForm() {
           return;
         }
       } else {
-        // Web3Forms static submission (default)
+        // Web3Forms static submission (clean, guaranteed delivery, zero duplicates, no dummy email)
         const payload = {
-          access_key: web3formsKey || 'YOUR_ACCESS_KEY_HERE',
-          subject: `New Project Inquiry — ${formData.name.trim()} [Country: ${selectedCountry.name}] (${fullPhone})`,
+          access_key: web3formsKey,
+          subject: `✦ You Got a New Lead from Dhanu.me: ${formData.name.trim()} (${selectedCountry.name})`,
           from_name: 'Dhanush Portfolio Inquiries',
           name: formData.name.trim(),
-          country: countryInfo,
-          country_name: selectedCountry.name,
-          nationality: selectedCountry.name,
-          country_code: selectedCountry.code,
-          dial_code: selectedCountry.dial,
-          email: 'no-reply@dhanush.dev', // Fallback for Web3Forms API schema
           phone: fullPhone,
-          phone_number: fullPhone,
+          country: `${selectedCountry.name} (${selectedCountry.dial})`,
           services: selectedServices.join(', '),
           message: formData.message.trim(),
           botcheck: formData.botcheck ? 'true' : ''
         };
+
+        if (formData.email && formData.email.trim()) {
+          payload.email = formData.email.trim();
+        }
 
         response = await fetch('https://api.web3forms.com/submit', {
           method: 'POST',

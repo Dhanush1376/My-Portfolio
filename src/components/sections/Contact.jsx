@@ -40,8 +40,8 @@ export default function Contact({
             ease: 'back.out(2)',
             scrollTrigger: {
               trigger: headerRef.current,
-              start: 'top 55%',
-              toggleActions: 'play none none reverse',
+              start: 'top 85%',
+              once: true,
             },
           }
         );
@@ -69,8 +69,8 @@ export default function Contact({
             ease: 'power4.out',
             scrollTrigger: {
               trigger: headerRef.current,
-              start: 'top 55%',
-              toggleActions: 'play none none reverse',
+              start: 'top 85%',
+              once: true,
             },
           }
         );

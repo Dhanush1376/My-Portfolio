@@ -17,18 +17,19 @@
   --hero-btn-primary-badge-text: #FFFFFF;
   --hero-btn-secondary-text: #FFFFFF;
 
-  /* White canvas in Dark Mode */
-  --hero-orange-1: #FFFFFF;
-  --hero-orange-2: #F5F5F7;
-  --hero-orange-glow: rgba(255, 255, 255, 0.12);
+  /* Sleek dark canvas for video in Dark Mode */
+  --hero-canvas-bg: #0A0A0D;
+  --hero-orange-1: #161722;
+  --hero-orange-2: #0E0F12;
+  --hero-orange-glow: rgba(0, 0, 0, 0.45);
 
-  --hero-stage-text: #0E0F12;
+  --hero-stage-text: #FFFFFF;
   --hero-stage-pill-bg: transparent;
   --hero-stage-pill-border: transparent;
-  --hero-stage-pill-text: rgba(14, 15, 18, 0.75);
+  --hero-stage-pill-text: rgba(255, 255, 255, 0.75);
   --hero-stage-dot: var(--accent, #FF5520);
   --hero-stage-dot-glow: none;
-  --hero-grid-color: rgba(0, 0, 0, 0.13);
+  --hero-grid-color: rgba(255, 255, 255, 0.08);
 }
 
 /* --------------------------------------------------------------------------
@@ -46,7 +47,8 @@
   --hero-btn-primary-badge-text: #0E0F12;
   --hero-btn-secondary-text: #0E0F12;
 
-  /* Dark bluish-black canvas in Light Mode */
+  /* Sleek dark canvas for video in Light Mode */
+  --hero-canvas-bg: #0E0F12;
   --hero-orange-1: #161722;
   --hero-orange-2: #0E0F12;
   --hero-orange-glow: rgba(14, 15, 18, 0.18);
@@ -115,6 +117,47 @@
 
 .hero-orange-card-svg stop:last-child {
   stop-color: var(--hero-orange-2);
+}
+
+/* --------------------------------------------------------------------------
+   Stepped Media Canvas Layer (Autoplaying Looping Hero Video)
+   -------------------------------------------------------------------------- */
+.hero-canvas-media-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: url(#heroCanvasClip);
+  -webkit-clip-path: url(#heroCanvasClip);
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 5;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  border-radius: 0;
+}
+
+.hero-media-inner {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--hero-canvas-bg, #0E0F12);
+  overflow: hidden;
+  will-change: transform;
+}
+
+.hero-canvas-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+  filter: brightness(1.05) contrast(1.02);
+  opacity: 1;
 }
 
 /* Right Stage Showcase Content inside the Orange Canvas */
