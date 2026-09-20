@@ -22,7 +22,7 @@ function generateStudioCanvasPath(cardWidth, cardHeight, lines, r, s, W_left = 0
     u.push(`V ${De(o - safeR)}`);
     u.push(St(safeR, 0, W_left + safeR, o));
   } else {
-    // MOBILE (WhyCreatives exact layout): Top of Line 1 -> top-right -> bottom-right -> bottom-left -> up to shelf
+    // MOBILE: Top of Line 1 -> top-right -> bottom-right -> bottom-left -> up to shelf
     u.push(`M ${De(lines[0].right + r)} 0`);
     u.push(`H ${De(cardWidth - r)}`);
     u.push(St(r, 1, cardWidth, r));
@@ -305,7 +305,7 @@ export default function Hero() {
   const { paddingLeft, cardTop, cardHeight, cardWidth, W_left } = layout;
 
   return (
-    <section className="hero-why stack-section" id="hero" ref={heroRef}>
+    <section className="hero-section stack-section" id="hero" ref={heroRef}>
       {/* Orange Container Canvas: Dynamic stepped studio layout */}
       <div
         ref={wrapperRef}

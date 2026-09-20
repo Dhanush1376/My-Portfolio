@@ -88,7 +88,7 @@
    MINIMAL NOTCHED DISCOVERY GRID
    ========================================================================== */
 
-.why-services-notched-grid {
+.discovery-notched-grid {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   gap: clamp(1.5rem, 2.5vw, 2.5rem);
@@ -96,7 +96,7 @@
   align-items: center;
 }
 
-.why-service-card-group {
+.discovery-card-group {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -115,74 +115,74 @@
   will-change: transform, opacity;
 }
 
-.why-service-card-group.in-view {
+.discovery-card-group.in-view {
   opacity: 1;
   transform: translateY(0) scale(1) rotateX(0deg);
 }
 
-.why-service-card-group .why-hub-card-inner {
+.discovery-card-group .discovery-card-inner {
   position: relative;
   display: block;
   width: 100%;
 }
 
-.why-service-card-group:hover {
+.discovery-card-group:hover {
   transform: translateY(-6px);
 }
 
-.why-service-card-group:active {
+.discovery-card-group:active {
   transform: translateY(-2px) scale(0.985);
 }
 
-.why-service-card-group .notched-card-wrapper {
+.discovery-card-group .notched-card-wrapper {
   aspect-ratio: 16 / 10.8;
   border-radius: 28px;
   isolation: isolate;
   box-shadow: none !important;
 }
 
-.why-service-card-group:hover .notched-card-wrapper,
-.why-service-card-group:active .notched-card-wrapper {
+.discovery-card-group:hover .notched-card-wrapper,
+.discovery-card-group:active .notched-card-wrapper {
   box-shadow: none !important;
 }
 
-.why-service-card-group .notched-shadow-layer {
+.discovery-card-group .notched-shadow-layer {
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.08)) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.12));
   transition: filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.why-service-card-group:hover .notched-shadow-layer {
+.discovery-card-group:hover .notched-shadow-layer {
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12)) drop-shadow(0 20px 40px rgba(0, 0, 0, 0.18));
 }
 
-[data-theme="dark"] .why-service-card-group:hover .notched-shadow-layer {
+[data-theme="dark"] .discovery-card-group:hover .notched-shadow-layer {
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6)) drop-shadow(0 28px 56px rgba(0, 0, 0, 0.75));
 }
 
-.why-service-surface-light {
+.discovery-surface-light {
   background: linear-gradient(180deg, #F1F1EF 25%, #767882 100%) !important;
 }
 
-.why-service-surface-dark {
+.discovery-surface-dark {
   background: linear-gradient(180deg, #111215 25%, #050608 100%) !important;
 }
 
-.why-service-card-group .kinetic-stage-root {
+.discovery-card-group .kinetic-stage-root {
   background-color: transparent !important;
 }
 
 /* Scale down kinetic text inside hub cards */
-.why-service-card-group .kinetic-phrase-text {
+.discovery-card-group .kinetic-phrase-text {
   font-size: clamp(1.8rem, 3.2vw, 2.8rem) !important;
   line-height: 0.92 !important;
 }
 
-.why-service-card-group .kinetic-word-span {
+.discovery-card-group .kinetic-word-span {
   display: block;
   white-space: nowrap;
 }
 
-.why-service-stage {
+.discovery-service-stage {
   width: 100%;
   height: 100%;
   display: flex;
@@ -193,7 +193,7 @@
   user-select: none;
 }
 
-.why-service-hero-text {
+.discovery-service-hero-text {
   font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
   font-size: clamp(1.8rem, 3.2vw, 2.8rem);
   font-weight: 900;
@@ -203,15 +203,15 @@
   user-select: none;
 }
 
-.why-service-hero-text.text-violet {
+.discovery-service-hero-text.text-violet {
   color: #6D5AE6;
 }
 
-.why-service-hero-text.text-cyan {
+.discovery-service-hero-text.text-cyan {
   color: #22D3EE;
 }
 
-.why-service-below-info {
+.discovery-below-info {
   margin-top: 1.25rem;
   padding: 0 0.25rem;
   display: flex;
@@ -219,7 +219,7 @@
   gap: 0.35rem;
 }
 
-.why-service-headline {
+.discovery-headline {
   font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
   font-size: clamp(0.92rem, 1.15vw, 1.08rem);
   font-weight: 750;
@@ -231,18 +231,18 @@
   transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.why-service-card-group:hover .why-service-headline {
+.discovery-card-group:hover .discovery-headline {
   color: var(--accent, #FF5520);
 }
 
-.why-service-card-group .why-tags-row {
+.discovery-card-group .project-tags-row {
   display: flex;
   align-items: center;
   gap: 0.35rem;
   flex-wrap: wrap;
 }
 
-.why-service-card-group .why-tag-pill-dark {
+.discovery-card-group .project-tag-pill-dark {
   background: #0E0F12 !important;
   color: #FFFFFF !important;
   font-family: var(--font-mono, monospace);
@@ -253,7 +253,7 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.why-service-card-group .why-meta-row {
+.discovery-card-group .project-meta-row {
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -265,11 +265,11 @@
   text-transform: uppercase;
 }
 
-.why-service-card-group .why-meta-sep {
+.discovery-card-group .project-meta-sep {
   opacity: 0.4;
 }
 
-.why-service-card-group .why-meta-cat {
+.discovery-card-group .project-meta-cat {
   color: var(--text-secondary);
 }
 
@@ -320,18 +320,18 @@
 
 /* ============ STACKED / MOBILE: Horizontal divider line between cards ============ */
 @media (max-width: 900px) {
-  .why-services-notched-grid {
+  .discovery-notched-grid {
     grid-template-columns: 1fr !important;
     gap: 2.25rem !important;
   }
 
   /* Divider line between stacked Card 1 and Card 2 */
-  .why-services-notched-grid > .why-service-card-group:first-of-type {
+  .discovery-notched-grid > .discovery-card-group:first-of-type {
     position: relative;
     padding-bottom: 2.25rem;
   }
 
-  .why-services-notched-grid > .why-service-card-group:first-of-type::after {
+  .discovery-notched-grid > .discovery-card-group:first-of-type::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -348,7 +348,7 @@
     );
   }
 
-  [data-theme="dark"] .why-services-notched-grid > .why-service-card-group:first-of-type::after {
+  [data-theme="dark"] .discovery-notched-grid > .discovery-card-group:first-of-type::after {
     background: linear-gradient(
       90deg,
       transparent 0%,
@@ -359,13 +359,13 @@
     );
   }
 
-  .why-service-hero-text {
+  .discovery-service-hero-text {
     font-size: clamp(2.6rem, 8vw, 3.8rem);
   }
 }
 
 /* Clean Text Action Label at Bottom-Right (Visible by Default) */
-.why-service-card-group .why-card-hover-drawer {
+.discovery-card-group .project-card-hover-drawer {
   position: absolute;
   bottom: 1.15rem;
   right: 1.45rem;
@@ -388,22 +388,22 @@
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
 }
 
-.why-service-card-group .why-card-hover-drawer svg {
+.discovery-card-group .project-card-hover-drawer svg {
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.why-service-card-group:hover .why-card-hover-drawer svg {
+.discovery-card-group:hover .project-card-hover-drawer svg {
   transform: translate(2px, -2px);
 }
 
 /* Hide kinetic indicator dashes on hub cards for clean minimal look */
-.why-service-card-group .kinetic-indicators-rail {
+.discovery-card-group .kinetic-indicators-rail {
   display: none !important;
 }
 
 /* ============ MOBILE: Discovery grid stacks with heading on top ============ */
 @media (max-width: 768px) {
-  .why-services-notched-grid {
+  .discovery-notched-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
@@ -432,7 +432,7 @@
   box-sizing: border-box;
 }
 
-.studio-alt-hub.single-card-hub .why-services-notched-grid {
+.studio-alt-hub.single-card-hub .discovery-notched-grid {
   display: grid;
   grid-template-columns: minmax(260px, 340px) minmax(360px, 600px);
   justify-content: center;
@@ -470,14 +470,14 @@
   line-height: 1.6;
 }
 
-.studio-alt-hub.single-card-hub .why-service-card-group {
+.studio-alt-hub.single-card-hub .discovery-card-group {
   max-width: 600px;
   width: 100%;
   margin: 0 auto;
 }
 
 /* Fallback if heading is hidden */
-.studio-alt-hub.single-card-hub.no-heading .why-services-notched-grid {
+.studio-alt-hub.single-card-hub.no-heading .discovery-notched-grid {
   grid-template-columns: 1fr !important;
   max-width: 600px;
   margin: 0 auto;
@@ -485,7 +485,7 @@
 
 /* Tablet & Mobile: Stacked view with heading on top */
 @media (max-width: 860px) {
-  .studio-alt-hub.single-card-hub .why-services-notched-grid {
+  .studio-alt-hub.single-card-hub .discovery-notched-grid {
     grid-template-columns: 1fr !important;
     max-width: 520px;
     margin: 0 auto;

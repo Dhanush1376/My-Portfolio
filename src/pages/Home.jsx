@@ -15,8 +15,38 @@ import Projects from '../components/sections/Projects';
 import Services from '../components/sections/Services';
 import Contact from '../components/sections/Contact';
 import CaseStudyModal from '../components/modals/CaseStudyModal';
+import SEO from '../components/common/SEO';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const homeSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://dhanu.me/#website",
+      "url": "https://dhanu.me/",
+      "name": "Dhanush",
+      "description": "Personal portfolio of Dhanush — Software Engineer & AI Systems Builder"
+    },
+    {
+      "@type": "Person",
+      "@id": "https://dhanu.me/#person",
+      "name": "Dhanush",
+      "url": "https://dhanu.me/",
+      "jobTitle": "Software Engineer & AI Systems Builder",
+      "sameAs": [
+        "https://github.com/Dhanush1376",
+        "https://linkedin.com/in/dhanush1376"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "Punjab",
+        "addressCountry": "IN"
+      }
+    }
+  ]
+};
 
 export default function Home() {
   const { theme, toggleTheme } = useTheme();
@@ -59,34 +89,46 @@ export default function Home() {
       lenis.raf(time * 1000);
     };
     gsap.ticker.add(updateLenis);
-    // Zero lagSmoothing is required by Lenis to maintain frame-perfect synchronization without jitter
-    gsap.ticker.lagSmoothing(0);
+    // Smooth frame recovery without violent jumps on lag
+    gsap.ticker.lagSmoothing(500, 33);
 
-    // 2. Physical Layer Stacking Setup
-    // #hero, #statement, and #contact are pinned at top: 0 in CSS.
-    // #work and #capabilities are dynamically set to Math.min(0, vh - sectionHeight) so that users
-    // can scroll naturally through all cards and capability rows, and as soon as the final content is reached,
-    // each layer smoothly holds as the next sheet slides up and overlays it!
-    const updateStickyOffsets = () => {
-      const vh = window.innerHeight;
-      const workSec = document.querySelector('#main-content > #work');
-      if (workSec) {
-        const h = workSec.offsetHeight;
-        const targetTop = Math.min(0, vh - h);
-        workSec.style.setProperty('top', `${targetTop}px`, 'important');
-      }
+    // 2. Physical Layer Stacking & Smooth Card Overlap (ScrollTrigger + Lenis)
+    // Synchronized pinning guarantees buttery-smooth overlapping sheets without native sticky jitter:
+    ScrollTrigger.create({
+      trigger: '#hero',
+      start: 'top top',
+      endTrigger: '#statement',
+      end: 'top top',
+      pin: true,
+      pinSpacing: false,
+    });
 
-      const capSec = document.querySelector('#main-content > #capabilities');
-      if (capSec) {
-        const h = capSec.offsetHeight;
-        const targetTop = Math.min(0, vh - h);
-        capSec.style.setProperty('top', `${targetTop}px`, 'important');
-      }
-    };
+    ScrollTrigger.create({
+      trigger: '#statement',
+      start: 'top top',
+      endTrigger: '#work',
+      end: 'top top',
+      pin: true,
+      pinSpacing: false,
+    });
 
-    updateStickyOffsets();
-    window.addEventListener('resize', updateStickyOffsets);
-    window.addEventListener('load', updateStickyOffsets);
+    ScrollTrigger.create({
+      trigger: '#work',
+      start: 'bottom bottom',
+      endTrigger: '#capabilities',
+      end: 'bottom bottom',
+      pin: true,
+      pinSpacing: false,
+    });
+
+    ScrollTrigger.create({
+      trigger: '#capabilities',
+      start: 'bottom bottom',
+      endTrigger: '#contact',
+      end: 'bottom bottom',
+      pin: true,
+      pinSpacing: false,
+    });
 
     // Hardware-Accelerated Hero Transition (Subtle visual depth without height-altering layout reflows)
     const heroCanvas = document.querySelector('#hero .hero-orange-wrapper');
@@ -233,8 +275,6 @@ export default function Home() {
       gsap.ticker.remove(updateLenis);
       window.removeEventListener('resize', handleResizeOrLoad);
       window.removeEventListener('load', handleResizeOrLoad);
-      window.removeEventListener('resize', updateStickyOffsets);
-      window.removeEventListener('load', updateStickyOffsets);
       lenis.destroy();
       ScrollTrigger.getAll().forEach(t => t.kill());
     };
@@ -242,6 +282,12 @@ export default function Home() {
 
   return (
     <div className="portfolio-app">
+      <SEO
+        title="Dhanush — Software Engineer & AI Systems Builder"
+        description="Software Engineer & AI Systems Builder building modern web applications and intelligent systems."
+        canonical="https://dhanu.me/"
+        schema={homeSchema}
+      />
       {/* Custom Cursor */}
       <CustomCursor />
 

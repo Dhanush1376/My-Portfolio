@@ -78,7 +78,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Header Bar: Minimalist Studio Bullet Label (matching WhyCreatives reference)
+   Header Bar: Minimalist Studio Bullet Label
    -------------------------------------------------------------------------- */
 .statement-header-row {
   display: flex;
@@ -428,7 +428,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Laptop & Desktop Layout: WhyCreatives Exact 2-Column Split
+   Laptop & Desktop Layout: Editorial 2-Column Split
    Left Column: Section Label / Tag
    Right Column: Manifesto Quote + Action Buttons (Left-Aligned in Column 2)
    -------------------------------------------------------------------------- */
@@ -530,7 +530,7 @@
 }
 
 /* ==========================================================================
-   SERVICES SCROLLING MARQUEE — WHYCREATIVES STUDIO REFERENCE DESIGN
+   SERVICES SCROLLING MARQUEE — EDITORIAL STUDIO STRIP
    ========================================================================== */
 
 .statement-services-marquee {

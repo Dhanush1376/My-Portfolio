@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback, useLayoutEffect, useEffect } from 'react';
 
 /**
- * Mathematical SVG Path calculation for the WhyCreatives dual-notched card.
+ * Mathematical SVG Path calculation for the dual-notched card.
  * Generates continuous smooth fillets (convex and concave arcs) connecting
  * the top-right tag notch and the bottom-left meta notch.
  */
@@ -40,7 +40,7 @@ export function generateNotchedPath(width, height, tags, meta, cornerRadius, fil
 
 /**
  * NotchedCard Component
- * Implements the exact stepped/cutout geometry from WhyCreatives.in
+ * Implements stepped/cutout geometry with dynamic SVG fillets
  */
 export default function NotchedCard({
   tags,
@@ -93,7 +93,7 @@ export default function NotchedCard({
       return;
     }
 
-    // Adaptive fillet radius matching WhyCreatives formula
+    // Adaptive fillet radius formula
     const A = Math.max(4, Math.min(P, 24, W.w / 2, W.h / 2, I.w / 2, I.h / 2));
 
     if (

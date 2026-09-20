@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 /**
  * KineticStage Component
- * Renders the signature WhyCreatives kinetic typography stage
+ * Renders the signature kinetic typography stage
  * with cycling animated phrase stages and bottom indicator dots.
  */
 export default function KineticStage({
@@ -49,8 +49,8 @@ export default function KineticStage({
     video.addEventListener('canplay', kickstart);
     video.addEventListener('canplaythrough', kickstart);
 
-    // Any touch, gesture, or scroll on the page immediately guarantees playback
-    const interactionEvents = ['touchstart', 'touchend', 'touchmove', 'scroll', 'pointerdown', 'click', 'wheel'];
+    // Discrete user interactions to guarantee autoplay policy bypass without thrashing scroll ticks
+    const interactionEvents = ['touchstart', 'pointerdown', 'click', 'keydown'];
     const onUserInteraction = () => {
       if (video && video.paused) {
         kickstart();
@@ -58,7 +58,7 @@ export default function KineticStage({
     };
 
     interactionEvents.forEach((evt) => {
-      window.addEventListener(evt, onUserInteraction, { passive: true });
+      window.addEventListener(evt, onUserInteraction, { once: true, passive: true });
     });
 
     return () => {
@@ -158,7 +158,7 @@ export default function KineticStage({
           ) : (
             <img
               src={activePreviewImg}
-              alt="Project Preview"
+              alt={projectId ? `${projectId} project interface demonstration` : 'Portfolio project interface demonstration'}
               className={`kinetic-preview-img kinetic-img-${projectId || 'default'}`}
             />
           )}

@@ -1,4 +1,4 @@
-export const WHY_SERVICES_DATA = [
+export const SERVICES_DATA = [
   {
     slug: "web-development",
     aliases: ["web-app-development"],
@@ -223,15 +223,15 @@ export const WHY_SERVICES_DATA = [
 ];
 
 export function getServiceBySlug(slug) {
-  if (!slug) return WHY_SERVICES_DATA[0];
+  if (!slug) return SERVICES_DATA[0];
   const s = String(slug).toLowerCase().trim();
   return (
-    WHY_SERVICES_DATA.find(
+    SERVICES_DATA.find(
       (item) =>
         item.slug === s ||
         (item.aliases && item.aliases.includes(s)) ||
         (s === 'web-development' && item.slug === 'web-app-development') ||
         (s === 'web-app-development' && item.slug === 'web-development')
-    ) || WHY_SERVICES_DATA[0]
+    ) || SERVICES_DATA[0]
   );
 }

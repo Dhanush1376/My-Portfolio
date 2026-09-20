@@ -5,16 +5,57 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, Phone, Mail } from 'lucide-react';
 
-import { WHY_SERVICES_DATA } from '../data/whyServicesData';
+import { SERVICES_DATA } from '../data/servicesData';
 import { useTheme } from '../hooks/useTheme';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import CustomCursor from '../components/common/CustomCursor';
 import AlternativeDiscoveryHub from '../components/sections/AlternativeDiscoveryHub';
 import Contact from '../components/sections/Contact';
+import SEO from '../components/common/SEO';
 import '../styles/services-page.css';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const servicesSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://dhanu.me/services#webpage",
+      "url": "https://dhanu.me/services",
+      "name": "Software & AI Development Services — Dhanush",
+      "description": "Explore software engineering and AI development services by Dhanush, including web applications, vector RAG pipelines, e-commerce storefronts, and automated workflows.",
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://dhanu.me/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Services",
+            "item": "https://dhanu.me/services"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "ItemList",
+      "name": "Engineering & AI Specializations",
+      "itemListElement": SERVICES_DATA.map((service, idx) => ({
+        "@type": "ListItem",
+        "position": idx + 1,
+        "name": service.title,
+        "url": `https://dhanu.me/services/${service.slug}`
+      }))
+    }
+  ]
+};
 
 export default function ServicesPage() {
   const navigate = useNavigate();
@@ -31,7 +72,7 @@ export default function ServicesPage() {
   const stageRef = useRef(null);
   const cardRefs = useRef([]);
 
-  const totalServices = WHY_SERVICES_DATA.length;
+  const totalServices = SERVICES_DATA.length;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -40,7 +81,7 @@ export default function ServicesPage() {
     // If navigating with legacy hash (e.g. #ai-rag-applications), redirect directly to dedicated service detail page
     const hash = window.location.hash.replace('#', '');
     if (hash) {
-      const match = WHY_SERVICES_DATA.find(
+      const match = SERVICES_DATA.find(
         (s) => s.slug === hash || (s.aliases && s.aliases.includes(hash))
       );
       if (match) {
@@ -322,6 +363,12 @@ export default function ServicesPage() {
 
   return (
     <div className={`services-page-container ${isDark ? 'theme-dark' : 'theme-light'}`} ref={containerRef}>
+      <SEO
+        title="Software & AI Development Services — Dhanush"
+        description="Explore software engineering and AI development services by Dhanush, including web applications, vector RAG pipelines, e-commerce storefronts, and automated workflows."
+        canonical="https://dhanu.me/services"
+        schema={servicesSchema}
+      />
       <CustomCursor />
 
       {/* Theme Portal Curtain */}
@@ -415,7 +462,7 @@ export default function ServicesPage() {
       {/* 2. THE 3D PINNED DECK-STACKING SCROLL STAGE */}
       <section ref={stageRef} className="services-deck-stage" id="services-deck-root">
         <div className="deck-stage-inner">
-          {WHY_SERVICES_DATA.map((service, index) => (
+          {SERVICES_DATA.map((service, index) => (
             <div
               key={service.slug}
               className="card-stage-wrapper"

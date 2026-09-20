@@ -70,8 +70,8 @@ export default function CustomCursor() {
 
       // 1. Project Card detection (circular arrow badge)
       const isProjectCard =
-        target.closest('.why-project-card-item .why-project-interactive-group, [data-cursor="project"]') &&
-        !target.closest('.studio-alt-hub, .why-service-card-group');
+        target.closest('.featured-project-card-item .featured-project-interactive-group, [data-cursor="project"]') &&
+        !target.closest('.studio-alt-hub, .discovery-card-group');
 
       if (isProjectCard) {
         dot.classList.add('cursor-project');
@@ -94,7 +94,7 @@ export default function CustomCursor() {
 
       // 3. Standard Clickable Elements
       const isClickable = target.closest(
-        'a, button, [role="button"], input, select, textarea, .nav-item, .studio-pill-btn, .why-case-btn, .why-link-btn, .trust-item, .accordion-item-head, .creds-toggle-btn, .service-pill-chip, .step-nav-tab, .hero-dock-btn'
+        'a, button, [role="button"], input, select, textarea, .nav-item, .studio-pill-btn, .project-case-btn, .project-link-btn, .trust-item, .accordion-item-head, .creds-toggle-btn, .service-pill-chip, .step-nav-tab, .hero-dock-btn'
       );
 
       if (isClickable) {

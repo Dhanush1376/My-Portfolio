@@ -170,7 +170,7 @@ export default function Contact({
 
   return (
     <section ref={sectionRef} className="section contact-editorial-section stack-section" id="contact">
-      {/* Visual Climax Header (Inspired by WhyCreatives) */}
+      {/* Visual Climax Header */}
       <div className="contact-climax-header" ref={headerRef}>
         <div className="tilted-tag-wrapper">
           <span className="tilted-tag">{tag}</span>

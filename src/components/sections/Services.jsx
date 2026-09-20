@@ -14,7 +14,7 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
-// The 6 core services aligned with WHY_SERVICES_DATA and Image 2 layout
+// The 6 core services aligned with SERVICES_DATA
 const EXPERTISE_SERVICES = [
   {
     id: 'web-development',
@@ -134,7 +134,7 @@ export default function Services() {
       aria-label="Our Expertise & Services"
     >
       <div className="expertise-container">
-        {/* Exact WhyCreatives 3-Column Editorial Header on Laptop */}
+        {/* Editorial 3-Column Header on Laptop */}
         <div className="expertise-header">
           {/* Column 1: Left Tag */}
           <div className="expertise-header-left">
@@ -165,7 +165,7 @@ export default function Services() {
           </div>
         </div>
 
-        {/* Minimalist Editorial Services Rows with Icons & Row Arrow (WhyCreatives Style) */}
+        {/* Minimalist Editorial Services Rows with Icons & Row Arrow */}
         <div className="expertise-list">
           {EXPERTISE_SERVICES.map((service) => {
             const Icon = service.icon;

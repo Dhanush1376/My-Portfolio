@@ -158,9 +158,11 @@ export default function Footer() {
             <div className="footer-link-col">
               <h4>EXPLORE</h4>
               <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#work">Work</a></li>
-                <li><a href="#services">Services</a></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/#work">Work</a></li>
+                <li><a href="/services">Services</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
               </ul>
             </div>
             
@@ -186,12 +188,12 @@ export default function Footer() {
 
         <div className="footer-marquee-wrapper">
           <div className="footer-marquee-content">
-            <h1 className="footer-giant-text">
+            <div className="footer-giant-text">
               CRAFTING SINCE' 2024 <span className="marquee-star">✦</span> FULL-STACK ARCHITECTURE <span className="marquee-star">✦</span> AI SYSTEMS & INTERACTION <span className="marquee-star">✦</span> DESIGNED TO SCALE <span className="marquee-star">✦</span>
-            </h1>
-            <h1 className="footer-giant-text" aria-hidden="true">
+            </div>
+            <div className="footer-giant-text" aria-hidden="true">
               CRAFTING SINCE' 2024 <span className="marquee-star">✦</span> FULL-STACK ARCHITECTURE <span className="marquee-star">✦</span> AI SYSTEMS & INTERACTION <span className="marquee-star">✦</span> DESIGNED TO SCALE <span className="marquee-star">✦</span>
-            </h1>
+            </div>
           </div>
         </div>
 

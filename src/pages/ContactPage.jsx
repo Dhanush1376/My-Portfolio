@@ -8,8 +8,53 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import ContactForm from '../components/sections/ContactForm';
 import CustomCursor from '../components/common/CustomCursor';
+import SEO from '../components/common/SEO';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const contactSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ContactPage",
+      "@id": "https://dhanu.me/contact#webpage",
+      "url": "https://dhanu.me/contact",
+      "name": "Contact Dhanush — Start a Software or AI Project",
+      "description": "Get in touch with Dhanush to discuss custom full-stack web applications, vector RAG pipelines, AI automation, or freelance engineering collaboration.",
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://dhanu.me/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Contact",
+            "item": "https://dhanu.me/contact"
+          }
+        ]
+      },
+      "mainEntity": {
+        "@type": "Person",
+        "@id": "https://dhanu.me/#person",
+        "name": "Dhanush",
+        "jobTitle": "Software Engineer & AI Systems Builder",
+        "url": "https://dhanu.me/",
+        "email": "mailto:dhanush1376@gmail.com",
+        "telephone": "+919154691315",
+        "sameAs": [
+          "https://github.com/Dhanush1376",
+          "https://linkedin.com/in/dhanush1376",
+          "https://wa.me/919154691315"
+        ]
+      }
+    }
+  ]
+};
 
 export default function ContactPage() {
   const overlayRef = useRef(null);
@@ -241,6 +286,12 @@ export default function ContactPage() {
 
   return (
     <div className={`contact-page-wrapper ${isDark ? 'theme-dark' : 'theme-light'}`} ref={overlayRef}>
+      <SEO
+        title="Contact Dhanush — Start a Software or AI Project"
+        description="Get in touch with Dhanush to discuss custom full-stack web applications, vector RAG pipelines, AI automation, or freelance engineering collaboration."
+        canonical="https://dhanu.me/contact"
+        schema={contactSchema}
+      />
       {/* Custom Cursor */}
       <CustomCursor />
 

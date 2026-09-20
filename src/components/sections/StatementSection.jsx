@@ -194,7 +194,7 @@ export default function StatementSection() {
       <div className="statement-divider-top" aria-hidden="true" />
  
       <div className="statement-container">
-        {/* Section Header with Studio Minimalist Bullet Label (matching WhyCreatives reference) */}
+        {/* Section Header with Studio Minimalist Bullet Label */}
         <div className="statement-header-row">
           <div className="statement-label-wrapper">
             <span className="statement-studio-label">
@@ -251,7 +251,7 @@ export default function StatementSection() {
         </div>
       </div>
 
-      {/* Services Scrolling Marquee — WhyCreatives Reference Style */}
+      {/* Services Scrolling Marquee */}
       <div 
         ref={marqueeRef}
         className="statement-services-marquee" 

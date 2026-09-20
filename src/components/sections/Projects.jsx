@@ -72,24 +72,24 @@ export default function Projects({ onOpenCaseStudy }) {
   }, []);
 
   return (
-    <section className="section why-projects-section stack-section" id="work">
+    <section className="section featured-projects-section stack-section" id="work">
 
       {/* Background Matrix/Grid is handled via CSS */}
-      <div className="why-projects-grid-overlay" aria-hidden="true">
-        <div className="why-grid-pattern" />
-        <div className="why-grid-v-line v-line-left" />
-        <div className="why-grid-v-line v-line-center" />
-        <div className="why-grid-v-line v-line-right" />
+      <div className="projects-grid-overlay" aria-hidden="true">
+        <div className="canvas-grid-pattern" />
+        <div className="canvas-grid-v-line v-line-left" />
+        <div className="canvas-grid-v-line v-line-center" />
+        <div className="canvas-grid-v-line v-line-right" />
       </div>
 
-      <div className="why-projects-container">
+      <div className="featured-projects-container">
         {/* Visual Climax Header (Matching Pic 2 Design & Pic 3 Animation) */}
-        <div className="why-projects-climax-header" ref={headerRef}>
+        <div className="projects-climax-header" ref={headerRef}>
           <div className="tilted-tag-wrapper">
             <span className="tilted-tag">PROJECTS</span>
           </div>
 
-          <h2 className="why-projects-huge-headline">
+          <h2 className="projects-huge-headline">
             <div className="title-line-mask">
               <span className="title-line-inner">SELECTED</span>
             </div>
@@ -100,14 +100,14 @@ export default function Projects({ onOpenCaseStudy }) {
         </div>
 
         {/* Project Showcase Flow (Card + Text Beside on Laptop) */}
-        <div className="why-projects-flow">
+        <div className="featured-projects-flow">
           {projectsList.map((project, index) => (
             <NotchedProjectCard
               key={project.id}
               project={project}
               index={index}
               onOpenCaseStudy={onOpenCaseStudy}
-              className="why-project-row-item"
+              className="featured-project-row-item"
             />
           ))}
         </div>

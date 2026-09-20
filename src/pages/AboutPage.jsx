@@ -10,6 +10,53 @@ import Footer from '../components/layout/Footer';
 import CustomCursor from '../components/common/CustomCursor';
 import Contact from '../components/sections/Contact';
 import AlternativeDiscoveryHub from '../components/sections/AlternativeDiscoveryHub';
+import SEO from '../components/common/SEO';
+
+const aboutSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfilePage",
+      "@id": "https://dhanu.me/about#webpage",
+      "url": "https://dhanu.me/about",
+      "name": "About Dhanush — Software Engineer & AI Systems Builder",
+      "description": "Learn about Dhanush, a software engineer and AI systems builder specializing in full-stack web applications, vector RAG pipelines, and intelligent automation systems.",
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://dhanu.me/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "About",
+            "item": "https://dhanu.me/about"
+          }
+        ]
+      },
+      "mainEntity": {
+        "@type": "Person",
+        "@id": "https://dhanu.me/#person",
+        "name": "Dhanush",
+        "jobTitle": "Software Engineer & AI Systems Builder",
+        "url": "https://dhanu.me/",
+        "sameAs": [
+          "https://github.com/Dhanush1376",
+          "https://linkedin.com/in/dhanush1376"
+        ],
+        "address": {
+          "@type": "PostalAddress",
+          "addressRegion": "Punjab",
+          "addressCountry": "IN"
+        }
+      }
+    }
+  ]
+};
 
 const FAQ_ITEMS = [
   {
@@ -435,6 +482,12 @@ export default function AboutPage() {
 
   return (
     <div className={`about-page-wrapper ${isDark ? 'theme-dark' : 'theme-light'}`} ref={overlayRef}>
+      <SEO
+        title="About Dhanush — Software Engineer & AI Systems Builder"
+        description="Learn about Dhanush, a software engineer and AI systems builder specializing in full-stack web applications, vector RAG pipelines, and intelligent automation systems."
+        canonical="https://dhanu.me/about"
+        schema={aboutSchema}
+      />
       {/* Custom Cursor */}
       <CustomCursor />
 

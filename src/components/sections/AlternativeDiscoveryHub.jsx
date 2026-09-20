@@ -26,7 +26,7 @@ export const SERVICES_STAGE_PHRASES = [
 
 /**
  * HubDiscoveryCard
- * Mirrors WhyCreatives' NotchedProjectCard:
+ * Interactive Dual-Notched Card:
  * - 3D tilt perspective entrance with projectImageReveal
  * - Responsive tag hover elevation
  * - Tactile micro-press feedback
@@ -66,7 +66,7 @@ export function HubDiscoveryCard({
   return (
     <div
       ref={cardRef}
-      className={`why-service-card-group ${inView ? 'in-view' : ''}`}
+      className={`discovery-card-group ${inView ? 'in-view' : ''}`}
       style={{
         transitionDelay: `${cardIndex * 0.14}s`,
       }}
@@ -81,18 +81,18 @@ export function HubDiscoveryCard({
         }
       }}
     >
-      <div className="why-hub-card-inner">
+      <div className="discovery-card-inner">
         <NotchedCard
           bezelWidth={7}
           bezelColor="#111111"
-          className="why-service-notched-wrapper"
-          surfaceClassName="why-service-surface-light"
+          className="discovery-notched-wrapper"
+          surfaceClassName="discovery-surface-light"
           tags={
-            <div className="why-tags-row">
+            <div className="project-tags-row">
               {tags.map((tag, idx) => (
                 <span
                   key={idx}
-                  className="why-tag-pill why-tag-pill-dark"
+                  className="project-tag-pill project-tag-pill-dark"
                 >
                   {tag}
                 </span>
@@ -100,14 +100,14 @@ export function HubDiscoveryCard({
             </div>
           }
           meta={
-            <div className="why-meta-row">
-              <span className="why-meta-year">2026</span>
-              <span className="why-meta-sep">•</span>
-              <span className="why-meta-cat">{meta}</span>
+            <div className="project-meta-row">
+              <span className="project-meta-year">2026</span>
+              <span className="project-meta-sep">•</span>
+              <span className="project-meta-cat">{meta}</span>
             </div>
           }
           overlay={
-            <div className="why-card-hover-drawer">
+            <div className="project-card-hover-drawer">
               <span>{drawerLabel}</span>
               <ArrowUpRight size={16} strokeWidth={2.5} />
             </div>
@@ -122,8 +122,8 @@ export function HubDiscoveryCard({
         </NotchedCard>
       </div>
 
-      <div className="why-service-below-info">
-        <h4 className="why-service-headline">
+      <div className="discovery-below-info">
+        <h4 className="discovery-headline">
           {headline}
         </h4>
       </div>
@@ -302,7 +302,7 @@ export default function AlternativeDiscoveryHub({
       ref={rootRef}
       className={`studio-alt-hub ${isSingle ? 'single-card-hub' : ''} ${!showHeading ? 'no-heading' : ''} ${className}`}
     >
-      <div className="why-services-notched-grid">
+      <div className="discovery-notched-grid">
         {/* In single-card mode: Editorial Heading is placed first (on left of desktop grid) */}
         {isSingle && showHeading && renderHeading()}
 

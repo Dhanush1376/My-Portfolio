@@ -5,11 +5,12 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import { WHY_SERVICES_DATA, getServiceBySlug } from '../data/whyServicesData';
+import { SERVICES_DATA, getServiceBySlug } from '../data/servicesData';
 import { useTheme } from '../hooks/useTheme';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import CustomCursor from '../components/common/CustomCursor';
+import SEO from '../components/common/SEO';
 import '../styles/service-detail.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -69,9 +70,6 @@ export default function ServiceDetailPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (service) {
-      document.title = `${service.title} | Dhanush Portfolio`;
-    }
 
     // 1. Initialize Lenis for buttery-smooth inertia scrolling
     const lenis = new Lenis({
@@ -557,19 +555,78 @@ export default function ServiceDetailPage() {
     return <Navigate to="/services" replace />;
   }
 
-  const currentIndex = WHY_SERVICES_DATA.findIndex(
+  const currentIndex = SERVICES_DATA.findIndex(
     (s) => s.slug === service.slug || (s.aliases && s.aliases.includes(service.slug))
   );
-  const totalCount = String(WHY_SERVICES_DATA.length).padStart(2, '0');
+  const totalCount = String(SERVICES_DATA.length).padStart(2, '0');
   const serviceIndexStr = String((currentIndex >= 0 ? currentIndex : 0) + 1).padStart(2, '0');
 
   // Other services for bottom quick switcher
-  const otherServices = WHY_SERVICES_DATA.filter(
+  const otherServices = SERVICES_DATA.filter(
     (s) => s.slug !== service.slug && (!s.aliases || !s.aliases.includes(service.slug))
   );
 
+  const serviceSchema = service ? {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": `https://dhanu.me/services/${service.slug}#service`,
+        "name": service.title,
+        "description": service.description,
+        "provider": {
+          "@type": "Person",
+          "@id": "https://dhanu.me/#person",
+          "name": "Dhanush",
+          "url": "https://dhanu.me/"
+        },
+        "url": `https://dhanu.me/services/${service.slug}`,
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Deliverables",
+          "itemListElement": service.deliverables ? service.deliverables.map((item) => ({
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": item
+            }
+          })) : []
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://dhanu.me/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Services",
+            "item": "https://dhanu.me/services"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": service.title,
+            "item": `https://dhanu.me/services/${service.slug}`
+          }
+        ]
+      }
+    ]
+  } : null;
+
   return (
     <div className={`service-detail-page ${isDark ? 'theme-dark' : 'theme-light'}`}>
+      <SEO
+        title={`${service.title} — Dhanush`}
+        description={service.subtitle || service.description}
+        canonical={`https://dhanu.me/services/${service.slug}`}
+        schema={serviceSchema}
+      />
       <CustomCursor />
       <Navbar theme={theme} toggleTheme={toggleTheme} />
 

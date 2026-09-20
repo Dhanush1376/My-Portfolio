@@ -30,7 +30,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Header (Exact WhyCreatives 3-Column Layout on Laptop)
+   Header (3-Column Layout on Laptop)
    Left: Tag | Center: Centered Headline | Right: Subtitle + Button
    -------------------------------------------------------------------------- */
 
@@ -160,7 +160,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Services List & Big Editorial Rows (Exact WhyCreatives Structure)
+   Services List & Big Editorial Rows
    -------------------------------------------------------------------------- */
 
 .expertise-list {
@@ -195,7 +195,7 @@
   flex: 1;
 }
 
-/* 1. Rounded Icon Tile (Expands on Hover matching WhyCreatives screenshot) */
+/* 1. Rounded Icon Tile (Expands on Hover) */
 .expertise-icon-box {
   width: 0;
   height: clamp(52px, 4.8vw, 68px);

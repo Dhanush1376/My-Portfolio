@@ -80,7 +80,7 @@
   background: var(--accent, #FF5520);
 }
 
-/* State 2: Project Card Floating Badge (Exact match to WhyCreatives screenshot) */
+/* State 2: Project Card Floating Badge (Circular Interactive Badge) */
 .cursor-outline.cursor-project {
   width: 58px;
   height: 58px;
