@@ -110,6 +110,34 @@ export default function Home() {
       });
     }
 
+    // Physical Layer Stacking & Card Overlap Calculation
+    // For tall sections (#work, #capabilities, #contact), dynamically calculate top
+    // as Math.min(0, vh - sectionHeight) so the user can scroll naturally through
+    // all content, and as each section reaches its end, it holds seamlessly in place
+    // while the subsequent card sheet slides up and overlays it with physical shadow and grab handle!
+    const updateStickyOffsets = () => {
+      const vh = window.innerHeight;
+      ['#work', '#capabilities', '#contact'].forEach((selector) => {
+        const sec = document.querySelector(`#main-content > ${selector}`);
+        if (sec) {
+          const h = sec.offsetHeight;
+          const targetTop = Math.min(0, vh - h);
+          sec.style.setProperty('top', `${targetTop}px`, 'important');
+        }
+      });
+    };
+
+    updateStickyOffsets();
+
+    let mainRo = null;
+    const mainContentEl = document.querySelector('#main-content');
+    if (mainContentEl && typeof ResizeObserver !== 'undefined') {
+      mainRo = new ResizeObserver(() => {
+        updateStickyOffsets();
+      });
+      mainRo.observe(mainContentEl);
+    }
+
     // 4. Active Nav Link on Scroll
     const navSections = document.querySelectorAll('.hero-section, .section, .stack-section');
     const navLinks = document.querySelectorAll('.nav-link');
@@ -192,6 +220,7 @@ export default function Home() {
     });
 
     const handleResizeOrLoad = () => {
+      updateStickyOffsets();
       ScrollTrigger.refresh();
     };
 
@@ -200,12 +229,14 @@ export default function Home() {
 
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => {
+        updateStickyOffsets();
         ScrollTrigger.refresh();
       });
     }
 
     ScrollTrigger.refresh();
     const hashTimer = setTimeout(() => {
+      updateStickyOffsets();
       ScrollTrigger.refresh();
       const hash = window.location.hash;
       if (hash) {
@@ -220,6 +251,7 @@ export default function Home() {
 
     return () => {
       clearTimeout(hashTimer);
+      if (mainRo) mainRo.disconnect();
       window.lenis = null;
       window.navigateToSection = null;
       gsap.ticker.remove(updateLenis);
