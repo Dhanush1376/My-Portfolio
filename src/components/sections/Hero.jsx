@@ -130,6 +130,12 @@ export default function Hero() {
       el.setAttribute('webkit-playsinline', '');
       el.setAttribute('x5-playsinline', '');
       el.setAttribute('autoplay', '');
+      try {
+        const p = el.play();
+        if (p && typeof p.then === 'function') {
+          p.then(() => setIsVideoPlaying(true)).catch(() => {});
+        }
+      } catch (_) {}
     }
   };
 
@@ -140,87 +146,45 @@ export default function Hero() {
 
     let isSubscribed = true;
 
-    // Strict muted & playsinline attribute + property enforcement for cross-browser autoplay
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
-    video.setAttribute('muted', '');
-    video.setAttribute('playsinline', '');
-    video.setAttribute('webkit-playsinline', '');
-    video.setAttribute('x5-playsinline', '');
-    video.setAttribute('autoplay', '');
 
     const startPlayback = () => {
       if (!video || !isSubscribed) return;
       video.muted = true;
       video.defaultMuted = true;
 
-      // Avoid redundant play calls if already active
       if (!video.paused) {
         setIsVideoPlaying(true);
-        try {
-          video.playbackRate = 0.8;
-        } catch (_) {}
         return;
       }
 
       const p = video.play();
       if (p !== undefined) {
         p.then(() => {
-          if (isSubscribed) {
-            setIsVideoPlaying(true);
-            try {
-              video.playbackRate = 0.8;
-            } catch (_) {}
-          }
+          if (isSubscribed) setIsVideoPlaying(true);
         }).catch(() => {
           if (!isSubscribed) return;
-          // Silent retry with re-asserted muted status for strict browser policies
           video.muted = true;
-          video.defaultMuted = true;
           video.play().then(() => {
-            if (isSubscribed) {
-              setIsVideoPlaying(true);
-              try {
-                video.playbackRate = 0.8;
-              } catch (_) {}
-            }
+            if (isSubscribed) setIsVideoPlaying(true);
           }).catch(() => {});
         });
       }
     };
 
-    // Execute immediately on mount
     startPlayback();
-
-    const handleReady = () => {
-      startPlayback();
-    };
 
     const handlePlaying = () => {
       if (isSubscribed) {
         setIsVideoPlaying(true);
-        try {
-          video.playbackRate = 0.8;
-        } catch (_) {}
       }
     };
 
-    // Seamless infinite looping safeguard
-    const handleEnded = () => {
-      if (video) {
-        video.currentTime = 0;
-        startPlayback();
-      }
-    };
-
-    video.addEventListener('loadedmetadata', handleReady);
-    video.addEventListener('loadeddata', handleReady);
-    video.addEventListener('canplay', handleReady);
-    video.addEventListener('canplaythrough', handleReady);
     video.addEventListener('playing', handlePlaying);
-    video.addEventListener('timeupdate', handlePlaying);
-    video.addEventListener('ended', handleEnded);
+    video.addEventListener('canplay', startPlayback);
+    video.addEventListener('loadeddata', startPlayback);
 
     // If device switched tabs or resumed from sleep
     const onVisibilityChange = () => {
@@ -243,13 +207,9 @@ export default function Hero() {
 
     return () => {
       isSubscribed = false;
-      video.removeEventListener('loadedmetadata', handleReady);
-      video.removeEventListener('loadeddata', handleReady);
-      video.removeEventListener('canplay', handleReady);
-      video.removeEventListener('canplaythrough', handleReady);
       video.removeEventListener('playing', handlePlaying);
-      video.removeEventListener('timeupdate', handlePlaying);
-      video.removeEventListener('ended', handleEnded);
+      video.removeEventListener('canplay', startPlayback);
+      video.removeEventListener('loadeddata', startPlayback);
       document.removeEventListener('visibilitychange', onVisibilityChange);
       interactionEvents.forEach((evt) => {
         window.removeEventListener(evt, onInteraction);
@@ -510,7 +470,7 @@ export default function Hero() {
             ref={liquidFillRef}
             className="hero-media-inner"
           >
-            {/* Instant visual poster: prevents any blank flashes or native play icons */}
+            {/* Instant visual poster: sits on top of video until playing, completely masking any native play button */}
             <img
               src={currentPosterSrc}
               alt="Hero interactive background preview"
@@ -519,9 +479,7 @@ export default function Hero() {
             />
             <video
               ref={setVideoElement}
-              key={currentVideoSrc}
               src={currentVideoSrc}
-              poster={currentPosterSrc}
               autoPlay
               loop
               muted
@@ -535,13 +493,14 @@ export default function Hero() {
               preload="auto"
               className={`hero-canvas-video ${isVideoPlaying ? 'video-playing' : ''}`}
               onPlaying={() => setIsVideoPlaying(true)}
-              onTimeUpdate={() => {
-                if (!isVideoPlaying) setIsVideoPlaying(true);
+              onLoadedData={(e) => {
+                try { e.target.play().catch(() => {}); } catch (_) {}
+              }}
+              onCanPlay={(e) => {
+                try { e.target.play().catch(() => {}); } catch (_) {}
               }}
               aria-hidden="true"
-            >
-              <source src={currentVideoSrc} type="video/mp4" />
-            </video>
+            />
           </div>
         </div>
 
@@ -570,7 +529,7 @@ export default function Hero() {
             onClick={handleWorkClick}
             id="heroWorkBtn"
           >
-            <span>View our work</span>
+            <span>View my work</span>
             <span className="btn-arrow-badge">
               <ArrowUpRight size={17} strokeWidth={2.2} />
             </span>

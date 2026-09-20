@@ -697,10 +697,10 @@ export default function ServiceDetailPage() {
           </div>
         </section>
 
-        {/* 3. What We Build (Deliverables) Section (12-Col Desktop, Stacked Mobile) */}
+        {/* 3. What I Build (Deliverables) Section (12-Col Desktop, Stacked Mobile) */}
         <section className="service-build-section" ref={buildRef}>
           <div className="service-build-left">
-            <p className="service-section-kicker">WHAT WE BUILD</p>
+            <p className="service-section-kicker">WHAT I BUILD</p>
             <h2 className="service-section-heading">A clear, useful scope.</h2>
           </div>
           <div className="service-build-right">
@@ -717,9 +717,9 @@ export default function ServiceDetailPage() {
           </div>
         </section>
 
-        {/* 4. How We Work (Process) Section (4 Inverted Contrast Cards) */}
+        {/* 4. How I Work (Process) Section (4 Inverted Contrast Cards) */}
         <section className="service-process-section" ref={processRef}>
-          <p className="service-section-kicker">HOW WE WORK</p>
+          <p className="service-section-kicker">HOW I WORK</p>
           <div className="service-process-grid">
             {service.process.map((step, idx) => (
               <article key={idx} className="service-process-card">
@@ -736,7 +736,7 @@ export default function ServiceDetailPage() {
             <p className="service-section-kicker">TECHNOLOGY &amp; PRODUCTS</p>
             <h2 className="service-section-heading">Tools chosen for the work.</h2>
             <p className="service-tech-desc">
-              We select the stack after discovery. These are products we regularly use—not a requirement forced onto every project.
+              I select the stack after discovery. These are technologies I regularly use—tailored directly to project requirements.
             </p>
           </div>
           <div className="service-tech-right">
@@ -776,9 +776,9 @@ export default function ServiceDetailPage() {
         <section className="service-next-step-box" ref={ctaRef}>
           <div className="service-next-step-left">
             <p className="service-cta-kicker">NEXT STEP</p>
-            <h2 className="service-cta-headline">Tell us what needs to change.</h2>
+            <h2 className="service-cta-headline">Tell me what needs to change.</h2>
             <p className="service-cta-subtext">
-              We will review the goal, recommend the right scope and send a tailored proposal after discovery. No generic rate card or unnecessary deliverables.
+              I will review your requirements, recommend the right architecture and scope, and deliver high-impact results.
             </p>
           </div>
           <Link to="/contact" className="service-cta-btn">

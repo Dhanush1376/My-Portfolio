@@ -206,7 +206,7 @@ export default function Services() {
       ref={sectionRef}
       className="section capabilities-editorial-section stack-section"
       id="capabilities"
-      aria-label="Our Expertise & Services"
+      aria-label="My Expertise & Services"
     >
       <div className="expertise-container">
         {/* Visual Climax Header (Exact 1:1 Match to Selected Work & Contact Climax Style) */}
@@ -217,7 +217,7 @@ export default function Services() {
 
           <h2 className="services-huge-headline">
             <div className="title-line-mask">
-              <span className="title-line-inner">OUR</span>
+              <span className="title-line-inner">MY</span>
             </div>
             <div className="title-line-mask">
               <span className="title-line-inner">SERVICES<span className="title-accent">.</span></span>

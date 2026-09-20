@@ -6,7 +6,7 @@ export const SERVICES_DATA = [
     num: "01",
     title: "Web & App Development",
     subtitle: "Fast, maintainable digital products designed around real business workflows.",
-    description: "We engineer high-performance web applications and cross-platform mobile apps with fluid user journeys, secure cloud architecture, and sub-second responsiveness.",
+    description: "I engineer high-performance web applications and cross-platform mobile apps with fluid user journeys, secure cloud architecture, and sub-second responsiveness.",
     color: "#9B8AFF", // Vibrant Lilac / Violet
     outcomes: [
       "Sub-second reactive web interfaces and native-speed mobile apps",
@@ -81,7 +81,7 @@ export const SERVICES_DATA = [
     num: "03",
     title: "E-commerce Development",
     subtitle: "High-speed digital storefronts with friction-free 1-click checkouts and automated stock syncing built to maximize conversion.",
-    description: "We build lightning-fast storefronts with friction-free checkouts, dynamic inventory syncing, and automated funnels designed to maximize conversion.",
+    description: "I build lightning-fast storefronts with friction-free checkouts, dynamic inventory syncing, and automated funnels designed to maximize conversion.",
     color: "#FFB43D", // Warm Amber / Solar Gold
     outcomes: [
       "Sub-1.2s page visual loads with Cloudinary CDN optimization",

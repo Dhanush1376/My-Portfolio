@@ -77,7 +77,7 @@ const FAQ_ITEMS = [
     num: '03',
     category: 'TIMELINE',
     question: 'How long does a typical project take?',
-    answer: 'Most standard projects take between 1 to 3 weeks. For urgent MVPs, landing pages, or prototypes, I can often turn around a working build in just a few days. We establish clear delivery milestones right from day one.'
+    answer: 'Most standard projects take between 1 to 3 weeks. For urgent MVPs, landing pages, or prototypes, I can often turn around a working build in just a few days. I establish clear delivery milestones right from day one.'
   },
   {
     num: '04',

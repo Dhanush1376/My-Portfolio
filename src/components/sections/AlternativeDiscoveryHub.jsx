@@ -235,7 +235,7 @@ export default function AlternativeDiscoveryHub({
 
   const defaultSubtitle = isSingle
     ? 'Check real client projects and verified live applications.'
-    : 'Check live client projects or explore our specialized engineering services.';
+    : 'Check live client projects or explore my specialized engineering services.';
 
   const effectiveSubtitle = subtitle || defaultSubtitle;
 
