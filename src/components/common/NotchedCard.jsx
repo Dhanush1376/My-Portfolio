@@ -82,9 +82,8 @@ export default function NotchedCard({
     const W = { w: Math.round(tagsEl.offsetWidth), h: Math.round(tagsEl.offsetHeight) };
     const I = { w: Math.round(metaEl.offsetWidth), h: Math.round(metaEl.offsetHeight) };
 
-    // Default outer corner radius
-    const computedRadius = parseFloat(window.getComputedStyle(el).borderTopLeftRadius);
-    const P = !isNaN(computedRadius) && computedRadius > 0 ? computedRadius : 24;
+    // Outer corner radius (20px on mobile, 28px on desktop) without layout thrashing
+    const P = L < 768 ? 20 : 28;
 
     setDimensions((prev) => (prev && prev.w === L && prev.h === H ? prev : { w: L, h: H }));
 

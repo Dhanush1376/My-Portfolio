@@ -72,7 +72,7 @@ export default function KineticStage({
     };
   }, [activeVideo, showImagePreview]);
 
-  // Intersection observer to track visibility and trigger playback on entry
+  // Intersection observer to track visibility, pause offscreen videos, and play on entry
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -80,13 +80,17 @@ export default function KineticStage({
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
-        if (videoRef.current && entry.isIntersecting) {
-          videoRef.current.muted = true;
-          const p = videoRef.current.play();
-          if (p !== undefined) p.catch(() => {});
+        if (videoRef.current) {
+          if (entry.isIntersecting) {
+            videoRef.current.muted = true;
+            const p = videoRef.current.play();
+            if (p !== undefined) p.catch(() => {});
+          } else {
+            videoRef.current.pause();
+          }
         }
       },
-      { threshold: 0, rootMargin: '300px 0px' }
+      { threshold: 0.05, rootMargin: '100px 0px' }
     );
 
     observer.observe(el);

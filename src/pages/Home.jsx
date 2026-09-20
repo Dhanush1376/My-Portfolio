@@ -71,15 +71,16 @@ export default function Home() {
       window.scrollTo(0, 0);
     }
 
-    // Lenis Smooth Scroll Setup
+    // Lenis Smooth Scroll Setup - Silky smooth wheel scrolling with 100% native mobile inertia
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1,
-      touchMultiplier: 1.2,
+      touchMultiplier: 1,
+      syncTouch: false,
       infinite: false,
     });
 
@@ -93,45 +94,7 @@ export default function Home() {
     // Smooth frame recovery without violent jumps on lag
     gsap.ticker.lagSmoothing(500, 33);
 
-    // 2. Physical Layer Stacking & Smooth Card Overlap (ScrollTrigger + Lenis)
-    // Synchronized pinning guarantees buttery-smooth overlapping sheets without native sticky jitter:
-    ScrollTrigger.create({
-      trigger: '#hero',
-      start: 'top top',
-      endTrigger: '#statement',
-      end: 'top top',
-      pin: true,
-      pinSpacing: false,
-    });
-
-    ScrollTrigger.create({
-      trigger: '#statement',
-      start: 'top top',
-      endTrigger: '#work',
-      end: 'top top',
-      pin: true,
-      pinSpacing: false,
-    });
-
-    ScrollTrigger.create({
-      trigger: '#work',
-      start: 'bottom bottom',
-      endTrigger: '#capabilities',
-      end: 'bottom bottom',
-      pin: true,
-      pinSpacing: false,
-    });
-
-    ScrollTrigger.create({
-      trigger: '#capabilities',
-      start: 'bottom bottom',
-      endTrigger: '#contact',
-      end: 'bottom bottom',
-      pin: true,
-      pinSpacing: false,
-    });
-
-    // Hardware-Accelerated Hero Transition (Subtle visual depth without height-altering layout reflows)
+    // Hardware-Accelerated Hero Transition (Subtle visual depth as statement overlays hero)
     const heroCanvas = document.querySelector('#hero .hero-orange-wrapper');
     const stmtSec = document.querySelector('#statement');
     if (heroCanvas && stmtSec) {
@@ -148,13 +111,13 @@ export default function Home() {
     }
 
     // 4. Active Nav Link on Scroll
-    const navSections = document.querySelectorAll('.hero, .section');
+    const navSections = document.querySelectorAll('.hero-section, .section, .stack-section');
     const navLinks = document.querySelectorAll('.nav-link');
     navSections.forEach((section) => {
       ScrollTrigger.create({
         trigger: section,
-        start: 'top 25%',
-        end: 'bottom 25%',
+        start: 'top 35%',
+        end: 'bottom 35%',
         onToggle: (self) => {
           if (self.isActive) {
             const id = section.getAttribute('id');
@@ -166,18 +129,12 @@ export default function Home() {
       });
     });
 
-    // 6. Navigation with Pinned Sections Helper
+    // 6. Navigation with Smooth Scrolling
     window.navigateToSection = (targetId) => {
       const targetElement = document.querySelector(targetId);
       if (!targetElement) return;
 
       const navbarHeight = 80;
-
-      // Temporarily disable pins to measure and scroll accurately
-      ScrollTrigger.getAll().forEach((st) => {
-        if (st.vars.pin) st.disable();
-      });
-
       let targetPosition = 0;
       if (targetId !== '#hero') {
         const rect = targetElement.getBoundingClientRect();
@@ -186,25 +143,11 @@ export default function Home() {
 
       if (window.lenis) {
         window.lenis.scrollTo(targetPosition, {
-          duration: 1.5,
+          duration: 1.2,
           easing: (t) => 1 - Math.pow(2, -10 * t),
-          onComplete: () => {
-            setTimeout(() => {
-              ScrollTrigger.getAll().forEach((st) => {
-                if (st.vars.pin) st.enable();
-              });
-              ScrollTrigger.refresh();
-            }, 50);
-          }
         });
       } else {
         window.scrollTo({ top: targetPosition, behavior: 'smooth' });
-        setTimeout(() => {
-          ScrollTrigger.getAll().forEach((st) => {
-            if (st.vars.pin) st.enable();
-          });
-          ScrollTrigger.refresh();
-        }, 1000);
       }
     };
 

@@ -19,22 +19,7 @@ export default function NotchedProjectCard({
   className = '',
   style = {},
 }) {
-  const [inView, setInView] = useState(true);
   const cardRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.08, rootMargin: '120px 0px' }
-    );
-    if (cardRef.current) observer.observe(cardRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   // Determine tone and bezel color
   const tone = project.stage?.tone || (index % 2 === 0 ? 'light' : 'dark');
@@ -43,7 +28,7 @@ export default function NotchedProjectCard({
   return (
     <article
       ref={cardRef}
-      className={`featured-project-card-item ${inView ? 'in-view' : ''} ${className}`}
+      className={`featured-project-card-item ${className}`}
       style={style}
       id={`project-${project.id}`}
     >

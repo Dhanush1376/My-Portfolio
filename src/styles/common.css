@@ -408,6 +408,8 @@
 
 /* Deterministic Z-Index Hierarchy for Coordinated Stacking Overlays */
 .portfolio-app #hero.stack-section {
+  position: sticky !important;
+  top: 0 !important;
   z-index: 10;
   min-height: 100vh;
   min-height: 100dvh;
@@ -416,6 +418,8 @@
 }
 
 .portfolio-app #statement.stack-section {
+  position: sticky !important;
+  top: 0 !important;
   z-index: 20;
   min-height: 100vh;
   min-height: 100dvh;
@@ -423,16 +427,19 @@
 }
 
 .portfolio-app #work.stack-section {
+  position: relative !important;
   z-index: 30;
   background: var(--bg);
 }
 
 .portfolio-app #capabilities.stack-section {
+  position: relative !important;
   z-index: 40;
   background: var(--bg-alt);
 }
 
 .portfolio-app #contact.stack-section {
+  position: relative !important;
   z-index: 50;
   min-height: auto;
   background: var(--bg);

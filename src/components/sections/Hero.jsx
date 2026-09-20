@@ -162,7 +162,7 @@ export default function Hero() {
     video.addEventListener('ended', handleEnded);
 
     // Discrete user interactions to unlock playback if iOS Low Power Mode paused it
-    const interactionEvents = ['touchstart', 'pointerdown', 'click', 'scroll', 'keydown'];
+    const interactionEvents = ['touchstart', 'pointerdown', 'click', 'keydown'];
     const onUserInteraction = () => {
       if (video && video.paused) {
         kickstart();
@@ -170,7 +170,7 @@ export default function Hero() {
     };
 
     interactionEvents.forEach((evt) => {
-      window.addEventListener(evt, onUserInteraction, { passive: true });
+      window.addEventListener(evt, onUserInteraction, { once: true, passive: true });
     });
 
     const onVisibilityChange = () => {
@@ -192,7 +192,7 @@ export default function Hero() {
       });
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };
-  }, [currentVideoSrc]);
+  }, [currentVideoSrc, cardPath]);
 
   // Entrance Animation: Runs strictly ONCE on mount, never repeats on layout recalculations
   useEffect(() => {
@@ -460,10 +460,16 @@ export default function Hero() {
                       el.muted = true;
                       el.playsInline = true;
                       el.playbackRate = 0.8;
+                      const p = el.play();
+                      if (p !== undefined) {
+                        p.catch(() => {
+                          el.muted = true;
+                          el.play().catch(() => {});
+                        });
+                      }
                     }
                   }}
                   key={currentVideoSrc}
-                  src={currentVideoSrc}
                   autoPlay
                   loop
                   muted
@@ -477,7 +483,9 @@ export default function Hero() {
                   preload="auto"
                   className="hero-canvas-video"
                   aria-hidden="true"
-                />
+                >
+                  <source src={currentVideoSrc} type="video/mp4" />
+                </video>
               </div>
             </div>
           </>
