@@ -79,7 +79,12 @@ export default function KineticStage({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsVisible(entry.isIntersecting);
+        // Only update React state for phrase typography cycling.
+        // For image/video previews, avoid triggering component re-renders during scroll.
+        if (!showImagePreview) {
+          setIsVisible(entry.isIntersecting);
+        }
+
         if (videoRef.current) {
           if (entry.isIntersecting) {
             videoRef.current.muted = true;
@@ -90,12 +95,12 @@ export default function KineticStage({
           }
         }
       },
-      { threshold: 0.05, rootMargin: '100px 0px' }
+      { threshold: 0.05, rootMargin: '120px 0px' }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [showImagePreview]);
 
   // Timer to rotate phrases (only when typography stage is active)
   useEffect(() => {

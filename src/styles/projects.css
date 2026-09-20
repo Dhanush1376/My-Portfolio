@@ -536,8 +536,10 @@ html[data-theme="light"] .projects-title-stroke {
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.featured-project-interactive-group:hover .project-tag-pill {
-  transform: translateY(2px) scale(1.03);
+@media (hover: hover) and (pointer: fine) {
+  .featured-project-interactive-group:hover .project-tag-pill {
+    transform: translateY(2px) scale(1.03);
+  }
 }
 
 /* Bottom-Left Meta Notch Container */
@@ -609,6 +611,10 @@ html[data-theme="light"] .projects-title-stroke {
   height: 100%;
   background: var(--bg-card, #15161D);
   border-radius: 28px;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 [data-theme="light"] .notched-shadow-shape {
@@ -620,6 +626,10 @@ html[data-theme="light"] .projects-title-stroke {
   position: absolute;
   inset: 0;
   z-index: 5;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .notched-clipped-surface {
@@ -629,6 +639,11 @@ html[data-theme="light"] .projects-title-stroke {
   overflow: hidden;
   border-radius: 28px;
   background: #151515;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
 }
 
 [data-theme="light"] .notched-clipped-surface {
@@ -643,6 +658,8 @@ html[data-theme="light"] .projects-title-stroke {
   height: 100%;
   pointer-events: none;
   z-index: 30;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 /* --------------------------------------------------------------------------
@@ -769,6 +786,10 @@ html[data-theme="light"] .projects-title-stroke {
   z-index: 10;
   background: #000000;
   overflow: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .kinetic-preview-img {
@@ -785,7 +806,8 @@ html[data-theme="light"] .projects-title-stroke {
   height: 100%;
   object-fit: contain;
   object-position: center bottom;
-  transform: translateY(14px) scale(1.03);
+  transform: translateY(14px) scale(1.03) translateZ(0);
+  -webkit-transform: translateY(14px) scale(1.03) translateZ(0);
   transform-origin: center bottom;
   background: #000000;
   display: block;
@@ -793,19 +815,69 @@ html[data-theme="light"] .projects-title-stroke {
   user-select: none !important;
   -webkit-user-select: none !important;
   filter: brightness(1.09) contrast(1.03);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
   transition: filter 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.featured-project-interactive-group:hover .kinetic-preview-video {
-  filter: brightness(1.14) contrast(1.04);
+@media (hover: hover) and (pointer: fine) {
+  .featured-project-interactive-group:hover .kinetic-preview-video {
+    filter: brightness(1.14) contrast(1.04);
+  }
 }
 
-/* Suppress all native browser play buttons, overlays, and controls */
-.kinetic-preview-video::-webkit-media-controls,
-.kinetic-preview-video::-webkit-media-controls-start-playback-button,
-.kinetic-preview-video::-webkit-media-controls-play-button,
-.kinetic-preview-video::-webkit-media-controls-panel,
-.kinetic-preview-video::-webkit-media-controls-enclosure,
+/* Suppress all native browser play buttons, overlays, and controls with individual rules to prevent parser rejection */
+.kinetic-preview-video::-webkit-media-controls {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.kinetic-preview-video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.kinetic-preview-video::-webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.kinetic-preview-video::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.kinetic-preview-video::-webkit-media-controls-enclosure {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 .kinetic-preview-video::-webkit-media-controls-overlay-play-button {
   display: none !important;
   -webkit-appearance: none !important;
@@ -831,14 +903,16 @@ html[data-theme="light"] .projects-title-stroke {
   transition: background 0.35s ease;
 }
 
-.featured-project-interactive-group:hover .kinetic-preview-overlay {
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0) 75%,
-    rgba(0, 0, 0, 0.50) 88%,
-    rgba(0, 0, 0, 0.84) 100%
-  );
+@media (hover: hover) and (pointer: fine) {
+  .featured-project-interactive-group:hover .kinetic-preview-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 75%,
+      rgba(0, 0, 0, 0.50) 88%,
+      rgba(0, 0, 0, 0.84) 100%
+    );
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -877,9 +951,11 @@ html[data-theme="light"] .projects-title-stroke {
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.featured-project-interactive-group:hover .project-card-hover-drawer svg,
-.featured-project-interactive-group:hover .project-card-hover-drawer .project-drawer-icon {
-  transform: translate(3px, -3px);
+@media (hover: hover) and (pointer: fine) {
+  .featured-project-interactive-group:hover .project-card-hover-drawer svg,
+  .featured-project-interactive-group:hover .project-card-hover-drawer .project-drawer-icon {
+    transform: translate(3px, -3px);
+  }
 }
 
 

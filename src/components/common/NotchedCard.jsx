@@ -79,56 +79,92 @@ export default function NotchedCard({
 
     const L = Math.round(el.clientWidth);
     const H = Math.round(el.clientHeight);
+
+    // If container has unrendered/collapsed dimensions, avoid computing or destroying path
+    if (L < 40 || H < 40) return;
+
     const W = { w: Math.round(tagsEl.offsetWidth), h: Math.round(tagsEl.offsetHeight) };
     const I = { w: Math.round(metaEl.offsetWidth), h: Math.round(metaEl.offsetHeight) };
 
-    // Outer corner radius (20px on mobile, 28px on desktop) without layout thrashing
+    // Outer corner radius (20px on mobile, 28px on desktop)
     const P = L < 768 ? 20 : 28;
 
-    setDimensions((prev) => (prev && prev.w === L && prev.h === H ? prev : { w: L, h: H }));
+    // Subpixel debounce: only update dimensions state if size changed by at least 2px
+    setDimensions((prev) => {
+      if (prev && Math.abs(prev.w - L) < 2 && Math.abs(prev.h - H) < 2) {
+        return prev;
+      }
+      return { w: L, h: H };
+    });
 
-    if (L < 2 || H < 2 || W.w < 2 || W.h < 2 || I.w < 2 || I.h < 2) {
-      setClipPath((prev) => (prev === null ? prev : null));
-      return;
-    }
+    // Safety clamp dimensions so notches NEVER exceed available card space
+    // and never collapse to a rectangle during subpixel scroll changes
+    const maxNotchW = Math.max(20, L - P - 24);
+    const maxNotchH = Math.max(20, Math.floor((H - 24) / 2));
 
-    // Adaptive fillet radius formula
-    const A = Math.max(4, Math.min(P, 24, W.w / 2, W.h / 2, I.w / 2, I.h / 2));
+    const safeW = {
+      w: Math.max(10, Math.min(W.w, maxNotchW)),
+      h: Math.max(10, Math.min(W.h, maxNotchH)),
+    };
+    const safeI = {
+      w: Math.max(10, Math.min(I.w, maxNotchW)),
+      h: Math.max(10, Math.min(I.h, maxNotchH)),
+    };
 
-    if (
-      !(
-        W.w + A + P <= L &&
-        I.w + A + P <= L &&
-        W.h + A + P <= H &&
-        I.h + A + P <= H &&
-        W.h + I.h + 2 * A < H
+    // Fillet radius dynamically constrained by available space on all boundaries
+    const maxFilletByW = Math.min(L - safeW.w - P, L - safeI.w - P);
+    const maxFilletByH = Math.min(
+      Math.floor((H - safeW.h - safeI.h) / 2),
+      H - safeW.h - P,
+      H - safeI.h - P
+    );
+    const safeA = Math.max(
+      4,
+      Math.min(
+        P,
+        20,
+        Math.floor(safeW.w / 2),
+        Math.floor(safeW.h / 2),
+        Math.floor(safeI.w / 2),
+        Math.floor(safeI.h / 2),
+        maxFilletByW - 2,
+        maxFilletByH - 2
       )
-    ) {
-      setClipPath((prev) => (prev === null ? prev : null));
-      return;
-    }
+    );
 
-    const pathString = generateNotchedPath(L, H, W, I, P, A);
+    const pathString = generateNotchedPath(L, H, safeW, safeI, P, safeA);
     setClipPath((prev) => (prev === pathString ? prev : pathString));
   }, [container]);
 
   useLayoutEffect(() => {
     updatePath();
     const el = container.current;
-    const tagsEl = tagsRef.current;
-    const metaEl = metaRef.current;
-    if (!el || !tagsEl || !metaEl) return;
+    if (!el) return;
 
     let rafId = null;
-    const ro = new ResizeObserver(() => {
+    let lastW = 0;
+    let lastH = 0;
+
+    // Observe only the main container to avoid feedback loop from tags padding changes.
+    // Also ignore subpixel changes (< 2px) to prevent re-render loops while scrolling.
+    const ro = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      const { width, height } = entry.contentRect;
+
+      if (Math.abs(width - lastW) < 2 && Math.abs(height - lastH) < 2) {
+        return;
+      }
+      lastW = width;
+      lastH = height;
+
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         updatePath();
       });
     });
+
     ro.observe(el);
-    ro.observe(tagsEl);
-    ro.observe(metaEl);
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
