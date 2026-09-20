@@ -1,11 +1,12 @@
 export const WHY_SERVICES_DATA = [
   {
-    slug: "web-app-development",
+    slug: "web-development",
+    aliases: ["web-app-development"],
     display: "Web & Apps",
     num: "01",
-    title: "Full-Stack Web & App Development",
-    subtitle: "Custom web applications, mobile app building & reactive web interfaces engineered for sub-second speeds and scale.",
-    description: "From complex web applications and SaaS platforms to cross-platform mobile app building. We engineer responsive, reactive web interfaces and mobile applications complete with fluid user journeys, secure authentication, multi-tenant databases, Stripe subscriptions, and sub-second performance.",
+    title: "Web & App Development",
+    subtitle: "Fast, maintainable digital products designed around real business workflows.",
+    description: "We engineer high-performance web applications and cross-platform mobile apps with fluid user journeys, secure cloud architecture, and sub-second responsiveness.",
     color: "#9B8AFF", // Vibrant Lilac / Violet
     outcomes: [
       "Sub-second reactive web interfaces and native-speed mobile apps",
@@ -43,7 +44,7 @@ export const WHY_SERVICES_DATA = [
     num: "02",
     title: "AI/RAG Applications",
     subtitle: "Autonomous agents & dense vector RAG pipelines grounded in your proprietary data with verified zero-hallucination accuracy.",
-    description: "Turn raw knowledge and complex documents into lightning-fast, production-grade AI systems that never hallucinate. We build custom Retrieval-Augmented Generation (RAG) architectures with semantic vector search, dynamic contextual memory, autonomous multi-step tool execution, and deterministic guardrails so your users and team get sub-second, verified answers.",
+    description: "Transform proprietary documents into lightning-fast, production-grade AI systems with semantic vector search and verified zero-hallucination accuracy.",
     color: "#FF6B42", // Vibrant Studio Coral
     outcomes: [
       "Sub-800ms semantic search & accurate contextual responses",
@@ -80,7 +81,7 @@ export const WHY_SERVICES_DATA = [
     num: "03",
     title: "E-commerce Development",
     subtitle: "High-speed digital storefronts with friction-free 1-click checkouts and automated stock syncing built to maximize conversion.",
-    description: "Stop losing sales to sluggish load times and clunky checkouts. We engineer high-converting e-commerce experiences with sub-second visual rendering, responsive mobile-first product catalogs, direct WhatsApp order funnels, automated cart abandonment flows, and seamless payment integrations tailored for maximum Average Order Value (AOV).",
+    description: "We build lightning-fast storefronts with friction-free checkouts, dynamic inventory syncing, and automated funnels designed to maximize conversion.",
     color: "#FFB43D", // Warm Amber / Solar Gold
     outcomes: [
       "Sub-1.2s page visual loads with Cloudinary CDN optimization",
@@ -116,7 +117,7 @@ export const WHY_SERVICES_DATA = [
     num: "04",
     title: "AI Automation & Integrations",
     subtitle: "Autonomous workflow pipelines that connect your CRM, databases, and APIs to eliminate hundreds of hours of manual labor.",
-    description: "Eliminate manual data entry, repetitive client updates, and disconnected business tools forever. We engineer intelligent AI-powered automation pipelines that listen to webhooks, process complex unstructured documents, extract verified data, update CRMs, and trigger autonomous multi-step operations 24/7 with zero human intervention.",
+    description: "Automate repetitive operational workflows with intelligent pipelines that connect your CRMs, documents, and business tools 24/7 with zero human error.",
     color: "#5BB8E5", // Vibrant Sky Blue / Electric Cyan
     outcomes: [
       "80%+ reduction in repetitive operational task hours",
@@ -153,7 +154,7 @@ export const WHY_SERVICES_DATA = [
     num: "05",
     title: "Landing pages",
     subtitle: "Art-directed, high-converting editorial launch pages engineered with fluid motion physics to captivate visitors immediately.",
-    description: "Turn traffic into paying clients with editorial landing pages that command attention. We merge brand-elevating typography, bespoke GSAP micro-animations, interactive 3D elements, and razor-sharp persuasive copywriting with blistering 99+ Google Lighthouse performance. Built to make visitors say 'wow' and immediately click connect.",
+    description: "Art-directed editorial landing pages engineered with fluid motion physics and top-tier performance to captivate visitors and convert them into clients.",
     color: "#FF8CA6", // Vibrant Punchy Rose / Neon Coral Pink
     outcomes: [
       "Dramatic uplift in visitor engagement and scroll depth",
@@ -188,7 +189,7 @@ export const WHY_SERVICES_DATA = [
     num: "06",
     title: "Business Dashboards",
     subtitle: "Real-time interactive intelligence dashboards that turn messy company data into clear, actionable executive decisions.",
-    description: "Transform thousands of disconnected spreadsheet rows and database queries into a crystal-clear, reactive mission control for your business. We engineer bespoke executive dashboards with sub-second data caching, real-time WebSocket telemetry, interactive charting, granular date filtering, and automated KPI anomaly detection.",
+    description: "Turn complex company data into clear, real-time executive dashboards with live telemetry, interactive charts, and actionable operational metrics.",
     color: "#BEF264", // Vibrant Neon Lime / Electric Chartreuse
     outcomes: [
       "Instant visibility over revenue, pipeline velocity, and team performance",
@@ -220,3 +221,17 @@ export const WHY_SERVICES_DATA = [
     ]
   }
 ];
+
+export function getServiceBySlug(slug) {
+  if (!slug) return WHY_SERVICES_DATA[0];
+  const s = String(slug).toLowerCase().trim();
+  return (
+    WHY_SERVICES_DATA.find(
+      (item) =>
+        item.slug === s ||
+        (item.aliases && item.aliases.includes(s)) ||
+        (s === 'web-development' && item.slug === 'web-app-development') ||
+        (s === 'web-app-development' && item.slug === 'web-development')
+    ) || WHY_SERVICES_DATA[0]
+  );
+}

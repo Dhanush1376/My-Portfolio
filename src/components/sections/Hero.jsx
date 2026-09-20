@@ -189,7 +189,8 @@ export default function Hero() {
       const paddingLeft = isMobile ? 12 : isTablet ? 24 : Math.max(36, Math.min(64, Math.round(w * 0.035)));
       const cardTop = isMobile ? 74 : Math.round(Math.max(84, Math.min(105, h * 0.11)));
       const bottomPadding = isMobile ? 16 : 28;
-      const cardHeight = Math.max(isMobile ? 540 : 500, Math.round(h - cardTop - bottomPadding));
+      const minCardH = isMobile ? 420 : 500;
+      const cardHeight = Math.max(minCardH, Math.round(h - cardTop - bottomPadding));
       const cardWidth = Math.round(w - paddingLeft * 2);
 
       const W_left = isMobile ? 0 : Math.round(Math.max(80, Math.min(130, cardWidth * 0.09)));

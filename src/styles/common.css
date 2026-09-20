@@ -416,6 +416,9 @@
   top: 0 !important;
   z-index: 10 !important;
   min-height: 100vh;
+  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
 }
 
 .portfolio-app #statement.stack-section {
@@ -424,13 +427,15 @@
   top: 0 !important;
   z-index: 20 !important;
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg) !important;
+  box-shadow: none !important;
 }
 
 .portfolio-app #work.stack-section {
   position: -webkit-sticky !important;
   position: sticky !important;
-  top: 0 !important;
+  top: 0;
   z-index: 30 !important;
   background: var(--bg) !important;
 }
@@ -438,7 +443,7 @@
 .portfolio-app #capabilities.stack-section {
   position: -webkit-sticky !important;
   position: sticky !important;
-  top: 0 !important;
+  top: 0;
   z-index: 40 !important;
   background: var(--bg-alt) !important;
 }
@@ -466,60 +471,22 @@
   border-radius: 0 !important;
 }
 
-/* Horizontal Top Edge Bar + Ambient Upward Shadow: Creates the physical overlapping card appearance */
+/* Clean hairline borders for stacking layers */
 [data-theme="dark"] .portfolio-app .stack-section:not(#hero),
 :root:not([data-theme="light"]) .portfolio-app .stack-section:not(#hero) {
-  border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
-  box-shadow:
-    0 -25px 60px -10px rgba(0, 0, 0, 0.75),
-    0 -8px 20px -2px rgba(0, 0, 0, 0.45) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: none !important;
 }
 
-/* Light Theme: Distinct Horizontal Top Bar + Ambient Shadow */
 [data-theme="light"] .portfolio-app .stack-section:not(#hero) {
-  border-top: 1px solid rgba(0, 0, 0, 0.12) !important;
-  box-shadow:
-    0 -25px 60px -10px rgba(0, 0, 0, 0.16),
-    0 -8px 20px -2px rgba(0, 0, 0, 0.08) !important;
-}
-
-/* Horizontal Moving-Up Sheet Grab Handle Bar (Strictly Home Page) */
-.portfolio-app .stack-section:not(#hero)::after {
-  content: '';
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 52px;
-  height: 4.5px;
-  border-radius: 999px;
-  z-index: 100 !important;
-  pointer-events: none;
-  opacity: 1 !important;
-  transition: opacity 0.3s ease, background-color 0.3s ease;
-}
-
-[data-theme="dark"] .portfolio-app .stack-section:not(#hero)::after,
-:root:not([data-theme="light"]) .portfolio-app .stack-section:not(#hero)::after {
-  background: rgba(255, 255, 255, 0.42) !important;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) !important;
-}
-
-[data-theme="light"] .portfolio-app .stack-section:not(#hero)::after,
-.theme-light .portfolio-app .stack-section:not(#hero)::after {
-  background: rgba(0, 0, 0, 0.38) !important;
-  box-shadow: 0 1px 2px rgba(255, 255, 255, 0.7) !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: none !important;
 }
 
 @media (max-width: 768px) {
   .portfolio-app .stack-section,
   .portfolio-app .stack-section:not(#hero) {
     border-radius: 0 !important;
-  }
-
-  .portfolio-app .stack-section:not(#hero)::after {
-    width: 44px;
-    height: 4px;
-    top: 9px;
+    box-shadow: none !important;
   }
 }

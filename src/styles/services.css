@@ -6,20 +6,20 @@
 .capabilities-editorial-section {
   position: relative;
   background: var(--bg-alt, #0e0f13);
-  padding: clamp(5rem, 8vw, 8rem) clamp(1.5rem, 4vw, 3.5rem) clamp(240px, 30vh, 420px);
   overflow-x: clip;
+  overflow-y: visible;
   transition: background 0.4s ease;
 }
 
 @media (max-width: 1024px) {
   .capabilities-editorial-section {
-    padding: clamp(4.5rem, 7vw, 6.5rem) 2rem clamp(200px, 26vh, 360px) 2rem;
+    padding: clamp(4.5rem, 7vw, 6.5rem) 2rem clamp(3.5rem, 5vh, 5rem) 2rem;
   }
 }
 
 @media (max-width: 768px) {
   .capabilities-editorial-section {
-    padding: 4.5rem 1.25rem clamp(180px, 22vh, 300px) 1.25rem;
+    padding: 4.5rem 1.25rem clamp(3rem, 4vh, 4rem) 1.25rem;
   }
 }
 
@@ -259,6 +259,18 @@
   transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.expertise-text-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  justify-content: center;
+}
+
+/* Hidden on desktop/laptop to preserve original clean editorial look */
+.expertise-row-desc {
+  display: none;
+}
+
 /* When hovering over the list, the rest comes fade */
 .expertise-list:hover .expertise-row .expertise-row-name {
   color: rgba(255, 255, 255, 0.2);
@@ -459,43 +471,148 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
 }
 
 @media (max-width: 768px) {
+  .expertise-header {
+    gap: 1.25rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .expertise-header-desc {
+    display: none !important;
+  }
+
+  .expertise-header-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .see-all-services-btn {
+    margin-left: auto;
+  }
+
+  /* Prevent fading/dimming other items on mobile/touch */
+  .expertise-list:hover .expertise-row .expertise-row-name {
+    color: #FFFFFF !important;
+    opacity: 1 !important;
+  }
+
+  [data-theme="light"] .expertise-list:hover .expertise-row .expertise-row-name,
+  body[data-theme="light"] .expertise-list:hover .expertise-row .expertise-row-name {
+    color: #121217 !important;
+    opacity: 1 !important;
+  }
+
   .expertise-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     padding: 1.25rem 0;
+    gap: 0;
   }
 
-  .expertise-row-name {
-    font-size: clamp(1.6rem, 6.5vw, 2.35rem);
+  .expertise-row-left {
+    display: flex;
+    align-items: center;
+    gap: 1.15rem;
+    width: 100%;
+    min-width: 0;
   }
 
-  /* Keep icon box compact & visible on mobile */
+  /* Fixed rounded icon tile matching reference image */
   .expertise-icon-box {
-    width: 44px;
-    height: 44px;
-    opacity: 1;
-    margin-right: 0.85rem;
-    transform: scale(1);
-    border-radius: 12px;
+    width: clamp(54px, 14vw, 62px) !important;
+    height: clamp(54px, 14vw, 62px) !important;
+    min-width: clamp(54px, 14vw, 62px) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    margin-right: 0 !important;
+    border-radius: 16px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
   }
 
   .expertise-icon-box svg {
-    width: 22px;
-    height: 22px;
+    width: 26px !important;
+    height: 26px !important;
+    color: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+    stroke-width: 2.2px !important;
   }
 
   .expertise-row:hover .expertise-icon-box {
-    width: 44px;
-    margin-right: 0.85rem;
+    width: clamp(54px, 14vw, 62px) !important;
+    margin-right: 0 !important;
+    transform: none !important;
   }
 
+  .expertise-text-col {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.28rem !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+    justify-content: center !important;
+  }
+
+  /* Full wrap title without ellipsis truncation matching reference image */
+  .expertise-row-name {
+    font-size: clamp(1.25rem, 5vw, 1.55rem) !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.025em !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word !important;
+    color: #FFFFFF !important;
+  }
+
+  /* Subtitle description visible underneath title */
+  .expertise-row-desc {
+    display: block !important;
+    font-size: clamp(0.78rem, 2.7vw, 0.86rem) !important;
+    line-height: 1.45 !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    letter-spacing: normal !important;
+    font-weight: 400 !important;
+    margin: 0 !important;
+    word-break: break-word !important;
+  }
+
+  /* Hide right arrow button on mobile as per reference design */
   .expertise-row-arrow {
-    width: 38px;
-    height: 38px;
-    opacity: 1;
-    transform: scale(1) translate(0, 0);
+    display: none !important;
   }
 
-  .expertise-row-arrow svg {
-    width: 17px;
-    height: 17px;
+  /* Mobile light mode overrides */
+  [data-theme="light"] .expertise-icon-box,
+  body[data-theme="light"] .expertise-icon-box {
+    background: #FFFFFF !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06) !important;
+  }
+
+  [data-theme="light"] .expertise-icon-box svg,
+  body[data-theme="light"] .expertise-icon-box svg {
+    color: #0E0F12 !important;
+    stroke: #0E0F12 !important;
+  }
+
+  [data-theme="light"] .expertise-row-name,
+  body[data-theme="light"] .expertise-row-name {
+    color: #0E0F12 !important;
+  }
+
+  [data-theme="light"] .expertise-row-desc,
+  body[data-theme="light"] .expertise-row-desc {
+    color: #555562 !important;
   }
 }

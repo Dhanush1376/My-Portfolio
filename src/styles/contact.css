@@ -5,8 +5,8 @@
 .contact-editorial-section {
   position: relative;
   background: var(--bg);
-  padding: 8.5rem 4rem 1.5rem 4rem; /* Balanced gap, sits snug directly above footer */
   overflow-x: clip;
+  overflow-y: visible;
   z-index: 60;
   transition: background 0.4s ease;
   margin-top: 0;

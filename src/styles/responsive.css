@@ -747,15 +747,6 @@
    LIGHT THEME OVERRIDES
    =========================================== */
 
-/* Preloader */
-[data-theme="light"] .preloader {
-  background: var(--bg);
-}
-
-[data-theme="light"] .preloader-sub {
-  color: var(--text-faint);
-}
-
 /* Hero */
 [data-theme="light"] .hero-img {
   filter: grayscale(100%) contrast(1.1) brightness(var(--hero-brightness));

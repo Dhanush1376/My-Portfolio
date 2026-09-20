@@ -5,12 +5,16 @@ import Home from './pages/Home';
 import ContactPage from './pages/ContactPage';
 import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
+import ServiceDetailPage from './pages/ServiceDetailPage';
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
   useEffect(() => {
     if (!hash) {
       window.scrollTo(0, 0);
+      if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+        window.lenis.scrollTo(0, { immediate: true });
+      }
     }
   }, [pathname, hash]);
   return null;
@@ -24,7 +28,9 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/services" element={<ServicesPage />} />
+        <Route path="/services/:slug" element={<ServiceDetailPage />} />
         <Route path="/what-we-do" element={<ServicesPage />} />
+        <Route path="/what-we-do/:slug" element={<ServiceDetailPage />} />
         <Route path="/contact" element={<ContactPage />} />
       </Routes>
     </Router>

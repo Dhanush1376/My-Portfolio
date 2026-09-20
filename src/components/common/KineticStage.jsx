@@ -21,7 +21,58 @@ export default function KineticStage({
   const containerRef = useRef(null);
   const videoRef = useRef(null);
 
-  // Intersection observer to pause timer and video when offscreen
+  // Relentless and robust mobile & desktop autoplay engine
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !activeVideo) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    video.setAttribute('x5-playsinline', '');
+
+    const kickstart = () => {
+      if (video) {
+        video.muted = true;
+        const p = video.play();
+        if (p !== undefined) {
+          p.catch(() => {});
+        }
+      }
+    };
+
+    kickstart();
+    video.addEventListener('loadedmetadata', kickstart);
+    video.addEventListener('loadeddata', kickstart);
+    video.addEventListener('canplay', kickstart);
+    video.addEventListener('canplaythrough', kickstart);
+
+    // Any touch, gesture, or scroll on the page immediately guarantees playback
+    const interactionEvents = ['touchstart', 'touchend', 'touchmove', 'scroll', 'pointerdown', 'click', 'wheel'];
+    const onUserInteraction = () => {
+      if (video && video.paused) {
+        kickstart();
+      }
+    };
+
+    interactionEvents.forEach((evt) => {
+      window.addEventListener(evt, onUserInteraction, { passive: true });
+    });
+
+    return () => {
+      video.removeEventListener('loadedmetadata', kickstart);
+      video.removeEventListener('loadeddata', kickstart);
+      video.removeEventListener('canplay', kickstart);
+      video.removeEventListener('canplaythrough', kickstart);
+      interactionEvents.forEach((evt) => {
+        window.removeEventListener(evt, onUserInteraction);
+      });
+    };
+  }, [activeVideo, showImagePreview]);
+
+  // Intersection observer to track visibility and trigger playback on entry
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -29,15 +80,13 @@ export default function KineticStage({
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
-        if (videoRef.current) {
-          if (entry.isIntersecting) {
-            videoRef.current.play().catch(() => {});
-          } else {
-            videoRef.current.pause();
-          }
+        if (videoRef.current && entry.isIntersecting) {
+          videoRef.current.muted = true;
+          const p = videoRef.current.play();
+          if (p !== undefined) p.catch(() => {});
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0, rootMargin: '300px 0px' }
     );
 
     observer.observe(el);
@@ -88,6 +137,7 @@ export default function KineticStage({
                 if (el) {
                   el.muted = true;
                   el.defaultMuted = true;
+                  el.playsInline = true;
                 }
               }}
               src={activeVideo}
@@ -96,10 +146,15 @@ export default function KineticStage({
               muted
               playsInline
               webkit-playsinline="true"
+              x5-playsinline="true"
               preload="auto"
-              poster={activePreviewImg || "/assets/siriarts_poster.jpg"}
+              controls={false}
+              disablePictureInPicture
+              disableRemotePlayback
               className="kinetic-preview-video"
-            />
+            >
+              <source src={activeVideo} type="video/mp4" />
+            </video>
           ) : (
             <img
               src={activePreviewImg}

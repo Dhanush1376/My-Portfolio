@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowUpRight, X, CheckCircle2, Phone, Mail } from 'lucide-react';
+import { ArrowUpRight, Phone, Mail } from 'lucide-react';
 
 import { WHY_SERVICES_DATA } from '../data/whyServicesData';
 import { useTheme } from '../hooks/useTheme';
@@ -17,8 +17,8 @@ import '../styles/services-page.css';
 gsap.registerPlugin(ScrollTrigger);
 
 export default function ServicesPage() {
+  const navigate = useNavigate();
   const { theme, toggleTheme, isDark } = useTheme();
-  const [selectedService, setSelectedService] = useState(null);
 
   const containerRef = useRef(null);
   const portalRef = useRef(null);
@@ -35,12 +35,17 @@ export default function ServicesPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    let measureCardH = null;
 
+    // If navigating with legacy hash (e.g. #ai-rag-applications), redirect directly to dedicated service detail page
     const hash = window.location.hash.replace('#', '');
     if (hash) {
-      const match = WHY_SERVICES_DATA.find((s) => s.slug === hash);
+      const match = WHY_SERVICES_DATA.find(
+        (s) => s.slug === hash || (s.aliases && s.aliases.includes(hash))
+      );
       if (match) {
-        setSelectedService(match);
+        navigate(`/services/${match.slug}`, { replace: true });
+        return;
       }
     }
 
@@ -61,7 +66,8 @@ export default function ServicesPage() {
       lenis.raf(time * 1000);
     };
     gsap.ticker.add(updateLenis);
-    gsap.ticker.lagSmoothing(500, 33);
+    // Zero lagSmoothing ensures frame-perfect sync with Lenis smooth scroll
+    gsap.ticker.lagSmoothing(0);
 
     const ctx = gsap.context(() => {
       // 1. Entrance Animation Sequence (Exact Contact Page Motion)
@@ -213,6 +219,19 @@ export default function ServicesPage() {
       // 2. PINNED 3D DECK-STACKING SCROLL ENGINE
       const stageEl = stageRef.current;
       if (stageEl) {
+        let cachedCardH = window.innerWidth < 860 ? 480 : 540;
+        measureCardH = () => {
+          const isMobile = window.innerWidth < 860;
+          const firstCard = cardRefs.current[0];
+          if (firstCard && firstCard.offsetHeight > 50) {
+            cachedCardH = firstCard.offsetHeight;
+          } else {
+            cachedCardH = isMobile ? 480 : 540;
+          }
+        };
+        measureCardH();
+        window.addEventListener('resize', measureCardH);
+
         const updateDeckCards = (progress) => {
           const isMobile = window.innerWidth < 860;
           const activeIdx = Math.min(totalServices - 1, Math.max(0, Math.round(progress * (totalServices - 1))));
@@ -246,9 +265,8 @@ export default function ServicesPage() {
               const scaleStep = isMobile ? 0.012 : 0.018;
               scale = Math.max(0.92, 1 - depth * scaleStep);
 
-              // Accurately compensate top-anchored scaling so each card tier reveals exactly stepPx of bottom surface
-              const cardH = cardEl.offsetHeight || (isMobile ? 480 : 540);
-              const yPx = (depth * stepPx) + cardH * (1 - scale);
+              // Accurately compensate top-anchored scaling without forcing per-frame DOM layout reflow
+              const yPx = (depth * stepPx) + cachedCardH * (1 - scale);
               yTransform = `${yPx.toFixed(1)}px`;
               isVisible = depth <= 3.2;
             }
@@ -256,7 +274,7 @@ export default function ServicesPage() {
             cardEl.style.transform = `translate3d(0, ${yTransform}, 0) scale(${scale.toFixed(4)})`;
             cardEl.style.opacity = '1';
             cardEl.style.visibility = isVisible ? 'visible' : 'hidden';
-            cardEl.style.pointerEvents = activeIdx === i ? 'auto' : 'none';
+            cardEl.style.pointerEvents = isVisible ? 'auto' : 'none';
           }
         };
 
@@ -264,13 +282,15 @@ export default function ServicesPage() {
         updateDeckCards(0);
 
         // Pin the stage for smooth, dramatic multi-page scrolling
+        const isMobile = window.innerWidth < 860;
+        const scrollDist = isMobile ? totalServices * 45 : totalServices * 55;
         ScrollTrigger.create({
           trigger: stageEl,
           start: 'top top',
-          end: `+=${totalServices * 80}%`,
+          end: `+=${scrollDist}%`,
           pin: true,
           pinSpacing: true,
-          scrub: 0.5,
+          scrub: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
@@ -286,23 +306,12 @@ export default function ServicesPage() {
 
     return () => {
       clearTimeout(refreshTimer);
+      if (measureCardH) window.removeEventListener('resize', measureCardH);
       gsap.ticker.remove(updateLenis);
       lenis.destroy();
       ctx.revert();
     };
   }, [totalServices]);
-
-  // Lock body scroll when modal is open
-  useEffect(() => {
-    if (selectedService) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [selectedService]);
 
   const scrollToServices = () => {
     const el = stageRef.current;
@@ -416,7 +425,17 @@ export default function ServicesPage() {
                 ref={(el) => (cardRefs.current[index] = el)}
                 className="service-stack-card"
                 style={{
-                  backgroundColor: service.color
+                  backgroundColor: service.color,
+                  cursor: 'pointer'
+                }}
+                onClick={() => navigate(`/services/${service.slug}`)}
+                role="link"
+                tabIndex={0}
+                aria-label={`Open details for ${service.title}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    navigate(`/services/${service.slug}`);
+                  }
                 }}
               >
                 {/* Card Top Header */}
@@ -452,17 +471,17 @@ export default function ServicesPage() {
 
                   {/* CTA Action Button */}
                   <div className="card-action-wrap">
-                    <button
-                      type="button"
+                    <Link
+                      to={`/services/${service.slug}`}
                       className="card-cta-btn"
-                      onClick={() => setSelectedService(service)}
                       aria-label={`View full details for ${service.title}`}
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <span>View more details</span>
                       <span className="btn-circle-arrow">
                         <ArrowUpRight size={14} strokeWidth={2.5} />
                       </span>
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -479,109 +498,6 @@ export default function ServicesPage() {
 
       {/* Editorial Contact Section with Background Marquee & Swipe Button */}
       <Contact variant="peach" />
-
-      {/* 4. SERVICE DETAILS DRAWER / MODAL */}
-      {selectedService && (
-        <div className="service-modal-overlay" onClick={() => setSelectedService(null)}>
-          <div 
-            className="service-modal-container" 
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={selectedService.title}
-          >
-            {/* Modal Header */}
-            <div 
-              className="modal-header-banner" 
-              style={{ backgroundColor: selectedService.color }}
-            >
-              <div className="modal-banner-top">
-                <span className="modal-badge">{selectedService.num} / {selectedService.display}</span>
-                <button 
-                  className="modal-close-btn" 
-                  onClick={() => setSelectedService(null)}
-                  aria-label="Close modal"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-              <h2 className="modal-service-title">{selectedService.title}</h2>
-              <p className="modal-service-subtitle">{selectedService.subtitle}</p>
-            </div>
-
-            {/* Modal Scrollable Body */}
-            <div className="modal-body-content">
-              {/* Detailed Description */}
-              <div className="modal-section">
-                <span className="modal-section-label">OVERVIEW</span>
-                <p className="modal-desc-text">{selectedService.description}</p>
-              </div>
-
-              {/* What Changes & What You Get */}
-              <div className="modal-two-col">
-                <div className="modal-col">
-                  <span className="modal-section-label">WHAT CHANGES</span>
-                  <ul className="modal-bullet-list">
-                    {selectedService.outcomes.map((out, idx) => (
-                      <li key={idx}>
-                        <CheckCircle2 size={16} className="modal-bullet-icon" />
-                        <span>{out}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="modal-col">
-                  <span className="modal-section-label">WHAT YOU GET</span>
-                  <ul className="modal-numbered-list">
-                    {selectedService.deliverables.map((deliv, idx) => (
-                      <li key={idx}>
-                        <span className="modal-item-num">{String(idx + 1).padStart(2, '0')}</span>
-                        <span>{deliv}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* Execution Process */}
-              <div className="modal-section">
-                <span className="modal-section-label">EXECUTION PROCESS</span>
-                <div className="modal-process-grid">
-                  {selectedService.process.map((step, idx) => (
-                    <div key={idx} className="process-step-card">
-                      <span className="process-step-num">0{idx + 1}</span>
-                      <p className="process-step-text">{step}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Tools & Stack */}
-              <div className="modal-section">
-                <span className="modal-section-label">CORE TOOLS &amp; TECHNOLOGIES</span>
-                <div className="modal-tools-tags">
-                  {selectedService.tools.map((t, idx) => (
-                    <span key={idx} className="tool-chip">{t}</span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Modal Footer CTA */}
-              <div className="modal-footer-cta">
-                <Link 
-                  to="/contact" 
-                  className="modal-book-btn"
-                  onClick={() => setSelectedService(null)}
-                >
-                  <span>Start a project with {selectedService.display}</span>
-                  <ArrowUpRight size={16} />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Footer */}
       <Footer />

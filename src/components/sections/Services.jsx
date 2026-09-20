@@ -17,11 +17,11 @@ gsap.registerPlugin(ScrollTrigger);
 // The 6 core services aligned with WHY_SERVICES_DATA and Image 2 layout
 const EXPERTISE_SERVICES = [
   {
-    id: 'web-app-development',
+    id: 'web-development',
     name: 'Web & App Development',
     desc: 'Fast, responsive web apps & reactive interfaces.',
     icon: Globe,
-    slug: 'web-app-development',
+    slug: 'web-development',
   },
   {
     id: 'ai-rag-applications',
@@ -172,19 +172,23 @@ export default function Services() {
 
             return (
               <Link
-                to={`/services#${service.slug}`}
+                to={`/services/${service.slug}`}
                 key={service.id}
                 className="expertise-row"
                 aria-label={`${service.name} — ${service.desc}`}
               >
                 <div className="expertise-row-left">
-                  {/* Rounded Icon Tile (Expands on hover) */}
+                  {/* Rounded Icon Tile (Visible on mobile, expands on hover on laptop) */}
                   <div className="expertise-icon-box" aria-hidden="true">
-                    <Icon size={28} strokeWidth={2.2} />
+                    <Icon size={26} strokeWidth={2.2} />
                   </div>
 
-                  {/* Big Editorial Headline */}
-                  <h3 className="expertise-row-name">{service.name}</h3>
+                  <div className="expertise-text-col">
+                    {/* Big Editorial Headline */}
+                    <h3 className="expertise-row-name">{service.name}</h3>
+                    {/* Editorial Description / Subtitle for mobile view */}
+                    <p className="expertise-row-desc">{service.desc}</p>
+                  </div>
                 </div>
 
                 {/* Right Interactive Arrow Circle (Reveals on hover) */}

@@ -8,8 +8,8 @@
   width: 100%;
   min-height: 100vh;
   background-color: var(--bg, #0A0A0D);
-  color: var(--text, #F5F5F7);
   overflow-x: clip;
+  overflow-y: visible;
   transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -686,6 +686,15 @@
   justify-content: space-between;
   will-change: transform;
   transform-origin: center top;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.service-stack-card:hover {
+  filter: brightness(1.02);
 }
 
 /* Card Top Bar */
@@ -777,6 +786,7 @@
   font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
   font-size: 13.5px;
   font-weight: 700;
+  text-decoration: none;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1016,245 +1026,3 @@
   color: #484A54;
 }
 
-/* --------------------------------------------------------------------------
-   4. MODAL DRAWER FOR SERVICE DETAILS
-   -------------------------------------------------------------------------- */
-.service-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 1000;
-  animation: modalFadeIn 0.25s ease;
-}
-
-@keyframes modalFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.service-modal-container {
-  width: 100%;
-  max-width: 780px;
-  max-height: 90vh;
-  background-color: #121318;
-  border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes modalSlideUp {
-  from { transform: translateY(30px) scale(0.97); opacity: 0; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-.modal-header-banner {
-  padding: 2.25rem 2.25rem 1.75rem;
-  color: #0A0A0C;
-}
-
-.modal-banner-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.modal-badge {
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(10, 10, 12, 0.7);
-}
-
-.modal-close-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.12);
-  border: none;
-  color: #0A0A0C;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.modal-close-btn:hover {
-  background-color: rgba(0, 0, 0, 0.25);
-}
-
-.modal-service-title {
-  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
-  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
-  font-weight: 750;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  margin: 0 0 0.6rem;
-  text-transform: uppercase;
-}
-
-.modal-service-subtitle {
-  font-size: 0.95rem;
-  line-height: 1.45;
-  color: rgba(10, 10, 12, 0.85);
-  margin: 0;
-}
-
-.modal-body-content {
-  padding: 2rem 2.25rem;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  color: #FFFFFF;
-}
-
-.modal-section-label {
-  display: block;
-  font-family: var(--font-mono, monospace);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #FF5E57;
-  margin-bottom: 0.75rem;
-}
-
-.modal-desc-text {
-  font-size: 0.98rem;
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0;
-}
-
-.modal-two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-@media (max-width: 640px) {
-  .modal-two-col {
-    grid-template-columns: 1fr;
-  }
-}
-
-.modal-bullet-list,
-.modal-numbered-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.modal-bullet-list li,
-.modal-numbered-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  font-size: 0.92rem;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.modal-bullet-icon {
-  color: #FF5E57;
-  shrink: 0;
-  margin-top: 2px;
-}
-
-.modal-item-num {
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  font-weight: 700;
-  color: #FF5E57;
-}
-
-.modal-process-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
-}
-
-@media (max-width: 640px) {
-  .modal-process-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.process-step-card {
-  background-color: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 1rem;
-}
-
-.process-step-num {
-  font-family: var(--font-mono, monospace);
-  font-size: 10px;
-  font-weight: 700;
-  color: #FF5E57;
-}
-
-.process-step-text {
-  font-size: 0.88rem;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0.4rem 0 0;
-}
-
-.modal-tools-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tool-chip {
-  background-color: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 0.35rem 0.85rem;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.modal-footer-cta {
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.modal-book-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  width: 100%;
-  padding: 1rem;
-  background-color: #FF5E57;
-  color: #0A0A0C;
-  font-weight: 700;
-  font-size: 0.95rem;
-  border-radius: 9999px;
-  text-decoration: none;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.modal-book-btn:hover {
-  transform: translateY(-2px);
-  background-color: #FF756F;
-}

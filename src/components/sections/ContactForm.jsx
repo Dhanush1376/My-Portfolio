@@ -606,7 +606,7 @@ export default function ContactForm() {
       console.error('Contact form submission error:', err);
       setStatus('error');
       trackAnalytics('contact_form_error', { reason: 'Network error' });
-      setErrorMessage('Network error while transmitting. Please check your internet connection and try again.');
+      setErrorMessage('Network error while sending. Please check your internet connection and try again.');
     }
   };
 
@@ -732,12 +732,43 @@ export default function ContactForm() {
                     </div>
                   </div>
 
-                  {/* Tick Seal & Title */}
+                  {/* Tick Seal & Title with Satisfying Dynamic Micro-Animations */}
                   <div className="success-header-block">
                     <div className="success-hero-seal" aria-hidden="true">
+                      {/* Radial Celebration Sparkle Dots */}
+                      <div className="seal-sparkles-burst">
+                        <span className="sparkle-dot sp-1" />
+                        <span className="sparkle-dot sp-2" />
+                        <span className="sparkle-dot sp-3" />
+                        <span className="sparkle-dot sp-4" />
+                        <span className="sparkle-dot sp-5" />
+                        <span className="sparkle-dot sp-6" />
+                      </div>
+
+                      {/* Concentric Expanding Ripple Waves */}
+                      <div className="seal-ripple seal-ripple-1" />
+                      <div className="seal-ripple seal-ripple-2" />
+
+                      {/* Outer Glassmorphic Spring Ring */}
                       <div className="seal-outer-ring">
                         <div className="seal-inner-circle">
-                          <Check size={26} strokeWidth={3} />
+                          {/* Animated SVG Checkmark that draws its stroke */}
+                          <svg
+                            className="satisfying-check-svg"
+                            viewBox="0 0 24 24"
+                            width="26"
+                            height="26"
+                          >
+                            <path
+                              className="satisfying-check-tick"
+                              fill="none"
+                              stroke="#FFFFFF"
+                              strokeWidth="3.2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 13l4.5 4.5L19 7"
+                            />
+                          </svg>
                         </div>
                       </div>
                     </div>
@@ -761,18 +792,13 @@ export default function ContactForm() {
                         </div>
                       )}
 
-                      <div className="success-meta-row">
-                        <span className="meta-kicker">COUNTRY</span>
-                        <span className="meta-pill" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
-                          <CountryFlag code={selectedCountry.code} name={selectedCountry.name} />
-                          <span>{selectedCountry.name} ({selectedCountry.dial})</span>
-                        </span>
-                      </div>
-
                       {formData.phone && (
                         <div className="success-meta-row">
                           <span className="meta-kicker">PHONE</span>
-                          <span className="meta-pill">{selectedCountry.dial} {formData.phone}</span>
+                          <span className="meta-pill" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+                            <CountryFlag code={selectedCountry.code} name={selectedCountry.name} />
+                            <span>{selectedCountry.dial} {formData.phone}</span>
+                          </span>
                         </div>
                       )}
 
@@ -1202,7 +1228,7 @@ export default function ContactForm() {
                         className="studio-theme-btn mobile-step-btn"
                         disabled={status === 'sending'}
                       >
-                        <span className="btn-label">{status === 'sending' ? 'Transmitting...' : 'Send Inquiry'}</span>
+                        <span className="btn-label">{status === 'sending' ? 'Sending...' : 'Send'}</span>
                         <span className="btn-arrow-bubble">
                           <Send size={16} strokeWidth={2.5} />
                         </span>
@@ -1217,7 +1243,7 @@ export default function ContactForm() {
                       className="studio-theme-btn desktop-submit-btn"
                       disabled={status === 'sending'}
                     >
-                      <span className="btn-label">{status === 'sending' ? 'Transmitting...' : 'Send Project Inquiry'}</span>
+                      <span className="btn-label">{status === 'sending' ? 'Sending...' : 'Send'}</span>
                       <span className="btn-arrow-bubble">
                         <ArrowRight size={18} strokeWidth={2.5} />
                       </span>

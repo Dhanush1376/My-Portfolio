@@ -114,18 +114,12 @@
 }
 
 html {
-  scroll-behavior: auto !important;
   font-size: 16px;
   cursor: auto;
-  /* Temporarily restored native cursor */
-  width: 100% !important;
-  overflow-x: clip !important;
-  overflow-y: visible !important;
-  /* Hide scrollbar */
+  width: 100%;
+  overflow-x: hidden;
   scrollbar-width: none;
-  /* Firefox */
   -ms-overflow-style: none;
-  /* IE and Edge */
 }
 
 html.lenis,
@@ -133,30 +127,48 @@ html.lenis body {
   height: auto;
 }
 
-html::-webkit-scrollbar {
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
   display: none;
-  /* Chrome, Safari and Opera */
+  width: 0;
+  height: 0;
 }
 
 body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text);
-  overflow-x: clip !important;
-  overflow-y: visible !important;
-  width: 100% !important;
-  min-width: 100% !important;
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   cursor: auto;
-  /* Temporarily restored native cursor */
   transition: background 0.5s, color 0.5s;
-  /* Hide scrollbar */
 }
 
-body::-webkit-scrollbar {
-  display: none;
-  /* Chrome, Safari and Opera */
+/* Allow position: sticky on Home page while clipping standalone pages */
+.portfolio-app,
+#main-content {
+  width: 100%;
+  overflow: visible !important;
+}
+
+.about-page-wrapper,
+.services-page-container,
+.contact-page-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 ::selection {
@@ -203,15 +215,10 @@ img {
   position: relative;
 }
 
-/* Ensure proper stacking for both GSAP spacer class names */
+/* GSAP Pin Spacers */
 .pin-spacer,
 .gsap-pin-spacer {
-  pointer-events: none !important;
-}
-
-.pin-spacer>*,
-.gsap-pin-spacer>* {
-  pointer-events: auto !important;
+  pointer-events: auto;
 }
 
 /* Disable pointer events during navigation to prevent conflicts */

@@ -8,8 +8,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg);
   overflow-x: clip;
+  overflow-y: visible;
   transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 

@@ -6,7 +6,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import { useTheme } from '../hooks/useTheme';
 import CustomCursor from '../components/common/CustomCursor';
-import Preloader from '../components/common/Preloader';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 
@@ -34,6 +33,13 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    }
+
     // Lenis Smooth Scroll Setup
     const lenis = new Lenis({
       duration: 1.2,
@@ -42,8 +48,7 @@ export default function Home() {
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1,
-      smoothTouch: false,
-      touchMultiplier: 2,
+      touchMultiplier: 1.2,
       infinite: false,
     });
 
@@ -54,8 +59,8 @@ export default function Home() {
       lenis.raf(time * 1000);
     };
     gsap.ticker.add(updateLenis);
-    // Smooth frame recovery without violent jumps on lag
-    gsap.ticker.lagSmoothing(500, 33);
+    // Zero lagSmoothing is required by Lenis to maintain frame-perfect synchronization without jitter
+    gsap.ticker.lagSmoothing(0);
 
     // 2. Physical Layer Stacking Setup
     // #hero, #statement, and #contact are pinned at top: 0 in CSS.
@@ -79,14 +84,11 @@ export default function Home() {
       }
     };
 
-    // Calculate immediately and at staggered intervals as media and web fonts finish loading
     updateStickyOffsets();
-    const t1 = setTimeout(updateStickyOffsets, 80);
-    const t2 = setTimeout(updateStickyOffsets, 300);
-    const t3 = setTimeout(updateStickyOffsets, 700);
-    const t4 = setTimeout(updateStickyOffsets, 1500);
+    window.addEventListener('resize', updateStickyOffsets);
+    window.addEventListener('load', updateStickyOffsets);
 
-    // 3. Kinetic 3D Layer Stacking Depth Scrub (Preceding sections gently anchor as next sheet overlays)
+    // Hardware-Accelerated Hero Transition (Subtle visual depth without height-altering layout reflows)
     const heroCanvas = document.querySelector('#hero .hero-orange-wrapper');
     const stmtSec = document.querySelector('#statement');
     if (heroCanvas && stmtSec) {
@@ -95,54 +97,6 @@ export default function Home() {
         ease: 'none',
         scrollTrigger: {
           trigger: stmtSec,
-          start: 'top bottom',
-          end: 'top top',
-          scrub: true,
-        },
-      });
-    }
-
-    const stmtContainer = document.querySelector('#statement .statement-container');
-    const workSec = document.querySelector('#work');
-    if (stmtContainer && workSec) {
-      gsap.to(stmtContainer, {
-        scale: 0.98,
-        transformOrigin: '50% 50%',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: workSec,
-          start: 'top bottom',
-          end: 'top top',
-          scrub: true,
-        },
-      });
-    }
-
-    const workContainer = document.querySelector('#work .why-projects-container');
-    const capSec = document.querySelector('#capabilities');
-    if (workContainer && capSec) {
-      gsap.to(workContainer, {
-        scale: 0.985,
-        transformOrigin: '50% 70%',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: capSec,
-          start: 'top bottom',
-          end: 'top top',
-          scrub: true,
-        },
-      });
-    }
-
-    const capContent = document.querySelectorAll('#capabilities .capabilities-header, #capabilities .capabilities-editorial-list');
-    const contactSec = document.querySelector('#contact');
-    if (capContent.length && contactSec) {
-      gsap.to(capContent, {
-        scale: 0.98,
-        transformOrigin: '50% 50%',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: contactSec,
           start: 'top bottom',
           end: 'top top',
           scrub: true,
@@ -274,15 +228,13 @@ export default function Home() {
 
     return () => {
       clearTimeout(hashTimer);
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(t4);
       window.lenis = null;
       window.navigateToSection = null;
       gsap.ticker.remove(updateLenis);
       window.removeEventListener('resize', handleResizeOrLoad);
       window.removeEventListener('load', handleResizeOrLoad);
+      window.removeEventListener('resize', updateStickyOffsets);
+      window.removeEventListener('load', updateStickyOffsets);
       lenis.destroy();
       ScrollTrigger.getAll().forEach(t => t.kill());
     };
@@ -292,9 +244,6 @@ export default function Home() {
     <div className="portfolio-app">
       {/* Custom Cursor */}
       <CustomCursor />
-
-      {/* Preloader */}
-      <Preloader onComplete={() => ScrollTrigger.refresh()} />
 
       {/* Navigation */}
       <Navbar theme={theme} toggleTheme={toggleTheme} transparent />
