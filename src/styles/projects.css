@@ -817,8 +817,19 @@ html[data-theme="light"] .projects-title-stroke {
   filter: brightness(1.09) contrast(1.03);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  will-change: transform;
-  transition: filter 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+  opacity: 0;
+  transition: opacity 0.35s ease, filter 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kinetic-preview-video.video-playing {
+  opacity: 1 !important;
+}
+
+.kinetic-preview-video.video-suppressed {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 @media (hover: hover) and (pointer: fine) {

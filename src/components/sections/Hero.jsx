@@ -93,6 +93,7 @@ export default function Hero() {
   const navigate = useNavigate();
 
   const [cardPath, setCardPath] = useState('');
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [layout, setLayout] = useState(() => {
     const isClient = typeof window !== 'undefined';
     const w = isClient ? window.innerWidth : 1400;
@@ -111,6 +112,7 @@ export default function Hero() {
 
   const isMobile = layout.w < 768;
   const currentVideoSrc = isMobile ? '/assets/mobile-hero.MP4' : '/assets/laptop-hero.MP4';
+  const currentPosterSrc = isMobile ? '/assets/mobile-hero-poster.webp' : '/assets/laptop-hero-poster.webp';
 
   const liquidFillRef = useRef(null);
   const stageContentRef = useRef(null);
@@ -134,17 +136,24 @@ export default function Hero() {
       if (!video) return;
       video.muted = true;
       video.defaultMuted = true;
-      video.playbackRate = 0.8;
       const p = video.play();
       if (p !== undefined) {
-        p.catch(() => {
+        p.then(() => setIsVideoPlaying(true)).catch(() => {
           video.muted = true;
-          video.play().catch(() => {});
+          video.play().then(() => setIsVideoPlaying(true)).catch(() => {});
         });
       }
     };
 
     kickstart();
+
+    const handleCanPlay = () => {
+      if (video) {
+        video.playbackRate = 0.8;
+      }
+    };
+
+    const handlePlaying = () => setIsVideoPlaying(true);
 
     // Loop fallback: ensures infinite seamless loop even if mobile buffer ends
     const handleEnded = () => {
@@ -155,9 +164,11 @@ export default function Hero() {
     };
 
     video.addEventListener('play', kickstart);
+    video.addEventListener('playing', handlePlaying);
+    video.addEventListener('timeupdate', handlePlaying);
     video.addEventListener('loadedmetadata', kickstart);
     video.addEventListener('loadeddata', kickstart);
-    video.addEventListener('canplay', kickstart);
+    video.addEventListener('canplay', handleCanPlay);
     video.addEventListener('canplaythrough', kickstart);
     video.addEventListener('ended', handleEnded);
 
@@ -182,9 +193,11 @@ export default function Hero() {
 
     return () => {
       video.removeEventListener('play', kickstart);
+      video.removeEventListener('playing', handlePlaying);
+      video.removeEventListener('timeupdate', handlePlaying);
       video.removeEventListener('loadedmetadata', kickstart);
       video.removeEventListener('loadeddata', kickstart);
-      video.removeEventListener('canplay', kickstart);
+      video.removeEventListener('canplay', handleCanPlay);
       video.removeEventListener('canplaythrough', kickstart);
       video.removeEventListener('ended', handleEnded);
       interactionEvents.forEach((evt) => {
@@ -452,6 +465,13 @@ export default function Hero() {
                 ref={liquidFillRef}
                 className="hero-media-inner"
               >
+                {/* Instant visual poster: prevents any blank flashes or native play icons */}
+                <img
+                  src={currentPosterSrc}
+                  alt="Hero interactive background preview"
+                  className="hero-canvas-poster"
+                  aria-hidden="true"
+                />
                 <video
                   ref={(el) => {
                     videoRef.current = el;
@@ -459,17 +479,18 @@ export default function Hero() {
                       el.defaultMuted = true;
                       el.muted = true;
                       el.playsInline = true;
-                      el.playbackRate = 0.8;
                       const p = el.play();
                       if (p !== undefined) {
-                        p.catch(() => {
+                        p.then(() => setIsVideoPlaying(true)).catch(() => {
                           el.muted = true;
-                          el.play().catch(() => {});
+                          el.play().then(() => setIsVideoPlaying(true)).catch(() => {});
                         });
                       }
                     }
                   }}
                   key={currentVideoSrc}
+                  src={currentVideoSrc}
+                  poster={currentPosterSrc}
                   autoPlay
                   loop
                   muted
@@ -481,7 +502,11 @@ export default function Hero() {
                   webkit-playsinline="true"
                   x5-playsinline="true"
                   preload="auto"
-                  className="hero-canvas-video"
+                  className={`hero-canvas-video ${isVideoPlaying ? 'video-playing' : 'video-suppressed'}`}
+                  onPlaying={() => setIsVideoPlaying(true)}
+                  onTimeUpdate={() => {
+                    if (!isVideoPlaying) setIsVideoPlaying(true);
+                  }}
                   aria-hidden="true"
                 >
                   <source src={currentVideoSrc} type="video/mp4" />

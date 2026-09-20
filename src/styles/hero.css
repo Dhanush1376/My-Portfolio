@@ -147,20 +147,48 @@
   will-change: transform;
 }
 
-.hero-canvas-video {
+.hero-canvas-poster {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
   display: block;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  will-change: transform;
-  filter: brightness(1.05) contrast(1.02);
-  opacity: 1;
+  z-index: 1;
   pointer-events: none !important;
   user-select: none !important;
   -webkit-user-select: none !important;
+}
+
+.hero-canvas-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  z-index: 2;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: opacity, transform;
+  filter: brightness(1.05) contrast(1.02);
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.hero-canvas-video.video-playing {
+  opacity: 1 !important;
+}
+
+.hero-canvas-video.video-suppressed {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 /* Suppress all native mobile browser play buttons and overlays individually */

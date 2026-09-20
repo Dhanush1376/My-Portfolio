@@ -18,6 +18,7 @@ export default function KineticStage({
   const [index, setIndex] = useState(seed % Math.max(1, phrases.length));
   const [isVisible, setIsVisible] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const containerRef = useRef(null);
   const videoRef = useRef(null);
 
@@ -38,12 +39,16 @@ export default function KineticStage({
         video.muted = true;
         const p = video.play();
         if (p !== undefined) {
-          p.catch(() => {});
+          p.then(() => setIsVideoPlaying(true)).catch(() => {});
         }
       }
     };
 
     kickstart();
+
+    const handlePlaying = () => setIsVideoPlaying(true);
+    video.addEventListener('playing', handlePlaying);
+    video.addEventListener('timeupdate', handlePlaying);
     video.addEventListener('loadedmetadata', kickstart);
     video.addEventListener('loadeddata', kickstart);
     video.addEventListener('canplay', kickstart);
@@ -62,6 +67,8 @@ export default function KineticStage({
     });
 
     return () => {
+      video.removeEventListener('playing', handlePlaying);
+      video.removeEventListener('timeupdate', handlePlaying);
       video.removeEventListener('loadedmetadata', kickstart);
       video.removeEventListener('loadeddata', kickstart);
       video.removeEventListener('canplay', kickstart);
@@ -139,7 +146,15 @@ export default function KineticStage({
       {/* Background Media Preview (Video or Image) */}
       {showImagePreview && (activeVideo || activePreviewImg) && (
         <div className="kinetic-preview-image-layer">
-          {activeVideo ? (
+          {activePreviewImg && (
+            <img
+              src={activePreviewImg}
+              alt={projectId ? `${projectId} project interface demonstration` : 'Portfolio project interface demonstration'}
+              className={`kinetic-preview-img kinetic-img-${projectId || 'default'}`}
+              aria-hidden="true"
+            />
+          )}
+          {activeVideo && (
             <video
               ref={(el) => {
                 videoRef.current = el;
@@ -150,6 +165,7 @@ export default function KineticStage({
                 }
               }}
               src={activeVideo}
+              poster={activePreviewImg || undefined}
               autoPlay
               loop
               muted
@@ -160,16 +176,14 @@ export default function KineticStage({
               controls={false}
               disablePictureInPicture
               disableRemotePlayback
-              className="kinetic-preview-video"
+              className={`kinetic-preview-video ${isVideoPlaying ? 'video-playing' : 'video-suppressed'}`}
+              onPlaying={() => setIsVideoPlaying(true)}
+              onTimeUpdate={() => {
+                if (!isVideoPlaying) setIsVideoPlaying(true);
+              }}
             >
               <source src={activeVideo} type="video/mp4" />
             </video>
-          ) : (
-            <img
-              src={activePreviewImg}
-              alt={projectId ? `${projectId} project interface demonstration` : 'Portfolio project interface demonstration'}
-              className={`kinetic-preview-img kinetic-img-${projectId || 'default'}`}
-            />
           )}
           <div className="kinetic-preview-overlay" />
         </div>
