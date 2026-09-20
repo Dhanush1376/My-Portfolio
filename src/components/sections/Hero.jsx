@@ -119,93 +119,143 @@ export default function Hero() {
   const hasAnimatedRef = useRef(false);
   const videoRef = useRef(null);
 
-  // Playback rate management: "make itt a littl a very little slow" (0.8x) & guaranteed infinite loop
+  const setVideoElement = (el) => {
+    videoRef.current = el;
+    if (el) {
+      el.defaultMuted = true;
+      el.muted = true;
+      el.playsInline = true;
+      el.setAttribute('muted', '');
+      el.setAttribute('playsinline', '');
+      el.setAttribute('webkit-playsinline', '');
+      el.setAttribute('x5-playsinline', '');
+      el.setAttribute('autoplay', '');
+    }
+  };
+
+  // Autoplay management: Guarantees instantaneous, uninterrupted looping playback without user touch
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
+    let isSubscribed = true;
+
+    // Strict muted & playsinline attribute + property enforcement for cross-browser autoplay
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
-    video.playbackRate = 0.8;
+    video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
     video.setAttribute('x5-playsinline', '');
+    video.setAttribute('autoplay', '');
 
-    const kickstart = () => {
-      if (!video) return;
+    const startPlayback = () => {
+      if (!video || !isSubscribed) return;
       video.muted = true;
       video.defaultMuted = true;
+
+      // Avoid redundant play calls if already active
+      if (!video.paused) {
+        setIsVideoPlaying(true);
+        try {
+          video.playbackRate = 0.8;
+        } catch (_) {}
+        return;
+      }
+
       const p = video.play();
       if (p !== undefined) {
-        p.then(() => setIsVideoPlaying(true)).catch(() => {
+        p.then(() => {
+          if (isSubscribed) {
+            setIsVideoPlaying(true);
+            try {
+              video.playbackRate = 0.8;
+            } catch (_) {}
+          }
+        }).catch(() => {
+          if (!isSubscribed) return;
+          // Silent retry with re-asserted muted status for strict browser policies
           video.muted = true;
-          video.play().then(() => setIsVideoPlaying(true)).catch(() => {});
+          video.defaultMuted = true;
+          video.play().then(() => {
+            if (isSubscribed) {
+              setIsVideoPlaying(true);
+              try {
+                video.playbackRate = 0.8;
+              } catch (_) {}
+            }
+          }).catch(() => {});
         });
       }
     };
 
-    kickstart();
+    // Execute immediately on mount
+    startPlayback();
 
-    const handleCanPlay = () => {
-      if (video) {
-        video.playbackRate = 0.8;
+    const handleReady = () => {
+      startPlayback();
+    };
+
+    const handlePlaying = () => {
+      if (isSubscribed) {
+        setIsVideoPlaying(true);
+        try {
+          video.playbackRate = 0.8;
+        } catch (_) {}
       }
     };
 
-    const handlePlaying = () => setIsVideoPlaying(true);
-
-    // Loop fallback: ensures infinite seamless loop even if mobile buffer ends
+    // Seamless infinite looping safeguard
     const handleEnded = () => {
       if (video) {
         video.currentTime = 0;
-        kickstart();
+        startPlayback();
       }
     };
 
-    video.addEventListener('play', kickstart);
+    video.addEventListener('loadedmetadata', handleReady);
+    video.addEventListener('loadeddata', handleReady);
+    video.addEventListener('canplay', handleReady);
+    video.addEventListener('canplaythrough', handleReady);
     video.addEventListener('playing', handlePlaying);
     video.addEventListener('timeupdate', handlePlaying);
-    video.addEventListener('loadedmetadata', kickstart);
-    video.addEventListener('loadeddata', kickstart);
-    video.addEventListener('canplay', handleCanPlay);
-    video.addEventListener('canplaythrough', kickstart);
     video.addEventListener('ended', handleEnded);
 
-    // Discrete user interactions to unlock playback if iOS Low Power Mode paused it
-    const interactionEvents = ['touchstart', 'pointerdown', 'click', 'keydown'];
-    const onUserInteraction = () => {
-      if (video && video.paused) {
-        kickstart();
-      }
-    };
-
-    interactionEvents.forEach((evt) => {
-      window.addEventListener(evt, onUserInteraction, { once: true, passive: true });
-    });
-
+    // If device switched tabs or resumed from sleep
     const onVisibilityChange = () => {
       if (!document.hidden && video && video.paused) {
-        kickstart();
+        startPlayback();
       }
     };
     document.addEventListener('visibilitychange', onVisibilityChange);
 
+    // Discrete listener fallback in case ultra-aggressive OS battery savers pause background media
+    const interactionEvents = ['touchstart', 'pointerdown', 'click', 'keydown', 'scroll'];
+    const onInteraction = () => {
+      if (video && video.paused) {
+        startPlayback();
+      }
+    };
+    interactionEvents.forEach((evt) => {
+      window.addEventListener(evt, onInteraction, { once: true, passive: true });
+    });
+
     return () => {
-      video.removeEventListener('play', kickstart);
+      isSubscribed = false;
+      video.removeEventListener('loadedmetadata', handleReady);
+      video.removeEventListener('loadeddata', handleReady);
+      video.removeEventListener('canplay', handleReady);
+      video.removeEventListener('canplaythrough', handleReady);
       video.removeEventListener('playing', handlePlaying);
       video.removeEventListener('timeupdate', handlePlaying);
-      video.removeEventListener('loadedmetadata', kickstart);
-      video.removeEventListener('loadeddata', kickstart);
-      video.removeEventListener('canplay', handleCanPlay);
-      video.removeEventListener('canplaythrough', kickstart);
       video.removeEventListener('ended', handleEnded);
-      interactionEvents.forEach((evt) => {
-        window.removeEventListener(evt, onUserInteraction);
-      });
       document.removeEventListener('visibilitychange', onVisibilityChange);
+      interactionEvents.forEach((evt) => {
+        window.removeEventListener(evt, onInteraction);
+      });
     };
-  }, [currentVideoSrc, cardPath]);
+  }, [currentVideoSrc]);
 
   // Entrance Animation: Runs strictly ONCE on mount, never repeats on layout recalculations
   useEffect(() => {
@@ -229,20 +279,13 @@ export default function Hero() {
     // Mark as animated immediately to lock it to a single execution
     hasAnimatedRef.current = true;
 
-    // Set initial states for the single coordinated entrance
-    gsap.set(liquidFillRef.current, { y: Math.min(layout.cardHeight, 160) });
+    // Set video container to resting position without motion
+    gsap.set(liquidFillRef.current, { y: 0 });
     if (stageContentRef.current) {
       gsap.set(stageContentRef.current, { opacity: 0, y: 12 });
     }
 
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-    // 1. Single smooth card reveal
-    tl.to(liquidFillRef.current, {
-      y: 0,
-      duration: 0.75,
-      ease: 'power3.out',
-    });
 
     // 2. Stage content spec pill
     if (stageContentRef.current) {
@@ -418,103 +461,89 @@ export default function Hero() {
           height: `${cardHeight}px`,
         }}
       >
-        {cardPath && (
-          <>
-            <svg
-              className="hero-orange-card-svg"
-              viewBox={`0 0 ${cardWidth} ${cardHeight}`}
-              preserveAspectRatio="none"
+        <svg
+          className="hero-orange-card-svg"
+          viewBox={`0 0 ${cardWidth} ${cardHeight}`}
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <defs>
+            <filter id="heroOrangeGlow" x="-4%" y="-4%" width="108%" height="112%">
+              <feDropShadow dx="0" dy="16" stdDeviation="20" floodColor="var(--hero-orange-glow, rgba(0, 0, 0, 0.25))" floodOpacity="0.35" />
+            </filter>
+            <clipPath id="heroCanvasClip">
+              {cardPath ? <path d={cardPath} /> : null}
+            </clipPath>
+          </defs>
+          
+          {/* Base shadow layer cast by the path shape */}
+          {cardPath && (
+            <path
+              d={cardPath}
+              fill="none"
+              filter="url(#heroOrangeGlow)"
+            />
+          )}
+
+          {/* Base fallback fill in SVG */}
+          <g clipPath={cardPath ? 'url(#heroCanvasClip)' : undefined}>
+            <rect
+              width={cardWidth}
+              height={cardHeight}
+              rx={cardPath ? 0 : (isMobile ? 18 : 28)}
+              fill="var(--hero-canvas-bg, #0E0F12)"
+            />
+          </g>
+        </svg>
+
+        {/* Stepped Media Canvas Container - Clipped precisely to cardPath across all devices */}
+        <div
+          className="hero-canvas-media-layer"
+          style={{
+            clipPath: cardPath ? `path("${cardPath}")` : undefined,
+            WebkitClipPath: cardPath ? `path("${cardPath}")` : undefined,
+            borderRadius: cardPath ? undefined : (isMobile ? '18px' : '28px'),
+          }}
+          aria-hidden="true"
+        >
+          <div
+            ref={liquidFillRef}
+            className="hero-media-inner"
+          >
+            {/* Instant visual poster: prevents any blank flashes or native play icons */}
+            <img
+              src={currentPosterSrc}
+              alt="Hero interactive background preview"
+              className={`hero-canvas-poster ${isVideoPlaying ? 'poster-faded' : ''}`}
               aria-hidden="true"
-            >
-              <defs>
-                <filter id="heroOrangeGlow" x="-4%" y="-4%" width="108%" height="112%">
-                  <feDropShadow dx="0" dy="16" stdDeviation="20" floodColor="var(--hero-orange-glow, rgba(0, 0, 0, 0.25))" floodOpacity="0.35" />
-                </filter>
-                <clipPath id="heroCanvasClip">
-                  <path d={cardPath} />
-                </clipPath>
-              </defs>
-              
-              {/* Base shadow layer cast by the path shape */}
-              <path
-                d={cardPath}
-                fill="none"
-                filter="url(#heroOrangeGlow)"
-              />
-
-              {/* Base fallback fill in SVG */}
-              <g clipPath="url(#heroCanvasClip)">
-                <rect
-                  width={cardWidth}
-                  height={cardHeight}
-                  fill="var(--hero-canvas-bg, #0E0F12)"
-                />
-              </g>
-            </svg>
-
-            {/* Stepped Media Canvas Container - Clipped precisely to cardPath across all devices */}
-            <div
-              className="hero-canvas-media-layer"
-              style={{
-                clipPath: cardPath ? `path("${cardPath}")` : 'url(#heroCanvasClip)',
-                WebkitClipPath: cardPath ? `path("${cardPath}")` : 'url(#heroCanvasClip)',
+            />
+            <video
+              ref={setVideoElement}
+              key={currentVideoSrc}
+              src={currentVideoSrc}
+              poster={currentPosterSrc}
+              autoPlay
+              loop
+              muted
+              playsInline
+              controls={false}
+              disablePictureInPicture
+              disableRemotePlayback
+              tabIndex={-1}
+              webkit-playsinline="true"
+              x5-playsinline="true"
+              preload="auto"
+              className={`hero-canvas-video ${isVideoPlaying ? 'video-playing' : ''}`}
+              onPlaying={() => setIsVideoPlaying(true)}
+              onTimeUpdate={() => {
+                if (!isVideoPlaying) setIsVideoPlaying(true);
               }}
               aria-hidden="true"
             >
-              <div
-                ref={liquidFillRef}
-                className="hero-media-inner"
-              >
-                {/* Instant visual poster: prevents any blank flashes or native play icons */}
-                <img
-                  src={currentPosterSrc}
-                  alt="Hero interactive background preview"
-                  className="hero-canvas-poster"
-                  aria-hidden="true"
-                />
-                <video
-                  ref={(el) => {
-                    videoRef.current = el;
-                    if (el) {
-                      el.defaultMuted = true;
-                      el.muted = true;
-                      el.playsInline = true;
-                      const p = el.play();
-                      if (p !== undefined) {
-                        p.then(() => setIsVideoPlaying(true)).catch(() => {
-                          el.muted = true;
-                          el.play().then(() => setIsVideoPlaying(true)).catch(() => {});
-                        });
-                      }
-                    }
-                  }}
-                  key={currentVideoSrc}
-                  src={currentVideoSrc}
-                  poster={currentPosterSrc}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  controls={false}
-                  disablePictureInPicture
-                  disableRemotePlayback
-                  tabIndex={-1}
-                  webkit-playsinline="true"
-                  x5-playsinline="true"
-                  preload="auto"
-                  className={`hero-canvas-video ${isVideoPlaying ? 'video-playing' : 'video-suppressed'}`}
-                  onPlaying={() => setIsVideoPlaying(true)}
-                  onTimeUpdate={() => {
-                    if (!isVideoPlaying) setIsVideoPlaying(true);
-                  }}
-                  aria-hidden="true"
-                >
-                  <source src={currentVideoSrc} type="video/mp4" />
-                </video>
-              </div>
-            </div>
-          </>
-        )}
+              <source src={currentVideoSrc} type="video/mp4" />
+            </video>
+          </div>
+        </div>
 
         {/* Stage Content */}
       </div>

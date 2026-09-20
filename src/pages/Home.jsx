@@ -71,45 +71,47 @@ export default function Home() {
       window.scrollTo(0, 0);
     }
 
-    // Lenis Smooth Scroll Setup - Silky smooth wheel scrolling with 100% native mobile inertia
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1,
-      syncTouch: false,
-      infinite: false,
+    // Configure ScrollTrigger to ignore mobile address bar resize events (stops vibrating/shaking)
+    ScrollTrigger.config({
+      ignoreMobileResize: true,
+      autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load',
     });
 
-    lenis.on('scroll', ScrollTrigger.update);
-    window.lenis = lenis;
+    // Detect touch / mobile devices - NEVER hijack touch on phones (preserves 120Hz native momentum)
+    const isTouch =
+      typeof window !== 'undefined' &&
+      ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth <= 768);
 
-    const updateLenis = (time) => {
-      lenis.raf(time * 1000);
-    };
-    gsap.ticker.add(updateLenis);
-    // Smooth frame recovery without violent jumps on lag
-    gsap.ticker.lagSmoothing(500, 33);
+    let lenis = null;
+    let updateLenis = null;
 
-    // Hardware-Accelerated Hero Transition (Subtle visual depth as statement overlays hero)
-    const heroCanvas = document.querySelector('#hero .hero-orange-wrapper');
-    const stmtSec = document.querySelector('#statement');
-    if (heroCanvas && stmtSec) {
-      gsap.to(heroCanvas, {
-        opacity: 0.88,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: stmtSec,
-          start: 'top bottom',
-          end: 'top top',
-          scrub: true,
-        },
+    if (!isTouch) {
+      // Desktop-only Lenis Smooth Scroll Setup for silky mouse wheel scrolling
+      lenis = new Lenis({
+        duration: 1.1,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 0,
+        syncTouch: false,
+        infinite: false,
       });
+
+      lenis.on('scroll', ScrollTrigger.update);
+      window.lenis = lenis;
+
+      updateLenis = (time) => {
+        lenis.raf(time * 1000);
+      };
+      gsap.ticker.add(updateLenis);
+      gsap.ticker.lagSmoothing(500, 33);
+    } else {
+      window.lenis = null;
     }
 
+    // (Hero video has no scroll animations per user request)
 
     // 4. Active Nav Link on Scroll
     const navSections = document.querySelectorAll('.hero-section, .section, .stack-section');
@@ -130,7 +132,7 @@ export default function Home() {
       });
     });
 
-    // 6. Navigation with Smooth Scrolling
+    // 5. Navigation with Smooth Scrolling
     window.navigateToSection = (targetId) => {
       const targetElement = document.querySelector(targetId);
       if (!targetElement) return;
@@ -142,7 +144,7 @@ export default function Home() {
         targetPosition = Math.max(0, window.scrollY + rect.top - navbarHeight);
       }
 
-      if (window.lenis) {
+      if (window.lenis && !isTouch) {
         window.lenis.scrollTo(targetPosition, {
           duration: 1.2,
           easing: (t) => 1 - Math.pow(2, -10 * t),
@@ -152,48 +154,17 @@ export default function Home() {
       }
     };
 
-    // 7. Floating Crosshairs Animation
-    gsap.utils.toArray('.crosshair').forEach((ch, i) => {
-      gsap.to(ch, {
-        y: `${(i % 2 === 0 ? -1 : 1) * (15 + i * 5)}`,
-        x: `${(i % 2 === 0 ? 1 : -1) * (10 + i * 3)}`,
-        duration: 3 + i * 0.5,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      });
-    });
-
-    // 8. Section Header Watermark & Title Animations
-    const headers = document.querySelectorAll('.section-header');
-    headers.forEach((header) => {
-      const watermark = header.querySelector('.section-watermark');
-      const title = header.querySelector('.section-title');
-
-      if (watermark) watermark.classList.add('animate-ready');
-      if (title) title.classList.add('animate-ready');
-
-      ScrollTrigger.create({
-        trigger: header,
-        start: 'top 85%',
-        once: true,
-        onEnter: () => {
-          if (watermark) {
-            gsap.to(watermark, {
-              clipPath: 'inset(0 0% 0 0%)',
-              opacity: 0.19,
-              scale: 1,
-              duration: 1.5,
-              ease: 'power4.out'
-            });
-          }
-          if (title) title.classList.add('animate-in');
-        }
-      });
-    });
-
-    const handleResizeOrLoad = () => {
-      ScrollTrigger.refresh();
+    // Only refresh on horizontal width changes (orientation flip), NEVER on height-only mobile address bar changes
+    let lastWidth = window.innerWidth;
+    const handleResizeOrLoad = (e) => {
+      if (e && e.type === 'load') {
+        ScrollTrigger.refresh();
+        return;
+      }
+      if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        ScrollTrigger.refresh();
+      }
     };
 
     window.addEventListener('resize', handleResizeOrLoad);
@@ -223,10 +194,10 @@ export default function Home() {
       clearTimeout(hashTimer);
       window.lenis = null;
       window.navigateToSection = null;
-      gsap.ticker.remove(updateLenis);
+      if (updateLenis) gsap.ticker.remove(updateLenis);
       window.removeEventListener('resize', handleResizeOrLoad);
       window.removeEventListener('load', handleResizeOrLoad);
-      lenis.destroy();
+      if (lenis) lenis.destroy();
       ScrollTrigger.getAll().forEach(t => t.kill());
     };
   }, []);

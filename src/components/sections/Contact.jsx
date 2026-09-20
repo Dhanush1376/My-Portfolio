@@ -20,11 +20,16 @@ export default function Contact({
   const { theme, isDark } = useTheme();
 
   useEffect(() => {
-    if (!headerRef.current) return;
+    if (!sectionRef.current || !headerRef.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
-      const tagEl = headerRef.current.querySelector('.tilted-tag-wrapper');
-      const lines = headerRef.current.querySelectorAll('.contact-line-inner');
+      const tagEl = headerRef.current?.querySelector('.tilted-tag-wrapper');
+      const lines = headerRef.current?.querySelectorAll('.contact-line-inner');
+      const track1 = sectionRef.current?.querySelector('.marquee-content-track');
+      const track2 = sectionRef.current?.querySelector('.marquee-content-track-reverse');
+      const btn = buttonRef.current;
 
       // 1. Tilted tape tag bounce-pop on scroll
       if (tagEl) {
@@ -76,7 +81,7 @@ export default function Contact({
         );
       } else {
         // Fallback for custom headlines without line-mask wrapper
-        const headlineEl = headerRef.current.querySelector('.contact-huge-headline');
+        const headlineEl = headerRef.current?.querySelector('.contact-huge-headline');
         if (headlineEl) {
           gsap.fromTo(
             headlineEl,
@@ -89,14 +94,58 @@ export default function Contact({
               ease: 'power4.out',
               scrollTrigger: {
                 trigger: headerRef.current,
-                start: 'top 55%',
-                toggleActions: 'play none none reverse',
+                start: 'top 85%',
+                once: true,
               },
             }
           );
         }
       }
-    }, headerRef);
+
+      // 3. Scroll Scrub Parallax on Outline Background Marquees
+      if (track1 && track2) {
+        gsap.to(track1, {
+          x: -120,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.2,
+          },
+        });
+        gsap.to(track2, {
+          x: 120,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.2,
+          },
+        });
+      }
+
+      // 4. Swipe CTA Button Entrance
+      if (btn) {
+        gsap.fromTo(
+          btn,
+          { scale: 0.86, y: 38, opacity: 0.15 },
+          {
+            scale: 1,
+            y: 0,
+            opacity: 1,
+            duration: 0.75,
+            ease: 'back.out(1.5)',
+            scrollTrigger: {
+              trigger: btn,
+              start: 'top 92%',
+              once: true,
+            },
+          }
+        );
+      }
+    }, sectionRef);
 
     return () => ctx.revert();
   }, [headline, tag]);

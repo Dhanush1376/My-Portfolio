@@ -30,16 +30,27 @@ export default function KineticStage({
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
+    video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
     video.setAttribute('x5-playsinline', '');
+    video.setAttribute('autoplay', '');
 
     const kickstart = () => {
       if (video) {
         video.muted = true;
+        video.defaultMuted = true;
+        if (!video.paused) {
+          setIsVideoPlaying(true);
+          return;
+        }
         const p = video.play();
         if (p !== undefined) {
-          p.then(() => setIsVideoPlaying(true)).catch(() => {});
+          p.then(() => setIsVideoPlaying(true)).catch(() => {
+            video.muted = true;
+            video.defaultMuted = true;
+            video.play().then(() => setIsVideoPlaying(true)).catch(() => {});
+          });
         }
       }
     };
@@ -47,12 +58,20 @@ export default function KineticStage({
     kickstart();
 
     const handlePlaying = () => setIsVideoPlaying(true);
+    const handleEnded = () => {
+      if (video) {
+        video.currentTime = 0;
+        kickstart();
+      }
+    };
+
     video.addEventListener('playing', handlePlaying);
     video.addEventListener('timeupdate', handlePlaying);
     video.addEventListener('loadedmetadata', kickstart);
     video.addEventListener('loadeddata', kickstart);
     video.addEventListener('canplay', kickstart);
     video.addEventListener('canplaythrough', kickstart);
+    video.addEventListener('ended', handleEnded);
 
     // Discrete user interactions to guarantee autoplay policy bypass without thrashing scroll ticks
     const interactionEvents = ['touchstart', 'pointerdown', 'click', 'keydown'];
@@ -73,6 +92,7 @@ export default function KineticStage({
       video.removeEventListener('loadeddata', kickstart);
       video.removeEventListener('canplay', kickstart);
       video.removeEventListener('canplaythrough', kickstart);
+      video.removeEventListener('ended', handleEnded);
       interactionEvents.forEach((evt) => {
         window.removeEventListener(evt, onUserInteraction);
       });
@@ -95,8 +115,11 @@ export default function KineticStage({
         if (videoRef.current) {
           if (entry.isIntersecting) {
             videoRef.current.muted = true;
+            videoRef.current.defaultMuted = true;
             const p = videoRef.current.play();
-            if (p !== undefined) p.catch(() => {});
+            if (p !== undefined) {
+              p.then(() => setIsVideoPlaying(true)).catch(() => {});
+            }
           } else {
             videoRef.current.pause();
           }
@@ -150,7 +173,7 @@ export default function KineticStage({
             <img
               src={activePreviewImg}
               alt={projectId ? `${projectId} project interface demonstration` : 'Portfolio project interface demonstration'}
-              className={`kinetic-preview-img kinetic-img-${projectId || 'default'}`}
+              className={`kinetic-preview-img kinetic-img-${projectId || 'default'} ${isVideoPlaying ? 'poster-faded' : ''}`}
               aria-hidden="true"
             />
           )}
@@ -162,6 +185,10 @@ export default function KineticStage({
                   el.muted = true;
                   el.defaultMuted = true;
                   el.playsInline = true;
+                  el.setAttribute('muted', '');
+                  el.setAttribute('playsinline', '');
+                  el.setAttribute('webkit-playsinline', '');
+                  el.setAttribute('autoplay', '');
                 }
               }}
               src={activeVideo}
@@ -176,7 +203,7 @@ export default function KineticStage({
               controls={false}
               disablePictureInPicture
               disableRemotePlayback
-              className={`kinetic-preview-video ${isVideoPlaying ? 'video-playing' : 'video-suppressed'}`}
+              className={`kinetic-preview-video ${isVideoPlaying ? 'video-playing' : ''}`}
               onPlaying={() => setIsVideoPlaying(true)}
               onTimeUpdate={() => {
                 if (!isVideoPlaying) setIsVideoPlaying(true);

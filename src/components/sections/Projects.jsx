@@ -8,25 +8,29 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Projects({ onOpenCaseStudy }) {
   const projectsList = Object.values(PROJECTS_DATA);
+  const sectionRef = useRef(null);
   const headerRef = useRef(null);
 
   useEffect(() => {
     if (!headerRef.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const ctx = gsap.context(() => {
+      if (prefersReducedMotion) return;
+
       const tagEl = headerRef.current.querySelector('.tilted-tag-wrapper');
       const lines = headerRef.current.querySelectorAll('.title-line-inner');
+      const vLines = sectionRef.current?.querySelectorAll('.canvas-grid-v-line');
 
       // 1. Tilted tape tag bounce-pop on scroll
       if (tagEl) {
         gsap.fromTo(
           tagEl,
-          { opacity: 0, scale: 0.65, y: 24, rotate: 8 },
+          { opacity: 0.1, scale: 0.85, y: 18 },
           {
             opacity: 1,
             scale: 1,
             y: 0,
-            rotate: 0,
             duration: 0.65,
             ease: 'back.out(2)',
             scrollTrigger: {
@@ -43,17 +47,13 @@ export default function Projects({ onOpenCaseStudy }) {
         gsap.fromTo(
           lines,
           {
-            yPercent: 125,
-            opacity: 0,
-            rotate: 2.2,
-            skewY: 1.2,
-            filter: 'blur(6px)',
+            yPercent: 60,
+            opacity: 0.1,
+            filter: 'blur(3px)',
           },
           {
             yPercent: 0,
             opacity: 1,
-            rotate: 0,
-            skewY: 0,
             filter: 'blur(0px)',
             duration: 0.8,
             stagger: 0.08,
@@ -66,9 +66,29 @@ export default function Projects({ onOpenCaseStudy }) {
           }
         );
       }
-    }, headerRef);
 
-    // Refresh ScrollTrigger to calculate accurate layout with pinned sheets
+      // 3. Architectural vertical grid hairlines entrance
+      if (vLines && vLines.length > 0) {
+        gsap.fromTo(
+          vLines,
+          { opacity: 0.05, scaleY: 0.7 },
+          {
+            opacity: 1,
+            scaleY: 1,
+            duration: 1,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+    }, sectionRef);
+
+    // Refresh ScrollTrigger to calculate accurate layout
     const refreshTimer = setTimeout(() => {
       ScrollTrigger.refresh();
     }, 100);
@@ -80,7 +100,7 @@ export default function Projects({ onOpenCaseStudy }) {
   }, []);
 
   return (
-    <section className="section featured-projects-section stack-section" id="work">
+    <section ref={sectionRef} className="section featured-projects-section stack-section" id="work">
 
       {/* Background Matrix/Grid is handled via CSS */}
       <div className="projects-grid-overlay" aria-hidden="true">

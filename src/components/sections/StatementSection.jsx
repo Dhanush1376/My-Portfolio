@@ -38,18 +38,44 @@ export default function StatementSection() {
   const groupRef = useRef(null);
 
   useEffect(() => {
+    const isMobile = typeof window !== 'undefined' && (window.innerWidth <= 768 || 'ontouchstart' in window);
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
+      if (prefersReducedMotion) return;
+
       const tagEl = sectionRef.current.querySelector('.statement-studio-label, .statement-label-wrapper');
+      const hairline = sectionRef.current.querySelector('.statement-hairline');
       const manifestoEl = sectionRef.current.querySelector('.statement-hero-manifesto') || sectionRef.current.querySelector('.statement-quote-box');
       const lines = sectionRef.current.querySelectorAll('.statement-line-inner');
+      const accents = sectionRef.current.querySelectorAll('.statement-accent-tag');
+      const actionsRow = sectionRef.current.querySelector('.statement-actions-row');
+      const gridLines = sectionRef.current.querySelector('.statement-grid-lines');
 
-      // 1. Studio bullet label reveal on scroll
+      // 1. Subtle Background Grid Parallax
+      if (gridLines) {
+        gsap.fromTo(
+          gridLines,
+          { y: -30 },
+          {
+            y: 30,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.2,
+            },
+          }
+        );
+      }
+
+      // 2. Studio bullet label reveal on scroll
       if (tagEl) {
         gsap.fromTo(
           tagEl,
-          { opacity: 0, y: 16 },
+          { opacity: 0.1, y: 18 },
           {
             opacity: 1,
             y: 0,
@@ -57,32 +83,91 @@ export default function StatementSection() {
             ease: 'power3.out',
             scrollTrigger: {
               trigger: tagEl,
-              start: 'top 85%',
+              start: 'top 88%',
               once: true,
             },
           }
         );
       }
 
-      // 2. Kinetic Headline Mask Reveal on scroll
+      // 3. Hairline expansion draw
+      if (hairline) {
+        gsap.fromTo(
+          hairline,
+          { scaleX: 0, transformOrigin: 'left center', opacity: 0.1 },
+          {
+            scaleX: 1,
+            opacity: 0.5,
+            duration: 0.85,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: hairline,
+              start: 'top 88%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 4. Kinetic Headline Mask Reveal on scroll
       if (lines && lines.length > 0) {
         gsap.fromTo(
           lines,
           {
-            yPercent: 120,
-            opacity: 0,
-            filter: 'blur(6px)',
+            yPercent: 60,
+            opacity: 0.1,
+            filter: 'blur(4px)',
           },
           {
             yPercent: 0,
             opacity: 1,
             filter: 'blur(0px)',
             duration: 0.85,
-            stagger: 0.1,
+            stagger: 0.09,
             ease: 'power4.out',
             scrollTrigger: {
               trigger: manifestoEl || sectionRef.current,
-              start: 'top 85%',
+              start: 'top 82%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 5. Chromatic Accent Words Illumination Pop
+      if (accents && accents.length > 0) {
+        accents.forEach((accent) => {
+          gsap.fromTo(
+            accent,
+            { scale: 0.95, filter: 'brightness(0.8)' },
+            {
+              scale: 1,
+              filter: 'brightness(1.2)',
+              duration: 0.6,
+              ease: 'back.out(1.8)',
+              scrollTrigger: {
+                trigger: accent,
+                start: 'top 80%',
+                once: true,
+              },
+            }
+          );
+        });
+      }
+
+      // 6. Action CTAs Row reveal
+      if (actionsRow) {
+        gsap.fromTo(
+          actionsRow,
+          { y: 26, opacity: 0.1 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: actionsRow,
+              start: 'top 90%',
               once: true,
             },
           }
@@ -100,8 +185,10 @@ export default function StatementSection() {
 
     if (track && group && marqueeEl) {
       let groupWidth = group.getBoundingClientRect().width;
+      let lastW = window.innerWidth;
       const updateWidth = () => {
-        if (group) {
+        if (group && window.innerWidth !== lastW) {
+          lastW = window.innerWidth;
           const w = group.getBoundingClientRect().width;
           if (w > 50) groupWidth = w;
         }
@@ -109,7 +196,12 @@ export default function StatementSection() {
 
       window.addEventListener('resize', updateWidth);
       if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(updateWidth);
+        document.fonts.ready.then(() => {
+          if (group) {
+            const w = group.getBoundingClientRect().width;
+            if (w > 50) groupWidth = w;
+          }
+        });
       }
 
       let xPos = 0;
@@ -126,7 +218,8 @@ export default function StatementSection() {
       let lastScrollY = window.scrollY;
       let lastScrollTime = performance.now();
 
-      const onScroll = () => {
+      // Only attach scroll impulse on non-touch devices to avoid touch scroll jitter
+      const onScroll = !isMobile ? () => {
         const now = performance.now();
         const currentScrollY = window.scrollY;
         const dy = currentScrollY - lastScrollY;
@@ -142,9 +235,11 @@ export default function StatementSection() {
 
         lastScrollY = currentScrollY;
         lastScrollTime = now;
-      };
+      } : null;
 
-      window.addEventListener('scroll', onScroll, { passive: true });
+      if (onScroll) {
+        window.addEventListener('scroll', onScroll, { passive: true });
+      }
 
       tickerFn = (time, deltaTime) => {
         const dt = Math.min(deltaTime / 16.667, 2.5);
@@ -167,12 +262,17 @@ export default function StatementSection() {
       };
 
       gsap.ticker.add(tickerFn);
-      const timer = setTimeout(updateWidth, 350);
+      const timer = setTimeout(() => {
+        if (group) {
+          const w = group.getBoundingClientRect().width;
+          if (w > 50) groupWidth = w;
+        }
+      }, 350);
 
       cleanupScroll = () => {
         clearTimeout(timer);
         if (tickerFn) gsap.ticker.remove(tickerFn);
-        window.removeEventListener('scroll', onScroll);
+        if (onScroll) window.removeEventListener('scroll', onScroll);
         window.removeEventListener('resize', updateWidth);
         marqueeEl.removeEventListener('mouseenter', onMouseEnter);
         marqueeEl.removeEventListener('mouseleave', onMouseLeave);

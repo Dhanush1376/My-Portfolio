@@ -6,16 +6,15 @@
 .featured-projects-section {
   position: relative;
   background-color: var(--bg);
-  background-size: 48px 48px;
+  background-size: 56px 56px;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.09) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.11) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.11) 1px, transparent 1px);
   padding-top: clamp(64px, 8vw, 132px);
-  padding-bottom: clamp(100px, 14vh, 180px);
+  padding-bottom: clamp(100px, 12vh, 150px);
   padding-left: 0 !important;
   padding-right: 0 !important;
-  overflow-x: clip;
-  overflow-y: visible;
+  overflow: clip !important;
   transition: background-color 0.4s ease;
 }
 
@@ -23,8 +22,8 @@
 body[data-theme="light"] .featured-projects-section,
 html[data-theme="light"] .featured-projects-section {
   background-image:
-    linear-gradient(to right, rgba(0, 0, 0, 0.12) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.12) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
 }
 
 .featured-projects-container {
@@ -44,26 +43,30 @@ html[data-theme="light"] .featured-projects-section {
 .projects-grid-overlay {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   overflow: hidden;
-  z-index: 2;
+  z-index: 1;
 }
 
 .canvas-grid-pattern {
   position: absolute;
   inset: 0;
-  background-size: 48px 48px;
+  width: 100%;
+  height: 100%;
+  background-size: 56px 56px;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.09) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.11) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.11) 1px, transparent 1px);
 }
 
 [data-theme="light"] .canvas-grid-pattern,
 body[data-theme="light"] .canvas-grid-pattern,
 html[data-theme="light"] .canvas-grid-pattern {
   background-image:
-    linear-gradient(to right, rgba(0, 0, 0, 0.12) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.12) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
 }
 
 /* Vertical Architectural Hairlines */
@@ -307,14 +310,15 @@ html[data-theme="light"] .projects-title-stroke {
 
 .featured-project-watermark-num {
   position: absolute;
-  top: -40px;
-  right: -10px;
+  top: -25px;
+  right: -25px;
   font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
-  font-size: clamp(8rem, 15vw, 14rem);
+  font-size: clamp(13rem, 24vw, 22rem);
   font-weight: 900;
-  line-height: 0.8;
+  line-height: 0.72;
+  letter-spacing: -0.05em;
   color: rgba(255, 255, 255, 0.12);
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
   user-select: none;
 }
@@ -793,43 +797,52 @@ html[data-theme="light"] .projects-title-stroke {
 }
 
 .kinetic-preview-img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: top center;
   filter: contrast(1.02);
   display: block;
+  z-index: 1;
+  transition: opacity 0.5s ease;
+}
+
+.kinetic-preview-img.poster-faded {
+  opacity: 0;
 }
 
 .kinetic-preview-video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center bottom;
-  transform: translateY(14px) scale(1.03) translateZ(0);
-  -webkit-transform: translateY(14px) scale(1.03) translateZ(0);
-  transform-origin: center bottom;
+  object-fit: cover;
+  object-position: top center;
   background: #000000;
   display: block;
+  z-index: 2;
   pointer-events: none !important;
   user-select: none !important;
   -webkit-user-select: none !important;
-  filter: brightness(1.09) contrast(1.03);
+  filter: brightness(1.05) contrast(1.02);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   will-change: opacity, transform;
-  opacity: 0;
-  transition: opacity 0.35s ease, filter 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 1;
+  visibility: visible !important;
+  transition: opacity 0.35s ease, filter 0.3s ease;
 }
 
 .kinetic-preview-video.video-playing {
   opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .kinetic-preview-video.video-suppressed {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1221,18 +1234,19 @@ body[data-theme="light"] .featured-project-card-item:hover .featured-project-des
     display: none !important;
   }
 
-  /* Keep project number clearly visible in mobile layout */
+  /* Prominent watermark number positioned directly behind the project description */
   .featured-project-watermark-num {
     display: block !important;
     position: absolute;
-    top: -20px;
+    top: auto;
+    bottom: 0px;
     right: 0;
     font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
-    font-size: clamp(4.5rem, 16vw, 6.2rem);
+    font-size: clamp(10rem, 30vw, 16rem);
     font-weight: 900;
-    line-height: 0.8;
-    letter-spacing: -0.04em;
-    color: rgba(255, 255, 255, 0.16);
+    line-height: 0.72;
+    letter-spacing: -0.05em;
+    color: rgba(255, 255, 255, 0.14);
     z-index: 0;
     pointer-events: none;
     user-select: none;
@@ -1240,7 +1254,7 @@ body[data-theme="light"] .featured-project-card-item:hover .featured-project-des
 
   [data-theme="light"] .featured-project-watermark-num,
   body[data-theme="light"] .featured-project-watermark-num {
-    color: rgba(0, 0, 0, 0.09);
+    color: rgba(0, 0, 0, 0.08);
   }
 
   .featured-project-headline,
@@ -1279,6 +1293,25 @@ body[data-theme="light"] .featured-project-card-item:hover .featured-project-des
    SYMMETRICAL HIGH-IMPACT PROJECT CARDS (PRESERVED 16:10.4 RATIO MATCHING GITHUB)
    ========================================================================== */
 @media (max-width: 768px) {
+  .portfolio-app .featured-projects-section,
+  .featured-projects-section {
+    padding-top: clamp(40px, 6vh, 60px) !important;
+    padding-bottom: clamp(54px, 7vh, 80px) !important;
+    overflow: clip !important;
+  }
+
+  .title-line-mask {
+    overflow: hidden;
+  }
+
+  .title-line-inner {
+    will-change: transform, opacity;
+  }
+
+  .tilted-tag-wrapper {
+    will-change: transform, opacity;
+  }
+
   .featured-projects-container {
     padding-left: clamp(10px, 2.8vw, 14px) !important;
     padding-right: clamp(10px, 2.8vw, 14px) !important;
@@ -1317,10 +1350,13 @@ body[data-theme="light"] .featured-project-card-item:hover .featured-project-des
   }
 
   .featured-project-watermark-num {
-    top: -14px;
-    right: 2px;
-    font-size: clamp(3.8rem, 15vw, 5.2rem);
-    color: rgba(255, 255, 255, 0.16);
+    top: auto;
+    bottom: 0px;
+    right: 0;
+    font-size: clamp(9.5rem, 36vw, 14.5rem);
+    line-height: 0.72;
+    letter-spacing: -0.05em;
+    color: rgba(255, 255, 255, 0.14);
   }
 }
 
@@ -1338,8 +1374,11 @@ body[data-theme="light"] .featured-project-card-item:hover .featured-project-des
   }
 
   .featured-project-watermark-num {
-    top: -10px;
-    right: 0;
-    font-size: clamp(3.2rem, 14vw, 4.4rem);
+    top: auto;
+    bottom: 0px;
+    right: -2px;
+    font-size: clamp(8.5rem, 38vw, 13rem);
+    line-height: 0.72;
+    letter-spacing: -0.05em;
   }
 }

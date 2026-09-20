@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import NotchedCard from '../common/NotchedCard';
 import KineticStage from '../common/KineticStage';
 import { ArrowUpRight } from 'lucide-react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 /**
  * NotchedProjectCard
@@ -11,6 +15,7 @@ import { ArrowUpRight } from 'lucide-react';
  * - Kinetic typography stage with cycling phrases and live preview
  * - On laptop: full editorial specifications beside the card with watermark number
  * - Hover interactions and direct live link
+ * - World-Class Scroll Choreography: Card entrance reveal, watermark parallax scrub, editorial text stagger
  */
 export default function NotchedProjectCard({
   project,
@@ -20,10 +25,117 @@ export default function NotchedProjectCard({
   style = {},
 }) {
   const cardRef = useRef(null);
+  const interactiveGroupRef = useRef(null);
+  const watermarkRef = useRef(null);
+  const besideRef = useRef(null);
 
   // Determine tone and bezel color
   const tone = project.stage?.tone || (index % 2 === 0 ? 'light' : 'dark');
   const bezelColor = '#000000';
+
+  useEffect(() => {
+    if (!cardRef.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      const cardEl = cardRef.current;
+      const groupEl = interactiveGroupRef.current;
+      const watermarkEl = watermarkRef.current;
+      const besideEl = besideRef.current;
+
+      // 1. Watermark Number Smooth Parallax Scrub
+      if (watermarkEl) {
+        gsap.fromTo(
+          watermarkEl,
+          { y: -45 },
+          {
+            y: 45,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: cardEl,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.2,
+            },
+          }
+        );
+      }
+
+      // 2. Card Container Smooth Elevation Reveal
+      if (groupEl) {
+        gsap.fromTo(
+          groupEl,
+          {
+            y: 48,
+            opacity: 0.15,
+            scale: 0.965,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.85,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: cardEl,
+              start: 'top 86%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 3. Editorial Beside Content Staggered Reveal
+      if (besideEl) {
+        const items = besideEl.querySelectorAll(
+          '.project-beside-meta-row, .featured-project-headline, .featured-project-desc, .project-beside-stats-row, .featured-project-bottom-rail'
+        );
+        if (items.length > 0) {
+          gsap.fromTo(
+            items,
+            {
+              y: 26,
+              opacity: 0.1,
+            },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.75,
+              stagger: 0.08,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: cardEl,
+                start: 'top 82%',
+                once: true,
+              },
+            }
+          );
+        }
+      }
+
+      // 4. Subtle Card Media Depth Parallax inside clipped card
+      const mediaLayer = cardEl.querySelector('.kinetic-preview-image-layer, .kinetic-stage-root');
+      if (mediaLayer) {
+        gsap.fromTo(
+          mediaLayer,
+          { yPercent: -3 },
+          {
+            yPercent: 3,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: cardEl,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          }
+        );
+      }
+    }, cardRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <article
@@ -34,6 +146,7 @@ export default function NotchedProjectCard({
     >
       {/* Visual Card - Click opens live website directly */}
       <a
+        ref={interactiveGroupRef}
         href={project.liveUrl || '#contact'}
         target={project.liveUrl ? '_blank' : '_self'}
         rel="noopener noreferrer"
@@ -93,8 +206,8 @@ export default function NotchedProjectCard({
       </a>
 
       {/* Editorial Content Beside Card on Laptop */}
-      <div className="featured-project-beside-content">
-        <div className="featured-project-watermark-num" aria-hidden="true">
+      <div ref={besideRef} className="featured-project-beside-content">
+        <div ref={watermarkRef} className="featured-project-watermark-num" aria-hidden="true">
           {project.num || `0${index + 1}`}
         </div>
         <div className="project-beside-meta-row">

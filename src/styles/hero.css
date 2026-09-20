@@ -159,6 +159,12 @@
   pointer-events: none !important;
   user-select: none !important;
   -webkit-user-select: none !important;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.hero-canvas-poster.poster-faded {
+  opacity: 0;
 }
 
 .hero-canvas-video {
@@ -177,18 +183,19 @@
   pointer-events: none !important;
   user-select: none !important;
   -webkit-user-select: none !important;
-  opacity: 0;
+  opacity: 1;
+  visibility: visible !important;
   transition: opacity 0.35s ease;
 }
 
 .hero-canvas-video.video-playing {
   opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .hero-canvas-video.video-suppressed {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* Suppress all native mobile browser play buttons and overlays individually */

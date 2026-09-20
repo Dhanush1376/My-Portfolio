@@ -71,24 +71,33 @@ export default function ServiceDetailPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    // 1. Initialize Lenis for buttery-smooth inertia scrolling
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.8,
-      infinite: false,
-    });
+    const isTouch =
+      typeof window !== 'undefined' &&
+      ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth <= 768);
 
-    lenis.on('scroll', ScrollTrigger.update);
-    const updateLenis = (time) => {
-      lenis.raf(time * 1000);
-    };
-    gsap.ticker.add(updateLenis);
-    gsap.ticker.lagSmoothing(0);
+    let lenis = null;
+    let updateLenis = null;
+
+    if (!isTouch) {
+      // 1. Desktop-only Lenis for smooth mouse wheel inertia
+      lenis = new Lenis({
+        duration: 1.1,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 0,
+        infinite: false,
+      });
+
+      lenis.on('scroll', ScrollTrigger.update);
+      updateLenis = (time) => {
+        lenis.raf(time * 1000);
+      };
+      gsap.ticker.add(updateLenis);
+      gsap.ticker.lagSmoothing(500, 33);
+    }
 
     // 2. GSAP Animations in clean context
     const ctx = gsap.context(() => {
@@ -534,15 +543,19 @@ export default function ServiceDetailPage() {
       });
     }, mainRef);
 
+    let lastWidth = window.innerWidth;
     const handleResize = () => {
-      ScrollTrigger.refresh();
+      if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        ScrollTrigger.refresh();
+      }
     };
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      gsap.ticker.remove(updateLenis);
-      lenis.destroy();
+      if (updateLenis) gsap.ticker.remove(updateLenis);
+      if (lenis) lenis.destroy();
       ctx.revert();
     };
   }, [slug, service]);

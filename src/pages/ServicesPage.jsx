@@ -91,25 +91,33 @@ export default function ServicesPage() {
       }
     }
 
-    // Initialize Lenis smooth scroll for butter-fluid trackpad & mousewheel physics
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.8,
-      infinite: false
-    });
+    const isTouch =
+      typeof window !== 'undefined' &&
+      ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth <= 768);
 
-    lenis.on('scroll', ScrollTrigger.update);
-    const updateLenis = (time) => {
-      lenis.raf(time * 1000);
-    };
-    gsap.ticker.add(updateLenis);
-    // Zero lagSmoothing ensures frame-perfect sync with Lenis smooth scroll
-    gsap.ticker.lagSmoothing(0);
+    let lenis = null;
+    let updateLenis = null;
+
+    if (!isTouch) {
+      // Desktop-only Lenis smooth scroll for trackpad & mousewheel
+      lenis = new Lenis({
+        duration: 1.1,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 0,
+        infinite: false
+      });
+
+      lenis.on('scroll', ScrollTrigger.update);
+      updateLenis = (time) => {
+        lenis.raf(time * 1000);
+      };
+      gsap.ticker.add(updateLenis);
+      gsap.ticker.lagSmoothing(500, 33);
+    }
 
     const ctx = gsap.context(() => {
       // 1. Entrance Animation Sequence (Exact Contact Page Motion)
@@ -339,6 +347,26 @@ export default function ServicesPage() {
             updateDeckCards(self.progress);
           }
         });
+
+        // 3. Section Divider Smooth Expansion Draw
+        const divider = containerRef.current?.querySelector('.services-section-divider');
+        if (divider) {
+          gsap.fromTo(
+            divider,
+            { scaleX: 0, opacity: 0.1, transformOrigin: 'center center' },
+            {
+              scaleX: 1,
+              opacity: 1,
+              duration: 0.85,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: divider,
+                start: 'top 90%',
+                once: true,
+              },
+            }
+          );
+        }
       }
     }, containerRef);
 
@@ -348,9 +376,8 @@ export default function ServicesPage() {
 
     return () => {
       clearTimeout(refreshTimer);
-      if (measureCardH) window.removeEventListener('resize', measureCardH);
-      gsap.ticker.remove(updateLenis);
-      lenis.destroy();
+      if (updateLenis) gsap.ticker.remove(updateLenis);
+      if (lenis) lenis.destroy();
       ctx.revert();
     };
   }, [totalServices]);

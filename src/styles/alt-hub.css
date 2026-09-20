@@ -107,30 +107,23 @@
   outline: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  transform-style: preserve-3d;
-  perspective: 1200px;
-  opacity: 0;
-  transform: translateY(60px) scale(0.97) rotateX(6deg);
-  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity;
-}
-
-.discovery-card-group.in-view {
   opacity: 1;
-  transform: translateY(0) scale(1) rotateX(0deg);
+  transform: translateZ(0);
+  will-change: transform, opacity;
 }
 
 .discovery-card-group .discovery-card-inner {
   position: relative;
   display: block;
   width: 100%;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.discovery-card-group:hover {
+.discovery-card-group:hover .discovery-card-inner {
   transform: translateY(-6px);
 }
 
-.discovery-card-group:active {
+.discovery-card-group:active .discovery-card-inner {
   transform: translateY(-2px) scale(0.985);
 }
 

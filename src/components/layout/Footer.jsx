@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUp, Linkedin, Phone, Mail, MapPin } from 'lucide-react';
 import { SOCIAL_LINKS } from '../../data/socialLinks';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const DEFAULT_QUESTIONS = [
   "Ready to build\nsomething great?",
@@ -89,6 +93,177 @@ const TypewriterText = ({ questions = DEFAULT_QUESTIONS }) => {
 };
 
 export default function Footer() {
+  const footerRef = useRef(null);
+
+  useEffect(() => {
+    if (!footerRef.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      const footerEl = footerRef.current;
+      const mainBlock = footerEl.querySelector('.footer-main-block');
+      const socialPills = footerEl.querySelectorAll('.social-pill');
+      const actionRow = footerEl.querySelector('.footer-action-row');
+      const linkCols = footerEl.querySelectorAll('.footer-link-col');
+      const marqueeWrapper = footerEl.querySelector('.footer-marquee-wrapper');
+      const marqueeContent = footerEl.querySelector('.footer-marquee-content');
+      const bottomBar = footerEl.querySelector('.footer-main-bottom');
+      const scrollBtn = footerEl.querySelector('.footer-bottom-scroll-cutout');
+
+      // 1. Main Footer Curved Block Smooth Elevation
+      if (mainBlock) {
+        gsap.fromTo(
+          mainBlock,
+          { y: 40, opacity: 0.2, scale: 0.98 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.85,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: footerEl,
+              start: 'top 88%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 2. Left Social Pills Staggered Spring Pop
+      if (socialPills && socialPills.length > 0) {
+        gsap.fromTo(
+          socialPills,
+          { scale: 0.6, y: 16, opacity: 0 },
+          {
+            scale: 1,
+            y: 0,
+            opacity: 1,
+            duration: 0.55,
+            stagger: 0.08,
+            ease: 'back.out(2)',
+            scrollTrigger: {
+              trigger: footerEl,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 3. Action Row (Start a project button + tiny desc)
+      if (actionRow) {
+        gsap.fromTo(
+          actionRow,
+          { y: 22, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: footerEl,
+              start: 'top 82%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 4. Link Columns Stagger
+      if (linkCols && linkCols.length > 0) {
+        gsap.fromTo(
+          linkCols,
+          { y: 28, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.75,
+            stagger: 0.12,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: footerEl,
+              start: 'top 82%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 5. Giant Marquee Ribbon Scroll Scrub
+      if (marqueeContent) {
+        gsap.fromTo(
+          marqueeWrapper,
+          { opacity: 0.1, y: 18 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: footerEl,
+              start: 'top 80%',
+              once: true,
+            },
+          }
+        );
+
+        gsap.to(marqueeContent, {
+          x: -60,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: footerEl,
+            start: 'top bottom',
+            end: 'bottom bottom',
+            scrub: 1,
+          },
+        });
+      }
+
+      // 6. Footer Bottom Bar
+      if (bottomBar) {
+        gsap.fromTo(
+          bottomBar,
+          { y: 16, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: footerEl,
+              start: 'top 75%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 7. Scroll-To-Top Button
+      if (scrollBtn) {
+        gsap.fromTo(
+          scrollBtn,
+          { scale: 0.8, y: 18, opacity: 0 },
+          {
+            scale: 1,
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            ease: 'back.out(1.6)',
+            scrollTrigger: {
+              trigger: footerEl,
+              start: 'top 75%',
+              once: true,
+            },
+          }
+        );
+      }
+    }, footerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   const scrollToTop = () => {
     if (window.lenis) {
       window.lenis.scrollTo(0, {
@@ -101,7 +276,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="footer-redesign-wrapper">
+    <footer ref={footerRef} className="footer-redesign-wrapper">
       {/* Left Column (Socials + Notch Extension) */}
       <div className="footer-left-column">
         <aside className="footer-social-bar">

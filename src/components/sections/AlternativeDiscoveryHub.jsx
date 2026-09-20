@@ -27,10 +27,10 @@ export const SERVICES_STAGE_PHRASES = [
 /**
  * HubDiscoveryCard
  * Interactive Dual-Notched Card:
- * - 3D tilt perspective entrance with projectImageReveal
- * - Responsive tag hover elevation
- * - Tactile micro-press feedback
- * - Fluid smooth navigation
+ * - GSAP ScrollTrigger smooth elevation & scale reveal
+ * - Tag pills staggered spring pop
+ * - Internal kinetic stage camera depth parallax scrub
+ * - Tactile micro-press feedback and fluid navigation
  */
 export function HubDiscoveryCard({
   tags,
@@ -42,34 +42,114 @@ export function HubDiscoveryCard({
   onCardClick,
   ariaLabel,
 }) {
-  const [inView, setInView] = useState(false);
   const cardRef = useRef(null);
+  const innerRef = useRef(null);
+  const belowInfoRef = useRef(null);
 
   useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
+    if (!cardRef.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.12 }
-    );
+    const ctx = gsap.context(() => {
+      const cardEl = cardRef.current;
+      const innerEl = innerRef.current;
+      const belowInfoEl = belowInfoRef.current;
+      const tagPills = cardEl.querySelectorAll('.project-tag-pill');
+      const metaRow = cardEl.querySelector('.project-meta-row');
 
-    observer.observe(el);
-    return () => observer.disconnect();
+      // 1. Card Smooth Elevation and Scale Reveal
+      if (cardEl) {
+        gsap.fromTo(
+          cardEl,
+          {
+            y: 48,
+            opacity: 0.15,
+            scale: 0.965,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.85,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: cardEl,
+              start: 'top 88%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 2. Tag pills bounce pop
+      if (tagPills && tagPills.length > 0) {
+        gsap.fromTo(
+          tagPills,
+          { scale: 0.75, opacity: 0 },
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 0.55,
+            stagger: 0.08,
+            ease: 'back.out(2)',
+            scrollTrigger: {
+              trigger: cardEl,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 3. Meta and below headline stagger
+      if (belowInfoEl) {
+        const infoElements = [metaRow, belowInfoEl].filter(Boolean);
+        gsap.fromTo(
+          infoElements,
+          { y: 20, opacity: 0.1 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            stagger: 0.08,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: cardEl,
+              start: 'top 82%',
+              once: true,
+            },
+          }
+        );
+      }
+
+      // 4. Kinetic Stage internal camera parallax scrub
+      const stageRoot = cardEl.querySelector('.kinetic-stage-root');
+      if (stageRoot) {
+        gsap.fromTo(
+          stageRoot,
+          { yPercent: -3 },
+          {
+            yPercent: 3,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: cardEl,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          }
+        );
+      }
+    }, cardRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
     <div
       ref={cardRef}
-      className={`discovery-card-group ${inView ? 'in-view' : ''}`}
-      style={{
-        transitionDelay: `${cardIndex * 0.14}s`,
-      }}
+      className="discovery-card-group"
       role="button"
       tabIndex={0}
       aria-label={ariaLabel}
@@ -81,7 +161,7 @@ export function HubDiscoveryCard({
         }
       }}
     >
-      <div className="discovery-card-inner">
+      <div ref={innerRef} className="discovery-card-inner">
         <NotchedCard
           bezelWidth={7}
           bezelColor="#111111"
@@ -122,7 +202,7 @@ export function HubDiscoveryCard({
         </NotchedCard>
       </div>
 
-      <div className="discovery-below-info">
+      <div ref={belowInfoRef} className="discovery-below-info">
         <h4 className="discovery-headline">
           {headline}
         </h4>
@@ -149,6 +229,7 @@ export default function AlternativeDiscoveryHub({
   showHeading = true,
 }) {
   const rootRef = useRef(null);
+  const headingRef = useRef(null);
   const navigate = useNavigate();
   const isSingle = mode === 'projects-only';
 
@@ -160,17 +241,20 @@ export default function AlternativeDiscoveryHub({
 
   useEffect(() => {
     if (!rootRef.current) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
-      const tagEl = rootRef.current.querySelector('.tilted-tag-wrapper');
-      const lines = rootRef.current.querySelectorAll('.title-line-inner');
-      const descEl = rootRef.current.querySelector('.alt-hub-desc');
+      const headingEl = headingRef.current || rootRef.current;
+      const tagEl = headingEl.querySelector('.tilted-tag-wrapper');
+      const lines = headingEl.querySelectorAll('.title-line-inner');
+      const descEl = headingEl.querySelector('.alt-hub-desc');
 
-      // 1. Tilted tape tag bounce-pop on scroll (Matches COMMON QUESTIONS & PROJECTS motion)
+      // 1. Tilted tape tag bounce-pop on scroll
       if (tagEl) {
         gsap.fromTo(
           tagEl,
-          { opacity: 0, scale: 0.65, y: 24, rotate: 8 },
+          { opacity: 0.1, scale: 0.8, y: 18, rotate: 6 },
           {
             opacity: 1,
             scale: 1,
@@ -179,57 +263,52 @@ export default function AlternativeDiscoveryHub({
             duration: 0.65,
             ease: 'back.out(2)',
             scrollTrigger: {
-              trigger: rootRef.current,
-              start: 'top 90%',
+              trigger: headingEl,
+              start: 'top 88%',
               once: true,
             },
           }
         );
       }
 
-      // 2. Kinetic Headline Mask Reveal on scroll (Matches COMMON QUESTIONS & PROJECTS motion)
+      // 2. Kinetic Headline Mask Reveal on scroll
       if (lines && lines.length > 0) {
         gsap.fromTo(
           lines,
           {
-            yPercent: 125,
-            opacity: 0,
-            rotate: 2.2,
-            skewY: 1.2,
-            filter: 'blur(6px)',
+            yPercent: 60,
+            opacity: 0.1,
+            filter: 'blur(3px)',
           },
           {
             yPercent: 0,
             opacity: 1,
-            rotate: 0,
-            skewY: 0,
             filter: 'blur(0px)',
             duration: 0.8,
             stagger: 0.08,
             ease: 'power4.out',
             scrollTrigger: {
-              trigger: rootRef.current,
-              start: 'top 90%',
+              trigger: headingEl,
+              start: 'top 88%',
               once: true,
             },
           }
         );
       }
 
-      // 3. Subtitle description smooth fade & de-blur reveal
+      // 3. Subtitle description smooth fade reveal
       if (descEl) {
         gsap.fromTo(
           descEl,
-          { opacity: 0, y: 18, filter: 'blur(4px)' },
+          { opacity: 0.1, y: 18 },
           {
             opacity: 1,
             y: 0,
-            filter: 'blur(0px)',
             duration: 0.75,
             ease: 'power3.out',
             scrollTrigger: {
-              trigger: rootRef.current,
-              start: 'top 90%',
+              trigger: headingEl,
+              start: 'top 88%',
               once: true,
             },
           }
@@ -264,7 +343,7 @@ export default function AlternativeDiscoveryHub({
   };
 
   const renderHeading = () => (
-    <div className="alt-hub-center">
+    <div ref={headingRef} className="alt-hub-center">
       <div className="tilted-tag-wrapper">
         <span className="alt-hub-badge tilted-tag">{badge}</span>
       </div>

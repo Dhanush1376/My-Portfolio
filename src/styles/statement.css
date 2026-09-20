@@ -619,6 +619,19 @@
 }
 
 @media (max-width: 768px) {
+  .statement-line-mask {
+    overflow: hidden;
+  }
+
+  .statement-line-inner {
+    will-change: transform, opacity;
+  }
+
+  .statement-studio-label,
+  .statement-label-wrapper {
+    will-change: transform, opacity;
+  }
+
   .statement-services-marquee {
     margin-top: clamp(2.5rem, 5vh, 3.5rem);
     margin-bottom: clamp(2.5rem, 5vh, 3.5rem);
