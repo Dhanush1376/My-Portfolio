@@ -9,6 +9,7 @@
   overflow-x: clip;
   overflow-y: visible;
   transition: background 0.4s ease;
+  padding: clamp(4.5rem, 7vh, 6rem) clamp(1.5rem, 3vw, 2.5rem) clamp(3.5rem, 5vh, 4.5rem) clamp(1.5rem, 3vw, 2.5rem);
 }
 
 @media (max-width: 1024px) {
