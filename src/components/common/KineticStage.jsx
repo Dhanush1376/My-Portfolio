@@ -22,6 +22,7 @@ export default function KineticStage({
   const containerRef = useRef(null);
   const videoRef = useRef(null);
   const isIntersectingRef = useRef(false);
+  const hasStartedRef = useRef(false);
 
   // Identify Tutorboard project
   const isTutorboard = projectId === 'tutorboard' || projectId === 'ragchatbot' || (typeof activeVideo === 'string' && activeVideo.includes('tutorboard'));
@@ -43,53 +44,50 @@ export default function KineticStage({
     video.setAttribute('loop', '');
     video.removeAttribute('controls');
 
-    if (!isTutorboard) {
-      video.setAttribute('autoplay', '');
-    } else {
-      video.removeAttribute('autoplay');
-      video.pause();
-      try { video.currentTime = 0; } catch (_) {}
-    }
-
     const kickstart = () => {
       if (video) {
-        // Tutorboard only starts when user has scrolled to the card
         if (isTutorboard && !isIntersectingRef.current) {
           return;
         }
         video.muted = true;
         video.defaultMuted = true;
-        if (!video.paused) {
-          setIsVideoPlaying(true);
-          return;
-        }
         const p = video.play();
         if (p !== undefined) {
-          p.then(() => setIsVideoPlaying(true)).catch(() => {
+          p.then(() => {
+            if (video.currentTime > 0.05) {
+              setIsVideoPlaying(true);
+            }
+          }).catch(() => {
             video.muted = true;
             video.defaultMuted = true;
-            video.play().then(() => setIsVideoPlaying(true)).catch(() => {});
+            video.play().catch(() => {});
           });
         }
       }
     };
 
     if (!isTutorboard) {
+      video.setAttribute('autoplay', '');
       kickstart();
+    } else {
+      video.removeAttribute('autoplay');
     }
 
-    const handlePlaying = () => setIsVideoPlaying(true);
+    const handlePlaying = () => {
+      if (video && video.currentTime > 0.05) {
+        setIsVideoPlaying(true);
+      }
+    };
+
     const handleEnded = () => {
       if (video) {
         video.currentTime = 0;
-        if (!isTutorboard || isIntersectingRef.current) {
-          kickstart();
-        }
+        kickstart();
       }
     };
 
     const handleCanPlay = () => {
-      if (!isTutorboard) {
+      if (!isTutorboard || isIntersectingRef.current) {
         kickstart();
       }
     };
@@ -102,13 +100,10 @@ export default function KineticStage({
     video.addEventListener('canplaythrough', handleCanPlay);
     video.addEventListener('ended', handleEnded);
 
-    // Discrete user interactions to guarantee autoplay policy bypass without thrashing scroll ticks
     const interactionEvents = ['touchstart', 'pointerdown', 'click', 'keydown'];
     const onUserInteraction = () => {
-      if (video && video.paused) {
-        if (!isTutorboard || isIntersectingRef.current) {
-          kickstart();
-        }
+      if (video && video.paused && (!isTutorboard || isIntersectingRef.current)) {
+        kickstart();
       }
     };
 
@@ -137,10 +132,8 @@ export default function KineticStage({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const wasIntersecting = isIntersectingRef.current;
         isIntersectingRef.current = entry.isIntersecting;
 
-        // Only update React state for phrase typography cycling.
         if (!showImagePreview) {
           setIsVisible(entry.isIntersecting);
         }
@@ -150,26 +143,27 @@ export default function KineticStage({
           if (entry.isIntersecting) {
             video.muted = true;
             video.defaultMuted = true;
-            // Tutorboard starts cleanly from the beginning only when freshly entering the viewport
-            if (isTutorboard && !wasIntersecting) {
+            // Tutorboard starts cleanly from beginning when scrolled into view for first time
+            if (isTutorboard && !hasStartedRef.current) {
+              hasStartedRef.current = true;
               try { video.currentTime = 0; } catch (_) {}
             }
             const p = video.play();
             if (p !== undefined) {
-              p.then(() => setIsVideoPlaying(true)).catch(() => {});
+              p.then(() => {
+                if (video.currentTime > 0.05) {
+                  setIsVideoPlaying(true);
+                }
+              }).catch(() => {});
             }
           } else {
             video.pause();
-            if (isTutorboard) {
-              try { video.currentTime = 0; } catch (_) {}
-              setIsVideoPlaying(false);
-            }
           }
         }
       },
       {
-        threshold: isTutorboard ? 0.25 : 0.05,
-        rootMargin: isTutorboard ? '0px 0px -40px 0px' : '120px 0px',
+        threshold: 0.08,
+        rootMargin: '100px 0px 100px 0px',
       }
     );
 
@@ -238,8 +232,6 @@ export default function KineticStage({
                     el.setAttribute('autoplay', '');
                   } else {
                     el.removeAttribute('autoplay');
-                    el.pause();
-                    try { el.currentTime = 0; } catch (_) {}
                   }
                 }
               }}
@@ -251,7 +243,7 @@ export default function KineticStage({
               playsInline
               webkit-playsinline="true"
               x5-playsinline="true"
-              preload={isTutorboard ? 'metadata' : 'auto'}
+              preload="auto"
               controls={false}
               disablePictureInPicture
               disableRemotePlayback
@@ -263,8 +255,8 @@ export default function KineticStage({
               onCanPlay={() => {
                 if (!isTutorboard) setIsVideoPlaying(true);
               }}
-              onTimeUpdate={() => {
-                if (!isVideoPlaying && (!isTutorboard || isIntersectingRef.current)) {
+              onTimeUpdate={(e) => {
+                if (!isVideoPlaying && e.currentTarget.currentTime > 0.05) {
                   setIsVideoPlaying(true);
                 }
               }}
