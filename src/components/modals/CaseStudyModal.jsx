@@ -43,12 +43,46 @@ export default function CaseStudyModal({ isOpen, projectId, onClose }) {
               <span className="cs-num-badge">{project.num} / CASE STUDY</span>
               <span className="cs-cat-badge">{project.service}</span>
             </div>
-            <h2 className="cs-title">{project.title}</h2>
+            <h2 className="cs-title">
+              {project.logo && (
+                <span className={`cs-title-logo-wrap logo-wrap-${project.id}`}>
+                  <img
+                    src={project.logo}
+                    alt={`${project.title} logo`}
+                    className={`cs-title-logo-img logo-img-${project.id}`}
+                    loading="lazy"
+                  />
+                </span>
+              )}
+              <span className="cs-title-text">{project.title}</span>
+            </h2>
             <p className="cs-subtitle">{project.subtitle}</p>
           </div>
 
           <div className="cs-hero-img-box">
-            <img src={project.img} alt={`${project.title} Interface Preview`} className="cs-hero-img" />
+            {project.video ? (
+              <video
+                src={project.video}
+                poster={project.img}
+                autoPlay
+                loop
+                muted
+                playsInline
+                webkit-playsinline="true"
+                x5-playsinline="true"
+                disablePictureInPicture
+                disableRemotePlayback
+                className="cs-hero-video"
+                onEnded={(e) => {
+                  e.target.currentTime = 0;
+                  e.target.play().catch(() => {});
+                }}
+              >
+                <source src={project.video} type="video/mp4" />
+              </video>
+            ) : (
+              <img src={project.img} alt={`${project.title} Interface Preview`} className="cs-hero-img" />
+            )}
           </div>
 
           <div className="cs-overview-section">

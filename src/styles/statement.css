@@ -243,24 +243,32 @@
    -------------------------------------------------------------------------- */
 .statement-actions-row {
   display: flex;
+  flex-direction: row !important;
   align-items: center;
   justify-content: flex-end;
-  gap: clamp(18px, 2.2vw, 32px);
+  gap: clamp(14px, 1.8vw, 24px);
   margin-top: clamp(1.4rem, 2.4vh, 2.2rem);
-  flex-wrap: wrap;
+  flex-wrap: nowrap !important;
   width: 100%;
 }
 
-/* Primary Studio Pill Button — Equal Height & Proportion with Secondary */
+/* Primary Studio Pill Button — Strictly Equal Height with Secondary */
 .statement-btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  height: clamp(48px, 5.2vh, 52px);
-  min-width: clamp(165px, 14vw, 195px);
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  max-height: 52px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
   gap: 0.85rem;
-  padding: 0 8px 0 clamp(1.3rem, 1.6vw, 1.8rem);
+  padding: 0 7px 0 clamp(1.3rem, 1.6vw, 1.8rem) !important;
   border-radius: 999px;
+  border: 1.5px solid transparent !important;
   background: #FFFFFF;
   color: #0E0F12;
   font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
@@ -270,7 +278,7 @@
   text-decoration: none;
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.22);
   white-space: nowrap;
-  box-sizing: border-box;
+  box-sizing: border-box !important;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
               background 0.25s ease, 
               box-shadow 0.25s ease;
@@ -283,18 +291,19 @@
 }
 
 .statement-btn-arrow-badge {
-  width: clamp(32px, 3.4vh, 36px);
-  height: clamp(32px, 3.4vh, 36px);
-  border-radius: 50%;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
   background: #0E0F12;
   color: #FFFFFF;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   font-size: 14px;
   font-weight: 750;
-  flex-shrink: 0;
+  flex-shrink: 0 !important;
   margin-left: auto;
+  line-height: 1 !important;
   transition: transform 0.25s ease;
 }
 
@@ -302,15 +311,21 @@
   transform: translate(2px, -2px);
 }
 
-/* Secondary Outline Pill Link — Exactly Matches Primary in Height, Font & Proportions */
+/* Secondary Outline Pill Link — Strictly Equal Height with Primary, Width Determined by Text */
 .statement-link-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  height: clamp(48px, 5.2vh, 52px);
-  min-width: clamp(165px, 14vw, 195px);
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  max-height: 52px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
   gap: 0.85rem;
-  padding: 0 clamp(1.2rem, 1.5vw, 1.6rem) 0 clamp(1.3rem, 1.6vw, 1.8rem);
+  padding: 0 clamp(1.4rem, 1.8vw, 1.9rem) !important;
   color: var(--text, #FFFFFF);
   font-family: var(--font-sans, 'Plus Jakarta Sans', sans-serif);
   font-size: clamp(0.95rem, 1.06vw, 1.05rem);
@@ -318,26 +333,27 @@
   letter-spacing: -0.012em;
   text-decoration: none;
   white-space: nowrap;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  border: 1.5px solid rgba(255, 255, 255, 0.32) !important;
   border-radius: 999px;
-  background: transparent;
-  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.05) !important;
+  box-sizing: border-box !important;
   transition: opacity 0.25s ease, border-color 0.25s ease, background-color 0.25s ease, transform 0.25s ease, color 0.25s ease;
 }
 
 .statement-link-secondary:hover {
-  border-color: rgba(255, 255, 255, 0.55);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
   color: var(--text, #FFFFFF);
   transform: translateY(-2px);
 }
 
 .statement-link-arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   font-size: 16px;
-  flex-shrink: 0;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
   margin-left: auto;
   transition: transform 0.25s ease;
 }
@@ -369,13 +385,14 @@
 [data-theme="light"] .statement-link-secondary,
 .theme-light .statement-link-secondary {
   color: #0E0F12;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1.5px solid rgba(0, 0, 0, 0.24) !important;
+  background: rgba(0, 0, 0, 0.03) !important;
 }
 
 [data-theme="light"] .statement-link-secondary:hover,
 .theme-light .statement-link-secondary:hover {
-  border-color: rgba(0, 0, 0, 0.55);
-  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.6) !important;
+  background: rgba(0, 0, 0, 0.07) !important;
   color: #0E0F12;
 }
 
@@ -407,25 +424,41 @@
   }
 
   .statement-actions-row {
+    display: flex;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
     justify-content: flex-start;
-    gap: 0.85rem;
+    align-items: center !important;
+    gap: 0.75rem;
   }
 
   .statement-btn-primary,
   .statement-link-secondary {
-    height: 46px;
-    min-width: 145px;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    width: auto !important;
+    min-width: 0 !important;
     font-size: 0.92rem;
-    padding: 0 1.2rem;
+    line-height: 1 !important;
+    vertical-align: middle !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
   }
 
   .statement-btn-primary {
-    padding: 0 6px 0 1.2rem;
+    padding: 0 6px 0 1.15rem !important;
+    border: 1.5px solid transparent !important;
+  }
+
+  .statement-link-secondary {
+    padding: 0 1.25rem !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.32) !important;
   }
 
   .statement-btn-arrow-badge {
-    width: 32px;
-    height: 32px;
+    width: 32px !important;
+    height: 32px !important;
   }
 }
 
@@ -506,8 +539,10 @@
 
   .statement-actions-row {
     display: flex;
-    align-items: center;
+    flex-direction: row !important;
+    align-items: center !important;
     justify-content: flex-start;
+    flex-wrap: nowrap !important;
     gap: 1.15rem;
     margin-top: clamp(2.2rem, 4vh, 3.2rem);
     width: 100%;
@@ -515,19 +550,31 @@
 
   .statement-btn-primary,
   .statement-link-secondary {
-    height: clamp(50px, 5.4vh, 54px);
-    min-width: clamp(170px, 14vw, 195px);
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 52px !important;
+    width: auto !important;
+    min-width: 0 !important;
     font-size: clamp(0.95rem, 1.06vw, 1.05rem);
-    padding: 0 clamp(1.3rem, 1.6vw, 1.8rem);
+    line-height: 1 !important;
+    vertical-align: middle !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
   }
 
   .statement-btn-primary {
-    padding: 0 8px 0 clamp(1.3rem, 1.6vw, 1.8rem);
+    padding: 0 7px 0 clamp(1.3rem, 1.6vw, 1.8rem) !important;
+    border: 1.5px solid transparent !important;
+  }
+
+  .statement-link-secondary {
+    padding: 0 clamp(1.4rem, 1.8vw, 1.9rem) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.32) !important;
   }
 
   .statement-btn-arrow-badge {
-    width: clamp(34px, 3.6vh, 38px);
-    height: clamp(34px, 3.6vh, 38px);
+    width: 36px !important;
+    height: 36px !important;
   }
 }
 

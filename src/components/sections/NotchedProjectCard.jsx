@@ -114,23 +114,25 @@ export default function NotchedProjectCard({
         }
       }
 
-      // 4. Subtle Card Media Depth Parallax inside clipped card
-      const mediaLayer = cardEl.querySelector('.kinetic-preview-image-layer, .kinetic-stage-root');
-      if (mediaLayer) {
-        gsap.fromTo(
-          mediaLayer,
-          { yPercent: -3 },
-          {
-            yPercent: 3,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: cardEl,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1,
-            },
-          }
-        );
+      // 4. Subtle Card Media Depth Parallax inside clipped card (only for static images, videos stay firmly fitted in frame)
+      if (!project.video) {
+        const mediaLayer = cardEl.querySelector('.kinetic-preview-image-layer, .kinetic-stage-root');
+        if (mediaLayer) {
+          gsap.fromTo(
+            mediaLayer,
+            { yPercent: -3 },
+            {
+              yPercent: 3,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: cardEl,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1,
+              },
+            }
+          );
+        }
       }
     }, cardRef);
 
@@ -221,9 +223,19 @@ export default function NotchedProjectCard({
             href={project.liveUrl || '#contact'}
             target={project.liveUrl ? '_blank' : '_self'}
             rel="noopener noreferrer"
-            style={{ color: 'inherit', textDecoration: 'none' }}
+            className="featured-project-title-link"
           >
-            {project.title}
+            {project.logo && (
+              <span className={`project-title-logo-wrap logo-wrap-${project.id}`}>
+                <img
+                  src={project.logo}
+                  alt={`${project.title} logo`}
+                  className={`project-title-logo-img logo-img-${project.id}`}
+                  loading="lazy"
+                />
+              </span>
+            )}
+            <span className="project-title-text">{project.title}</span>
           </a>
         </h3>
 

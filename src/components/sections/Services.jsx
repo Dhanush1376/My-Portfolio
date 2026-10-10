@@ -121,7 +121,27 @@ export default function Services() {
         );
       }
 
-      // 3. Header Action Bar (Description + Button)
+      // 3. Header Action Bar (Description & Beside-Title Button)
+      const btnEl = headerRef.current?.querySelector('.see-all-services-btn');
+      if (btnEl) {
+        gsap.fromTo(
+          btnEl,
+          { opacity: 0.1, y: 18, scale: 0.95 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.65,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: 'top 88%',
+              once: true,
+            },
+          }
+        );
+      }
+
       if (barEl) {
         gsap.fromTo(
           barEl,
@@ -211,29 +231,34 @@ export default function Services() {
       <div className="expertise-container">
         {/* Visual Climax Header (Exact 1:1 Match to Selected Work & Contact Climax Style) */}
         <div className="services-climax-header" ref={headerRef}>
-          <div className="tilted-tag-wrapper">
-            <span className="tilted-tag">EXPERTISE</span>
-          </div>
+          <div className="services-title-row">
+            <div className="services-title-col">
+              <div className="tilted-tag-wrapper">
+                <span className="tilted-tag">EXPERTISE</span>
+              </div>
 
-          <h2 className="services-huge-headline">
-            <div className="title-line-mask">
-              <span className="title-line-inner">MY</span>
+              <h2 className="services-huge-headline">
+                <div className="title-line-mask">
+                  <span className="title-line-inner">MY</span>
+                </div>
+                <div className="title-line-mask">
+                  <span className="title-line-inner">SERVICES<span className="title-accent">.</span></span>
+                </div>
+              </h2>
             </div>
-            <div className="title-line-mask">
-              <span className="title-line-inner">SERVICES<span className="title-accent">.</span></span>
-            </div>
-          </h2>
+
+            <Link to="/services" className="see-all-services-btn" aria-label="See all services">
+              <span>See all</span>
+              <span className="see-all-arrow-badge" aria-hidden="true">
+                <ArrowUpRight size={17} strokeWidth={2.2} />
+              </span>
+            </Link>
+          </div>
 
           <div className="services-header-bar">
             <p className="services-header-desc">
               Professional engineering &amp; AI services to elevate your brand and grow your business.
             </p>
-            <Link to="/services" className="see-all-services-btn" aria-label="See all services">
-              <span>See all services</span>
-              <span className="see-all-arrow-badge" aria-hidden="true">
-                <ArrowUpRight size={17} strokeWidth={2.2} />
-              </span>
-            </Link>
           </div>
         </div>
 
@@ -252,7 +277,7 @@ export default function Services() {
                 <div className="expertise-row-left">
                   {/* Rounded Icon Tile (Visible on mobile, expands on hover on laptop) */}
                   <div className="expertise-icon-box" aria-hidden="true">
-                    <Icon size={26} strokeWidth={2.2} />
+                    <Icon size={84} strokeWidth={2.2} />
                   </div>
 
                   <div className="expertise-text-col">

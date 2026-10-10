@@ -235,7 +235,7 @@ html[data-theme="light"] .projects-title-stroke {
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.featured-project-card-item .featured-project-beside-content > * {
+.featured-project-card-item .featured-project-beside-content>* {
   opacity: 1;
 }
 
@@ -829,10 +829,11 @@ html[data-theme="light"] .projects-title-stroke {
   filter: brightness(1.05) contrast(1.02);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  will-change: opacity, transform;
-  opacity: 1;
+  will-change: opacity;
+  opacity: 0;
   visibility: visible !important;
-  transition: opacity 0.35s ease, filter 0.3s ease;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .kinetic-preview-video.video-playing {
@@ -843,6 +844,99 @@ html[data-theme="light"] .projects-title-stroke {
 .kinetic-preview-video.video-suppressed {
   opacity: 1 !important;
   visibility: visible !important;
+}
+
+.kinetic-preview-video.video-ragchatbot,
+.kinetic-preview-video.video-tutorboard {
+  object-fit: contain !important;
+  object-position: center center !important;
+  background: #000000 !important;
+}
+
+.kinetic-preview-img.kinetic-img-ragchatbot,
+.kinetic-preview-img.kinetic-img-tutorboard {
+  object-fit: contain !important;
+  object-position: center center !important;
+  background: #000000 !important;
+}
+
+/* CakePopRush: seamless pure white background matching site header with no black borders and fully visible logo */
+.preview-layer-cakepoprush,
+.preview-layer-cakepoprush .kinetic-preview-video,
+.preview-layer-cakepoprush .kinetic-preview-img,
+.kinetic-preview-video.video-cakepoprush,
+.kinetic-preview-img.kinetic-img-cakepoprush {
+  background: #ffffff !important;
+}
+
+.kinetic-preview-video.video-cakepoprush,
+.kinetic-preview-img.kinetic-img-cakepoprush {
+  object-fit: cover !important;
+  object-position: -8px top !important;
+  background: #ffffff !important;
+  transform: translate(6px, 12px) !important;
+  transform-origin: left top !important;
+}
+
+/* Akula's Kitchen: video fills card completely so right side is fully visible with no white letterbox at bottom */
+.preview-layer-akulas_kitchen,
+.preview-layer-akulas_kitchen .kinetic-preview-video,
+.preview-layer-akulas_kitchen .kinetic-preview-img,
+.kinetic-preview-video.video-akulas_kitchen,
+.kinetic-preview-img.kinetic-img-akulas_kitchen {
+  background: #141414 !important;
+}
+
+.kinetic-preview-video.video-akulas_kitchen,
+.kinetic-preview-img.kinetic-img-akulas_kitchen {
+  object-fit: fill !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.video-ragchatbot~.kinetic-preview-overlay,
+.video-tutorboard~.kinetic-preview-overlay {
+  background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 88%,
+      rgba(0, 0, 0, 0.22) 100%) !important;
+}
+
+/* Gentle subtle bottom gradient for CakePopRush */
+.video-cakepoprush~.kinetic-preview-overlay {
+  background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 82%,
+      rgba(0, 0, 0, 0.20) 92%,
+      rgba(0, 0, 0, 0.44) 100%) !important;
+}
+
+/* Dark grounded bottom gradient for Akula's Kitchen eliminating white at bottom */
+.video-akulas_kitchen~.kinetic-preview-overlay {
+  background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 70%,
+      rgba(0, 0, 0, 0.35) 86%,
+      rgba(0, 0, 0, 0.68) 100%) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+  .featured-project-interactive-group:hover .video-cakepoprush~.kinetic-preview-overlay {
+    background: linear-gradient(180deg,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0) 80%,
+        rgba(0, 0, 0, 0.26) 91%,
+        rgba(0, 0, 0, 0.52) 100%) !important;
+  }
+
+  .featured-project-interactive-group:hover .video-akulas_kitchen~.kinetic-preview-overlay {
+    background: linear-gradient(180deg,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0) 65%,
+        rgba(0, 0, 0, 0.45) 82%,
+        rgba(0, 0, 0, 0.82) 100%) !important;
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -915,13 +1009,11 @@ html[data-theme="light"] .projects-title-stroke {
 .kinetic-preview-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0) 78%,
-    rgba(0, 0, 0, 0.42) 89%,
-    rgba(0, 0, 0, 0.76) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 78%,
+      rgba(0, 0, 0, 0.42) 89%,
+      rgba(0, 0, 0, 0.76) 100%);
   pointer-events: none;
   z-index: 12;
   transition: background 0.35s ease;
@@ -929,13 +1021,11 @@ html[data-theme="light"] .projects-title-stroke {
 
 @media (hover: hover) and (pointer: fine) {
   .featured-project-interactive-group:hover .kinetic-preview-overlay {
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) 75%,
-      rgba(0, 0, 0, 0.50) 88%,
-      rgba(0, 0, 0, 0.84) 100%
-    );
+    background: linear-gradient(180deg,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0) 75%,
+        rgba(0, 0, 0, 0.50) 88%,
+        rgba(0, 0, 0, 0.84) 100%);
   }
 }
 
@@ -976,6 +1066,7 @@ html[data-theme="light"] .projects-title-stroke {
 }
 
 @media (hover: hover) and (pointer: fine) {
+
   .featured-project-interactive-group:hover .project-card-hover-drawer svg,
   .featured-project-interactive-group:hover .project-card-hover-drawer .project-drawer-icon {
     transform: translate(3px, -3px);
@@ -1034,12 +1125,85 @@ html[data-theme="light"] .projects-title-stroke {
   transition: color 0.3s ease;
 }
 
+.featured-project-title-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.project-title-logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(48px, 3.6vw, 62px);
+  height: clamp(48px, 3.6vw, 62px);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.featured-project-title-link:hover .project-title-logo-wrap {
+  transform: scale(1.08);
+}
+
+.project-title-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+  transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="light"] .project-title-logo-img,
+body[data-theme="light"] .project-title-logo-img,
+html[data-theme="light"] .project-title-logo-img {
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.22)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.14));
+}
+
+.featured-project-title-link:hover .project-title-logo-img {
+  filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 14px rgba(255, 85, 32, 0.25));
+}
+
+[data-theme="light"] .featured-project-title-link:hover .project-title-logo-img,
+body[data-theme="light"] .featured-project-title-link:hover .project-title-logo-img,
+html[data-theme="light"] .featured-project-title-link:hover .project-title-logo-img {
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.28)) drop-shadow(0 3px 8px rgba(0, 0, 0, 0.16));
+}
+
+.project-title-text {
+  display: inline-block;
+}
+
+/* Circular styling for project logos */
+.logo-wrap-ragchatbot,
+.logo-wrap-tutorboard,
+.logo-wrap-siriarts,
+.logo-wrap-akulas_kitchen {
+  border-radius: 50% !important;
+}
+
+.logo-img-ragchatbot,
+.logo-img-tutorboard,
+.logo-img-siriarts,
+.logo-img-akulas_kitchen {
+  border-radius: 50% !important;
+  object-fit: contain;
+}
+
 .featured-project-interactive-group:hover+.project-under-content .featured-project-headline,
-.featured-project-headline:hover {
+.featured-project-headline:hover,
+.featured-project-title-link:hover {
   color: var(--accent, #FF5520);
 }
 
-.featured-project-headline + .featured-project-desc {
+.featured-project-headline+.featured-project-desc {
   margin-top: 0.65rem;
 }
 
@@ -1293,6 +1457,7 @@ body[data-theme="light"] .featured-project-card-item:hover .featured-project-des
    SYMMETRICAL HIGH-IMPACT PROJECT CARDS (PRESERVED 16:10.4 RATIO MATCHING GITHUB)
    ========================================================================== */
 @media (max-width: 768px) {
+
   .portfolio-app .featured-projects-section,
   .featured-projects-section {
     padding-top: clamp(40px, 6vh, 60px) !important;

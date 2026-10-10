@@ -98,13 +98,27 @@
   will-change: transform, opacity, filter;
 }
 
+.services-title-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
+  gap: clamp(1rem, 2.5vw, 3rem);
+  flex-wrap: wrap;
+}
+
+.services-title-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+
 .services-header-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
-  margin-top: clamp(1.75rem, 2.5vw, 2.75rem);
-  gap: 1.5rem;
+  margin-top: clamp(1.2rem, 1.8vw, 1.85rem);
 }
 
 .services-header-desc {
@@ -183,7 +197,8 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: clamp(1.4rem, 2.6vh, 2.3rem) 0;
+  padding: clamp(0.75rem, 1.2vh, 1.15rem) 0;
+  min-height: clamp(100px, 9vw, 136px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   text-decoration: none;
   cursor: pointer;
@@ -206,8 +221,8 @@
 /* 1. Rounded Icon Tile (Expands on Hover) */
 .expertise-icon-box {
   width: 0;
-  height: clamp(52px, 4.8vw, 68px);
-  border-radius: clamp(14px, 1.3vw, 18px);
+  height: clamp(84px, 8vw, 116px);
+  border-radius: clamp(18px, 1.8vw, 26px);
   background: rgba(255, 255, 255, 0.08);
   border: 0 solid rgba(255, 255, 255, 0.2);
   display: flex;
@@ -222,6 +237,7 @@
   pointer-events: none;
   visibility: hidden;
   box-sizing: border-box;
+  padding: 0;
   transition:
     width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
     height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
@@ -234,8 +250,11 @@
 }
 
 .expertise-icon-box svg {
-  width: clamp(26px, 2.4vw, 32px);
-  height: clamp(26px, 2.4vw, 32px);
+  width: 86% !important;
+  height: 86% !important;
+  max-width: 88% !important;
+  max-height: 88% !important;
+  aspect-ratio: 1 / 1;
   stroke-width: 2.2px;
   color: #FFFFFF;
   stroke: #FFFFFF;
@@ -243,13 +262,13 @@
 }
 
 .expertise-row:hover .expertise-icon-box {
-  width: clamp(52px, 4.8vw, 68px);
+  width: clamp(84px, 8vw, 116px);
   opacity: 1;
   visibility: visible;
   border-width: 1px;
-  margin-right: clamp(1.25rem, 2.2vw, 2.25rem);
+  margin-right: clamp(1.4rem, 2vw, 2.4rem);
   transform: scale(1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
 }
 
 /* 2. Big Editorial Service Title (Matching Screenshot Typography) */
@@ -483,11 +502,20 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
     will-change: transform, opacity;
   }
 
+  .services-title-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
   .services-header-bar {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
-    margin-top: 1.35rem;
+    margin-top: 1rem !important;
   }
 
   .services-header-desc {
@@ -504,6 +532,8 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
     font-size: 0.88rem !important;
     padding: 0 6px 0 1.25rem !important;
     margin-left: 0 !important;
+    margin-bottom: 0.25rem !important;
+    flex-shrink: 0 !important;
   }
 
   .see-all-arrow-badge {
@@ -527,7 +557,8 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 0.95rem 0 !important;
+    padding: clamp(0.4rem, 1vh, 0.65rem) 0 !important;
+    min-height: clamp(86px, 20vw, 104px);
     gap: 0;
     opacity: 1 !important;
     visibility: visible !important;
@@ -536,39 +567,43 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
   .expertise-row-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: clamp(0.85rem, 2.8vw, 1.25rem);
     width: 100%;
     min-width: 0;
   }
 
   /* Fixed rounded icon tile matching reference image */
   .expertise-icon-box {
-    width: clamp(44px, 12vw, 52px) !important;
-    height: clamp(44px, 12vw, 52px) !important;
+    width: clamp(70px, 16.5vw, 84px) !important;
+    height: clamp(70px, 16.5vw, 84px) !important;
     opacity: 1;
     visibility: visible !important;
     will-change: transform, opacity;
     margin-right: 0 !important;
-    border-radius: 13px !important;
+    border-radius: clamp(16px, 3.8vw, 20px) !important;
     background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     flex-shrink: 0 !important;
+    padding: 0 !important;
   }
 
   .expertise-icon-box svg {
-    width: 22px !important;
-    height: 22px !important;
+    width: 52% !important;
+    height: 52% !important;
+    max-width: 54% !important;
+    max-height: 54% !important;
+    aspect-ratio: 1 / 1;
     color: #FFFFFF !important;
     stroke: #FFFFFF !important;
     stroke-width: 2.2px !important;
   }
 
   .expertise-row:hover .expertise-icon-box {
-    width: clamp(44px, 12vw, 52px) !important;
+    width: clamp(70px, 16.5vw, 84px) !important;
     margin-right: 0 !important;
     transform: none !important;
   }
