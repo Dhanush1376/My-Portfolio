@@ -22,10 +22,6 @@ export default function KineticStage({
   const containerRef = useRef(null);
   const videoRef = useRef(null);
   const isIntersectingRef = useRef(false);
-  const hasStartedRef = useRef(false);
-
-  // Identify Tutorboard project
-  const isTutorboard = projectId === 'tutorboard' || projectId === 'ragchatbot' || (typeof activeVideo === 'string' && activeVideo.includes('tutorboard'));
 
   // Video autoplay & lifecycle engine
   useEffect(() => {
@@ -45,70 +41,73 @@ export default function KineticStage({
     video.setAttribute('autoplay', '');
     video.removeAttribute('controls');
 
-    const kickstart = () => {
+    const tryPlay = () => {
       if (video) {
-        if (isTutorboard && !hasStartedRef.current && !isIntersectingRef.current) {
-          return;
-        }
         video.muted = true;
         video.defaultMuted = true;
         const p = video.play();
         if (p !== undefined) {
-          p.then(() => setIsVideoPlaying(true)).catch(() => {
+          p.then(() => {
+            if (video.currentTime > 0.05) {
+              setIsVideoPlaying(true);
+            }
+          }).catch(() => {
             video.muted = true;
             video.defaultMuted = true;
-            video.play().then(() => setIsVideoPlaying(true)).catch(() => {});
+            video.play().catch(() => {});
           });
         }
       }
     };
 
-    kickstart();
+    // Attempt playback immediately if already in or near view
+    if (isIntersectingRef.current) {
+      tryPlay();
+    }
 
-    const handlePlaying = () => setIsVideoPlaying(true);
+    const handleTimeUpdate = () => {
+      if (video && video.currentTime > 0.05 && !video.paused) {
+        setIsVideoPlaying(true);
+      }
+    };
+
     const handleEnded = () => {
       if (video) {
         video.currentTime = 0;
-        kickstart();
+        tryPlay();
       }
     };
 
-    const handleCanPlay = () => kickstart();
-
-    video.addEventListener('playing', handlePlaying);
-    video.addEventListener('timeupdate', handlePlaying);
-    video.addEventListener('loadedmetadata', handleCanPlay);
-    video.addEventListener('loadeddata', handleCanPlay);
-    video.addEventListener('canplay', handleCanPlay);
-    video.addEventListener('canplaythrough', handleCanPlay);
+    video.addEventListener('playing', handleTimeUpdate);
+    video.addEventListener('timeupdate', handleTimeUpdate);
+    video.addEventListener('canplay', tryPlay);
+    video.addEventListener('canplaythrough', tryPlay);
     video.addEventListener('ended', handleEnded);
 
-    const interactionEvents = ['touchstart', 'pointerdown', 'click', 'keydown'];
     const onUserInteraction = () => {
-      if (video && video.paused) {
-        kickstart();
+      if (video && video.paused && isIntersectingRef.current) {
+        tryPlay();
       }
     };
 
+    const interactionEvents = ['touchstart', 'pointerdown', 'click', 'scroll'];
     interactionEvents.forEach((evt) => {
-      window.addEventListener(evt, onUserInteraction, { once: true, passive: true });
+      window.addEventListener(evt, onUserInteraction, { passive: true });
     });
 
     return () => {
-      video.removeEventListener('playing', handlePlaying);
-      video.removeEventListener('timeupdate', handlePlaying);
-      video.removeEventListener('loadedmetadata', handleCanPlay);
-      video.removeEventListener('loadeddata', handleCanPlay);
-      video.removeEventListener('canplay', handleCanPlay);
-      video.removeEventListener('canplaythrough', handleCanPlay);
+      video.removeEventListener('playing', handleTimeUpdate);
+      video.removeEventListener('timeupdate', handleTimeUpdate);
+      video.removeEventListener('canplay', tryPlay);
+      video.removeEventListener('canplaythrough', tryPlay);
       video.removeEventListener('ended', handleEnded);
       interactionEvents.forEach((evt) => {
         window.removeEventListener(evt, onUserInteraction);
       });
     };
-  }, [activeVideo, showImagePreview, isTutorboard]);
+  }, [activeVideo, showImagePreview]);
 
-  // Intersection observer to track visibility, pause offscreen videos, and start Tutorboard cleanly on scroll into view
+  // Intersection observer to track visibility and start/pause videos smoothly on scroll
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -124,26 +123,33 @@ export default function KineticStage({
         const video = videoRef.current;
         if (video) {
           if (entry.isIntersecting) {
-            // Tutorboard starts cleanly from beginning when scrolled into view for first time
-            if (isTutorboard && !hasStartedRef.current) {
-              hasStartedRef.current = true;
-              try { video.currentTime = 0; } catch (_) {}
+            video.muted = true;
+            video.defaultMuted = true;
+            const p = video.play();
+            if (p !== undefined) {
+              p.then(() => {
+                if (video.currentTime > 0.05) {
+                  setIsVideoPlaying(true);
+                }
+              }).catch(() => {
+                video.muted = true;
+                video.play().catch(() => {});
+              });
             }
-            video.play().then(() => setIsVideoPlaying(true)).catch(() => {});
           } else {
             video.pause();
           }
         }
       },
       {
-        threshold: 0.08,
-        rootMargin: '120px 0px 120px 0px',
+        threshold: 0.05,
+        rootMargin: '300px 0px 300px 0px',
       }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [showImagePreview, isTutorboard]);
+  }, [showImagePreview]);
 
   // Timer to rotate phrases (only when typography stage is active)
   useEffect(() => {
@@ -219,18 +225,17 @@ export default function KineticStage({
               disablePictureInPicture
               disableRemotePlayback
               className={`kinetic-preview-video video-${projectId || 'default'} ${isVideoPlaying ? 'video-playing' : ''}`}
-              onPlaying={() => setIsVideoPlaying(true)}
-              onLoadedData={() => setIsVideoPlaying(true)}
-              onCanPlay={() => setIsVideoPlaying(true)}
-              onCanPlayThrough={() => setIsVideoPlaying(true)}
-              onTimeUpdate={() => {
-                if (!isVideoPlaying) {
+              onPlaying={(e) => {
+                if (e.currentTarget.currentTime > 0.05) {
                   setIsVideoPlaying(true);
                 }
               }}
-            >
-              <source src={activeVideo} type="video/mp4" />
-            </video>
+              onTimeUpdate={(e) => {
+                if (!isVideoPlaying && e.currentTarget.currentTime > 0.05) {
+                  setIsVideoPlaying(true);
+                }
+              }}
+            />
           )}
           <div className="kinetic-preview-overlay" />
         </div>

@@ -28,6 +28,7 @@ scratch*
 extract*
 inspect*
 *.cjs
+hero-video/
 
 # Environment variables & secrets (CRITICAL: Never commit secrets)
 .env
