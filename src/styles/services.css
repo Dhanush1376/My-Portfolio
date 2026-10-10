@@ -74,7 +74,7 @@
   font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
   font-size: clamp(3rem, 7.8vw, 6.4rem);
   font-weight: 850;
-  line-height: 0.96;
+  line-height: 1.04;
   letter-spacing: -0.04em;
   color: var(--text, #ffffff);
   margin: 0;
@@ -91,6 +91,10 @@
 .services-climax-header .title-line-mask {
   overflow: hidden;
   display: block;
+  padding-top: 0.08em;
+  padding-bottom: 0.08em;
+  margin-top: -0.04em;
+  margin-bottom: -0.04em;
 }
 
 .services-climax-header .title-line-inner {
@@ -197,7 +201,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: clamp(0.75rem, 1.2vh, 1.15rem) 0;
+  padding: clamp(0.85rem, 1.4vh, 1.35rem) 0;
   min-height: clamp(100px, 9vw, 136px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   text-decoration: none;
@@ -205,6 +209,7 @@
   box-sizing: border-box;
   transition: border-bottom-color 0.25s ease;
   position: relative;
+  overflow: visible;
 }
 
 .expertise-row:hover {
@@ -216,6 +221,7 @@
   align-items: center;
   min-width: 0;
   flex: 1;
+  overflow: visible;
 }
 
 /* 1. Rounded Icon Tile (Expands on Hover) */
@@ -271,18 +277,19 @@
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
 }
 
-/* 2. Big Editorial Service Title (Matching Screenshot Typography) */
+/* 2. Big Editorial Service Title (Generous line height, padding & visible overflow so no letters cut) */
 .expertise-row-name {
   font-family: var(--font-display, 'Plus Jakarta Sans', -apple-system, sans-serif);
-  font-size: clamp(2.4rem, 5.2vw, 4.65rem);
+  font-size: clamp(2.2rem, 4.8vw, 4.45rem);
   font-weight: 700;
   letter-spacing: -0.035em;
-  line-height: 1.08;
+  line-height: 1.24;
+  padding-top: 0.14em;
+  padding-bottom: 0.08em;
   color: #FFFFFF;
   margin: 0;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
   transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -291,6 +298,7 @@
   flex-direction: column;
   min-width: 0;
   justify-content: center;
+  overflow: visible;
 }
 
 /* Hidden on desktop/laptop to preserve original clean editorial look */

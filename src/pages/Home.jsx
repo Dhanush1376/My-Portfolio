@@ -113,22 +113,73 @@ export default function Home() {
 
     // (Hero video has no scroll animations per user request)
 
+    // Stacked section overlap: each section scrolls until its last line is on screen,
+    // then holds (CSS sticky) while the next one slides over it and it recedes underneath.
+    // The hero keeps its own sticky setup with no effects; the last section has nothing above it.
+    const mainEl = document.querySelector('#main-content');
+    const stackLayers = mainEl
+      ? [...mainEl.children].filter((el) => el.classList.contains('stack-section')).slice(1, -1)
+      : [];
+
+    const syncStackHeights = () => {
+      stackLayers.forEach((el) => el.style.setProperty('--stack-h', `${el.offsetHeight}px`));
+    };
+    syncStackHeights();
+    stackLayers.forEach((el) => el.classList.add('stack-layer'));
+
+    const stackRo = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(syncStackHeights) : null;
+    stackLayers.forEach((el) => stackRo && stackRo.observe(el));
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const stackCtx = gsap.context(() => {
+      stackLayers.forEach((layer) => {
+        const next = layer.nextElementSibling;
+        if (!next) return;
+        // The veil lives on the incoming section and dims everything above it evenly
+        const veil = next.querySelector(':scope > .stack-veil');
+
+        // Progress = share of the screen the next section covers, so a short final
+        // section that never reaches the top only dims what it actually hides.
+        const tl = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: next,
+            start: 'top bottom',
+            end: 'top top',
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        if (veil) tl.to(veil, { opacity: 1 }, 0);
+        // Desktop only: the held section drifts up slowly (parallax) instead of sitting frozen.
+        // A drift keeps it full-bleed, so unlike scaling it never exposes card edges.
+        // Phones stay on cheap opacity-only compositing.
+        if (!isTouch && !prefersReducedMotion) {
+          gsap.set(layer, { willChange: 'transform' });
+          tl.fromTo(layer, { y: 0 }, { y: () => -0.15 * window.innerHeight, force3D: true }, 0);
+        }
+      });
+    });
+
     // 4. Active Nav Link on Scroll
     const navSections = document.querySelectorAll('.hero-section, .section, .stack-section');
     const navLinks = document.querySelectorAll('.nav-link');
-    navSections.forEach((section) => {
-      ScrollTrigger.create({
-        trigger: section,
-        start: 'top 35%',
-        end: 'bottom 35%',
-        onToggle: (self) => {
-          if (self.isActive) {
-            const id = section.getAttribute('id');
-            navLinks.forEach((link) => {
-              link.classList.toggle('active', link.getAttribute('href') === '#' + id);
-            });
+    const navCtx = gsap.context(() => {
+      navSections.forEach((section) => {
+        ScrollTrigger.create({
+          trigger: section,
+          start: 'top 35%',
+          end: 'bottom 35%',
+          onToggle: (self) => {
+            if (self.isActive) {
+              const id = section.getAttribute('id');
+              navLinks.forEach((link) => {
+                link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+              });
+            }
           }
-        }
+        });
       });
     });
 
@@ -140,8 +191,15 @@ export default function Home() {
       const navbarHeight = 80;
       let targetPosition = 0;
       if (targetId !== '#hero') {
-        const rect = targetElement.getBoundingClientRect();
-        targetPosition = Math.max(0, window.scrollY + rect.top - navbarHeight);
+        let top = window.scrollY + targetElement.getBoundingClientRect().top;
+        // A held (sticky) section reports where it is pinned, not its place in the page flow
+        if (mainEl && targetElement.parentElement === mainEl) {
+          top = window.scrollY + mainEl.getBoundingClientRect().top;
+          for (let el = mainEl.firstElementChild; el && el !== targetElement; el = el.nextElementSibling) {
+            top += el.offsetHeight;
+          }
+        }
+        targetPosition = Math.max(0, top - navbarHeight);
       }
 
       if (window.lenis && !isTouch) {
@@ -192,18 +250,26 @@ export default function Home() {
 
     return () => {
       clearTimeout(hashTimer);
+      stackCtx.revert();
+      if (stackRo) stackRo.disconnect();
+      stackLayers.forEach((el) => {
+        el.classList.remove('stack-layer');
+        el.style.removeProperty('--stack-h');
+      });
       window.lenis = null;
       window.navigateToSection = null;
       if (updateLenis) gsap.ticker.remove(updateLenis);
       window.removeEventListener('resize', handleResizeOrLoad);
       window.removeEventListener('load', handleResizeOrLoad);
       if (lenis) lenis.destroy();
-      ScrollTrigger.getAll().forEach(t => t.kill());
+      // Only tear down Home's own triggers; each section reverts its own reveal animations.
+      // Killing every trigger here left unrevealed sections frozen faded after a re-run.
+      navCtx.revert();
     };
   }, []);
 
   return (
-    <div className="portfolio-app">
+    <div className="portfolio-app home-page">
       <SEO
         title="Dhanush — Software Engineer & AI Systems Builder"
         description="Software Engineer & AI Systems Builder building modern web applications and intelligent systems."

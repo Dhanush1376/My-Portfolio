@@ -517,9 +517,9 @@ export default function Hero() {
         }}
       >
         <h1 className="hero-studio-title hero-title-large">
-          <span ref={row1Ref} className="title-text-line hero-anim-line">One stop solution for</span>
-          <span ref={row2Ref} className="title-text-line hero-anim-line">all engineering needs</span>
-          <span ref={row3Ref} className="title-text-line hero-anim-line">and AI systems</span>
+          <span ref={row1Ref} className="title-text-line hero-anim-line">Building modern software for</span>
+          <span ref={row2Ref} className="title-text-line hero-anim-line">high growth businesses</span>
+          <span ref={row3Ref} className="title-text-line hero-anim-line">and AI products</span>
         </h1>
 
         <div ref={btnRowRef} className="hero-btn-row">

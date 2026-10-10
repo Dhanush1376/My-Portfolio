@@ -58,7 +58,7 @@
   font-family: var(--font-display);
   font-size: clamp(2.75rem, 6.8vw, 6rem);
   font-weight: 850;
-  line-height: 0.98;
+  line-height: 1.04;
   letter-spacing: -0.04em;
   color: var(--text);
   margin: 0;
@@ -75,6 +75,10 @@
 .contact-line-mask {
   overflow: hidden;
   display: block;
+  padding-top: 0.08em;
+  padding-bottom: 0.08em;
+  margin-top: -0.04em;
+  margin-bottom: -0.04em;
 }
 
 .contact-line-inner {

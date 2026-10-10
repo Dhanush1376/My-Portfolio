@@ -297,6 +297,9 @@ export default function Services() {
           })}
         </div>
       </div>
+
+      {/* Veil hung above this section, dimming the one it slides over (driven from Home) */}
+      <div className="stack-veil" aria-hidden="true" />
     </section>
   );
 }

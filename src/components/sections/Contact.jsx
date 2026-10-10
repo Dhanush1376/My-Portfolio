@@ -244,6 +244,9 @@ export default function Contact({
           <SwipeToConnect onConnect={handleOpenContact} variant={variant} />
         </div>
       </div>
+
+      {/* Veil hung above this section, dimming the one it slides over (driven from Home) */}
+      <div className="stack-veil" aria-hidden="true" />
     </section>
   );
 }

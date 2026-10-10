@@ -42,43 +42,30 @@ export default function KineticStage({
     video.setAttribute('webkit-playsinline', '');
     video.setAttribute('x5-playsinline', '');
     video.setAttribute('loop', '');
+    video.setAttribute('autoplay', '');
     video.removeAttribute('controls');
 
     const kickstart = () => {
       if (video) {
-        if (isTutorboard && !isIntersectingRef.current) {
+        if (isTutorboard && !hasStartedRef.current && !isIntersectingRef.current) {
           return;
         }
         video.muted = true;
         video.defaultMuted = true;
         const p = video.play();
         if (p !== undefined) {
-          p.then(() => {
-            if (video.currentTime > 0.05) {
-              setIsVideoPlaying(true);
-            }
-          }).catch(() => {
+          p.then(() => setIsVideoPlaying(true)).catch(() => {
             video.muted = true;
             video.defaultMuted = true;
-            video.play().catch(() => {});
+            video.play().then(() => setIsVideoPlaying(true)).catch(() => {});
           });
         }
       }
     };
 
-    if (!isTutorboard) {
-      video.setAttribute('autoplay', '');
-      kickstart();
-    } else {
-      video.removeAttribute('autoplay');
-    }
+    kickstart();
 
-    const handlePlaying = () => {
-      if (video && video.currentTime > 0.05) {
-        setIsVideoPlaying(true);
-      }
-    };
-
+    const handlePlaying = () => setIsVideoPlaying(true);
     const handleEnded = () => {
       if (video) {
         video.currentTime = 0;
@@ -86,11 +73,7 @@ export default function KineticStage({
       }
     };
 
-    const handleCanPlay = () => {
-      if (!isTutorboard || isIntersectingRef.current) {
-        kickstart();
-      }
-    };
+    const handleCanPlay = () => kickstart();
 
     video.addEventListener('playing', handlePlaying);
     video.addEventListener('timeupdate', handlePlaying);
@@ -102,7 +85,7 @@ export default function KineticStage({
 
     const interactionEvents = ['touchstart', 'pointerdown', 'click', 'keydown'];
     const onUserInteraction = () => {
-      if (video && video.paused && (!isTutorboard || isIntersectingRef.current)) {
+      if (video && video.paused) {
         kickstart();
       }
     };
@@ -125,7 +108,7 @@ export default function KineticStage({
     };
   }, [activeVideo, showImagePreview, isTutorboard]);
 
-  // Intersection observer to track visibility, pause offscreen videos, and start on scroll into view
+  // Intersection observer to track visibility, pause offscreen videos, and start Tutorboard cleanly on scroll into view
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -141,21 +124,12 @@ export default function KineticStage({
         const video = videoRef.current;
         if (video) {
           if (entry.isIntersecting) {
-            video.muted = true;
-            video.defaultMuted = true;
             // Tutorboard starts cleanly from beginning when scrolled into view for first time
             if (isTutorboard && !hasStartedRef.current) {
               hasStartedRef.current = true;
               try { video.currentTime = 0; } catch (_) {}
             }
-            const p = video.play();
-            if (p !== undefined) {
-              p.then(() => {
-                if (video.currentTime > 0.05) {
-                  setIsVideoPlaying(true);
-                }
-              }).catch(() => {});
-            }
+            video.play().then(() => setIsVideoPlaying(true)).catch(() => {});
           } else {
             video.pause();
           }
@@ -163,7 +137,7 @@ export default function KineticStage({
       },
       {
         threshold: 0.08,
-        rootMargin: '100px 0px 100px 0px',
+        rootMargin: '120px 0px 120px 0px',
       }
     );
 
@@ -228,16 +202,13 @@ export default function KineticStage({
                   el.setAttribute('playsinline', '');
                   el.setAttribute('webkit-playsinline', '');
                   el.setAttribute('x5-playsinline', '');
-                  if (!isTutorboard) {
-                    el.setAttribute('autoplay', '');
-                  } else {
-                    el.removeAttribute('autoplay');
-                  }
+                  el.setAttribute('autoplay', '');
+                  el.setAttribute('loop', '');
                 }
               }}
               src={activeVideo}
               poster={activePreviewImg || undefined}
-              autoPlay={!isTutorboard}
+              autoPlay
               loop
               muted
               playsInline
@@ -249,14 +220,11 @@ export default function KineticStage({
               disableRemotePlayback
               className={`kinetic-preview-video video-${projectId || 'default'} ${isVideoPlaying ? 'video-playing' : ''}`}
               onPlaying={() => setIsVideoPlaying(true)}
-              onLoadedData={() => {
-                if (!isTutorboard) setIsVideoPlaying(true);
-              }}
-              onCanPlay={() => {
-                if (!isTutorboard) setIsVideoPlaying(true);
-              }}
-              onTimeUpdate={(e) => {
-                if (!isVideoPlaying && e.currentTarget.currentTime > 0.05) {
+              onLoadedData={() => setIsVideoPlaying(true)}
+              onCanPlay={() => setIsVideoPlaying(true)}
+              onCanPlayThrough={() => setIsVideoPlaying(true)}
+              onTimeUpdate={() => {
+                if (!isVideoPlaying) {
                   setIsVideoPlaying(true);
                 }
               }}
