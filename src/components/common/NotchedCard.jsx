@@ -241,7 +241,7 @@ export default function NotchedCard({
           {children}
 
           {/* Precision SVG Outline Bezel */}
-          {bezelWidth > 0 && clipPath && dimensions && (
+          {bezelWidth > 0 && clipPath && dimensions && dimensions.w > 0 && dimensions.h > 0 && (
             <svg
               aria-hidden="true"
               className="notched-bezel-svg"

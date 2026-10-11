@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { DEFAULT_OG_IMAGE, SITE_URL } from '../../data/site';
 
 /**
  * Lightweight, zero-dependency SEO manager component.
@@ -10,7 +11,7 @@ export default function SEO({
   description,
   canonical,
   schema = null,
-  image = 'https://dhanu.me/assets/logo.png',
+  image = DEFAULT_OG_IMAGE,
   type = 'website',
   noindex = false,
 }) {
@@ -50,7 +51,7 @@ export default function SEO({
     }
 
     // 3. Canonical URL
-    const canonicalUrl = canonical || 'https://dhanu.me/';
+    const canonicalUrl = canonical || `${SITE_URL}/`;
     setLinkTag('canonical', canonicalUrl);
 
     // 4. Robots Directives

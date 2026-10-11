@@ -19,7 +19,7 @@ export default function NotFoundPage() {
       <SEO
         title="Page Not Found — Dhanush"
         description="The requested page could not be found or has been moved."
-        canonical="https://dhanu.me/404"
+        canonical="https://www.dhanu.me/404"
         noindex={true}
       />
       <CustomCursor />

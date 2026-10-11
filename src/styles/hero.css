@@ -336,6 +336,28 @@ video::-webkit-media-controls {
   transition: color 0.3s ease;
 }
 
+/* Each line masks its own text so the entrance can roll it up into place. A clip-path (with a little
+   bleed for descenders) is used instead of overflow/padding because the row boxes are measured to
+   build the card notch and must not change size. */
+.hero-anim-line {
+  clip-path: inset(-0.05em -0.3em -0.22em -0.3em);
+}
+
+.hero-line-inner {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Hero entrance targets stay hidden until the entrance timeline takes them over (Hero.jsx) */
+html.hero-entrance-pending #navbar .nav-brand,
+html.hero-entrance-pending #navbar .nav-links-desktop li,
+html.hero-entrance-pending #navbar .nav-actions > *,
+html.hero-entrance-pending .hero-orange-wrapper,
+html.hero-entrance-pending .hero-line-inner,
+html.hero-entrance-pending .hero-btn-row > * {
+  opacity: 0;
+}
+
 .title-text-line {
   display: block;
   width: fit-content;

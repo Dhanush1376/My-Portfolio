@@ -1542,3 +1542,23 @@ body[data-theme="light"] .featured-project-card-item:hover .featured-project-des
     letter-spacing: -0.05em;
   }
 }
+/* Link from each project card to its case-study page (/work/:slug) */
+.project-case-study-link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: 'Schibsted Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 2px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.project-case-study-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}

@@ -9,6 +9,9 @@
 @import './common.css';
 @import './cursor.css';
 
+/* 2b. Opening intro */
+@import './intro.css';
+
 /* 3. Navigation & Header */
 @import './navbar.css';
 

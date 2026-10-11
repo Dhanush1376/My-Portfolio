@@ -15,6 +15,7 @@ import AlternativeDiscoveryHub from '../components/sections/AlternativeDiscovery
 import Contact from '../components/sections/Contact';
 import SEO from '../components/common/SEO';
 import '../styles/services-page.css';
+import { PAGE_META, absoluteUrl } from '../data/site';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,8 +24,8 @@ const servicesSchema = {
   "@graph": [
     {
       "@type": "CollectionPage",
-      "@id": "https://dhanu.me/services#webpage",
-      "url": "https://dhanu.me/services",
+      "@id": "https://www.dhanu.me/services#webpage",
+      "url": "https://www.dhanu.me/services",
       "name": "Software & AI Development Services — Dhanush",
       "description": "Explore software engineering and AI development services by Dhanush, including web applications, vector RAG pipelines, e-commerce storefronts, and automated workflows.",
       "breadcrumb": {
@@ -34,13 +35,13 @@ const servicesSchema = {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://dhanu.me/"
+            "item": "https://www.dhanu.me/"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Services",
-            "item": "https://dhanu.me/services"
+            "item": "https://www.dhanu.me/services"
           }
         ]
       }
@@ -52,7 +53,7 @@ const servicesSchema = {
         "@type": "ListItem",
         "position": idx + 1,
         "name": service.title,
-        "url": `https://dhanu.me/services/${service.slug}`
+        "url": `https://www.dhanu.me/services/${service.slug}`
       }))
     }
   ]
@@ -391,9 +392,9 @@ export default function ServicesPage() {
   return (
     <div className={`services-page-container ${isDark ? 'theme-dark' : 'theme-light'}`} ref={containerRef}>
       <SEO
-        title="Software & AI Development Services — Dhanush"
-        description="Explore software engineering and AI development services by Dhanush, including web applications, vector RAG pipelines, e-commerce storefronts, and automated workflows."
-        canonical="https://dhanu.me/services"
+        title={PAGE_META.services.title}
+        description={PAGE_META.services.description}
+        canonical={absoluteUrl(PAGE_META.services.path)}
         schema={servicesSchema}
       />
       <CustomCursor />

@@ -15,38 +15,12 @@ import Services from '../components/sections/Services';
 import Contact from '../components/sections/Contact';
 import CaseStudyModal from '../components/modals/CaseStudyModal';
 import SEO from '../components/common/SEO';
+import { PAGE_META, absoluteUrl, homeSchema as buildHomeSchema } from '../data/site';
+import { PROJECTS_DATA } from '../data/projectsData';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const homeSchema = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebSite",
-      "@id": "https://dhanu.me/#website",
-      "url": "https://dhanu.me/",
-      "name": "Dhanush",
-      "description": "Personal portfolio of Dhanush — Software Engineer & AI Systems Builder"
-    },
-    {
-      "@type": "Person",
-      "@id": "https://dhanu.me/#person",
-      "name": "Dhanush",
-      "url": "https://dhanu.me/",
-      "jobTitle": "Software Engineer & AI Systems Builder",
-      "sameAs": [
-        "https://github.com/Dhanush1376",
-        "https://linkedin.com/in/dhanush1376",
-        "https://x.com/Dhanush1376"
-      ],
-      "address": {
-        "@type": "PostalAddress",
-        "addressRegion": "Punjab",
-        "addressCountry": "IN"
-      }
-    }
-  ]
-};
+const homeSchema = buildHomeSchema(Object.values(PROJECTS_DATA));
 
 export default function Home() {
   const { theme, toggleTheme } = useTheme();
@@ -270,9 +244,9 @@ export default function Home() {
   return (
     <div className="portfolio-app home-page">
       <SEO
-        title="Dhanush — Software Engineer & AI Systems Builder"
-        description="Software Engineer & AI Systems Builder building modern web applications and intelligent systems."
-        canonical="https://dhanu.me/"
+        title={PAGE_META.home.title}
+        description={PAGE_META.home.description}
+        canonical={absoluteUrl(PAGE_META.home.path)}
         schema={homeSchema}
       />
       {/* Custom Cursor */}

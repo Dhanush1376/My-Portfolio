@@ -851,16 +851,16 @@ export default function ServiceDetailPage() {
     "@graph": [
       {
         "@type": "Service",
-        "@id": `https://dhanu.me/services/${service.slug}#service`,
+        "@id": `https://www.dhanu.me/services/${service.slug}#service`,
         "name": service.title,
         "description": service.description,
         "provider": {
           "@type": "Person",
-          "@id": "https://dhanu.me/#person",
+          "@id": "https://www.dhanu.me/#person",
           "name": "Dhanush",
-          "url": "https://dhanu.me/"
+          "url": "https://www.dhanu.me/"
         },
-        "url": `https://dhanu.me/services/${service.slug}`,
+        "url": `https://www.dhanu.me/services/${service.slug}`,
         "hasOfferCatalog": {
           "@type": "OfferCatalog",
           "name": "Deliverables",
@@ -880,19 +880,19 @@ export default function ServiceDetailPage() {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://dhanu.me/"
+            "item": "https://www.dhanu.me/"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Services",
-            "item": "https://dhanu.me/services"
+            "item": "https://www.dhanu.me/services"
           },
           {
             "@type": "ListItem",
             "position": 3,
             "name": service.title,
-            "item": `https://dhanu.me/services/${service.slug}`
+            "item": `https://www.dhanu.me/services/${service.slug}`
           }
         ]
       }
@@ -904,7 +904,7 @@ export default function ServiceDetailPage() {
       <SEO
         title={`${service.title} — Dhanush`}
         description={service.subtitle || service.description}
-        canonical={`https://dhanu.me/services/${service.slug}`}
+        canonical={`https://www.dhanu.me/services/${service.slug}`}
         schema={serviceSchema}
       />
       <CustomCursor />

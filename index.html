@@ -17,7 +17,7 @@
   <title>Dhanush — Software Engineer &amp; AI Systems Builder</title>
   <meta name="description"
     content="Software Engineer &amp; AI Systems Builder building modern web applications and intelligent systems." />
-  <link rel="canonical" href="https://dhanu.me/" />
+  <link rel="canonical" href="https://www.dhanu.me/" />
   <meta name="color-scheme" content="light dark" />
   <meta id="theme-color-meta" name="theme-color" content="#FBF9F5" />
   <script>
@@ -37,12 +37,25 @@
     })();
   </script>
 
+  <script>
+    // Cover the page from the first paint when the opening intro is going to play (see IntroSequence.jsx)
+    (function () {
+      try {
+        var forced = new URLSearchParams(location.search).has('intro');
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (forced || (!reduce && !localStorage.getItem('introSeen'))) {
+          document.documentElement.classList.add('intro-pending');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <!-- Open Graph -->
   <meta property="og:title" content="Dhanush — Software Engineer &amp; AI Systems Builder" />
   <meta property="og:description"
     content="Software Engineer &amp; AI Systems Builder building modern web applications and intelligent systems." />
-  <meta property="og:url" content="https://dhanu.me/" />
-  <meta property="og:image" content="https://dhanu.me/assets/logo.png" />
+  <meta property="og:url" content="https://www.dhanu.me/" />
+  <meta property="og:image" content="https://www.dhanu.me/og-image.png" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Dhanush" />
 
@@ -51,7 +64,7 @@
   <meta name="twitter:title" content="Dhanush — Software Engineer &amp; AI Systems Builder" />
   <meta name="twitter:description"
     content="Software Engineer &amp; AI Systems Builder building modern web applications and intelligent systems." />
-  <meta name="twitter:image" content="https://dhanu.me/assets/logo.png" />
+  <meta name="twitter:image" content="https://www.dhanu.me/og-image.png" />
 
   <!-- Web App Manifest & Favicon -->
   <link rel="manifest" href="/site.webmanifest" />
@@ -65,22 +78,22 @@
     rel="stylesheet" />
 
   <!-- Baseline Structured Data -->
-  <script type="application/ld+json">
+  <script type="application/ld+json" id="seo-structured-data">
   {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "WebSite",
-        "@id": "https://dhanu.me/#website",
-        "url": "https://dhanu.me/",
+        "@id": "https://www.dhanu.me/#website",
+        "url": "https://www.dhanu.me/",
         "name": "Dhanush",
         "description": "Personal portfolio of Dhanush — Software Engineer & AI Systems Builder"
       },
       {
         "@type": "Person",
-        "@id": "https://dhanu.me/#person",
+        "@id": "https://www.dhanu.me/#person",
         "name": "Dhanush",
-        "url": "https://dhanu.me/",
+        "url": "https://www.dhanu.me/",
         "jobTitle": "Software Engineer & AI Systems Builder",
         "sameAs": [
           "https://github.com/Dhanush1376",

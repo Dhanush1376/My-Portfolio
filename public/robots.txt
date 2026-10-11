@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dhanu.me/sitemap.xml
+Sitemap: https://www.dhanu.me/sitemap.xml

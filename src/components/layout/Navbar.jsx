@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Linkedin, Phone, ArrowUpRight } from 'lucide-react';
 import { SOCIAL_LINKS } from '../../data/socialLinks';
+import { playColorTransition, isPageTransitionRunning } from '../../utils/pageTransition';
 
 function ThemeIcon({ theme }) {
   return theme === 'dark' ? (
@@ -26,6 +27,7 @@ function ThemeIcon({ theme }) {
 export default function Navbar({ theme, toggleTheme, transparent = false }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [selectedHref, setSelectedHref] = useState(null);
   const drawerRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -93,6 +95,39 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
       const el = document.querySelector(targetId);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  // Menu links: the tapped row floods with its colour, the colour grows to cover the screen,
+  // the page changes underneath, then the colour lifts away (see utils/pageTransition.js)
+  const handleDrawerNav = (e, item) => {
+    e.preventDefault();
+    if (isPageTransitionRunning()) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) {
+      handleNavClick(e, item.href);
+      return;
+    }
+
+    const badge = e.currentTarget.querySelector('.drawer-arrow') || e.currentTarget;
+    const rect = badge.getBoundingClientRect();
+    const isSamePage = item.href.startsWith('#') && location.pathname === '/';
+    setSelectedHref(item.href);
+
+    // A beat for the row fill to read before the colour takes over the screen
+    setTimeout(() => {
+      playColorTransition({
+        color: item.swatch,
+        label: item.label,
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+        settleMs: isSamePage ? 450 : 140,
+        onCovered: () => {
+          setSelectedHref(null);
+          handleNavClick({ preventDefault() {} }, item.href);
+        },
+      });
+    }, 260);
   };
 
   const navItems = [
@@ -204,17 +239,17 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
               <span>({String(navItems.length).padStart(2, '0')})</span>
             </div>
 
-            <ul className="drawer-nav-list">
+            <ul className={`drawer-nav-list ${selectedHref ? 'has-selection' : ''}`}>
               {navItems.map((item, idx) => {
                 const isActive = isActiveItem(item);
                 return (
                   <li key={item.num} className="drawer-nav-item drawer-stagger" style={{ '--i': idx + 1 }}>
                     <a
                       href={item.href}
-                      className={`drawer-nav-link ${isActive ? 'active' : ''}`}
+                      className={`drawer-nav-link ${isActive ? 'active' : ''} ${selectedHref === item.href ? 'is-selected' : ''}`}
                       style={{ '--swatch': item.swatch }}
                       aria-current={isActive ? 'page' : undefined}
-                      onClick={(e) => handleNavClick(e, item.href)}
+                      onClick={(e) => handleDrawerNav(e, item)}
                     >
                       <span className="drawer-num">{item.num}</span>
                       <span className="drawer-label">

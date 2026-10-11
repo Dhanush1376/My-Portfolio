@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender.mjs",
     "preview": "vite preview",
-    "ci": "vite build"
+    "ci": "vite build && node scripts/prerender.mjs"
   },
   "dependencies": {
     "gsap": "^3.12.5",

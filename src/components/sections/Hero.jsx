@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ArrowUpRight } from 'lucide-react';
@@ -86,14 +86,16 @@ function generateStudioCanvasPath(cardWidth, cardHeight, lines, r, s, W_left = 0
 
 // Card geometry for a hero of size w × h (shared by the first render and live measurement)
 function getCardBox(w, h) {
-  const isMobile = w < 768;
-  const isTablet = w >= 768 && w < 1100;
-  const paddingLeft = isMobile ? 12 : isTablet ? 24 : Math.max(36, Math.min(64, Math.round(w * 0.035)));
-  const cardTop = isMobile ? 74 : Math.round(Math.max(84, Math.min(105, h * 0.11)));
+  const safeW = Math.max(320, typeof w === 'number' && !isNaN(w) ? w : 320);
+  const safeH = Math.max(420, typeof h === 'number' && !isNaN(h) ? h : 420);
+  const isMobile = safeW < 768;
+  const isTablet = safeW >= 768 && safeW < 1100;
+  const paddingLeft = isMobile ? 12 : isTablet ? 24 : Math.max(36, Math.min(64, Math.round(safeW * 0.035)));
+  const cardTop = isMobile ? 74 : Math.round(Math.max(84, Math.min(105, safeH * 0.11)));
   const bottomPadding = isMobile ? 16 : 28;
   const minCardH = isMobile ? 420 : 500;
-  const cardHeight = Math.max(minCardH, Math.round(h - cardTop - bottomPadding));
-  const cardWidth = Math.round(w - paddingLeft * 2);
+  const cardHeight = Math.max(minCardH, Math.round(safeH - cardTop - bottomPadding));
+  const cardWidth = Math.max(280, Math.round(safeW - paddingLeft * 2));
   const W_left = isMobile ? 0 : Math.round(Math.max(80, Math.min(130, cardWidth * 0.09)));
   return { paddingLeft, cardTop, cardHeight, cardWidth, W_left };
 }
@@ -136,6 +138,7 @@ export default function Hero() {
   const liquidFillRef = useRef(null);
   const stageContentRef = useRef(null);
   const hasAnimatedRef = useRef(false);
+  const entranceTlRef = useRef(null);
   const videoRef = useRef(null);
 
   // Seamless loop with no tap needed; pauses while the hero is scrolled away to free the decoder
@@ -147,20 +150,36 @@ export default function Hero() {
     threshold: 0.01,
   });
 
+  // Keep the entrance targets hidden from the very first paint (the entrance can only start once the
+  // notch has been measured), so nothing flashes in place before animating in
+  useLayoutEffect(() => {
+    if (hasAnimatedRef.current) return undefined;
+    const root = document.documentElement;
+    root.classList.add('hero-entrance-pending');
+    const failSafe = setTimeout(() => root.classList.remove('hero-entrance-pending'), 6000);
+    return () => {
+      clearTimeout(failSafe);
+      root.classList.remove('hero-entrance-pending');
+    };
+  }, []);
+
   // Entrance Animation: Runs strictly ONCE on mount, never repeats on layout recalculations
   useEffect(() => {
     if (!liquidFillRef.current || !cardPath || layout.cardHeight <= 0) return;
 
     // If already animated once, ensure elements stay at full resting visibility and do not re-animate
     if (hasAnimatedRef.current) {
+      // Re-measures (fonts loading, resize) can land while the entrance is waiting for the intro or
+      // still playing; leave it alone until it has finished
+      if (entranceTlRef.current && entranceTlRef.current.progress() < 1) return;
       gsap.set(liquidFillRef.current, { y: 0 });
       if (stageContentRef.current) {
         gsap.set(stageContentRef.current, { opacity: 1, y: 0 });
       }
       if (controlsRef.current) {
-        const lines = controlsRef.current.querySelectorAll('.hero-anim-line');
+        const lines = controlsRef.current.querySelectorAll('.hero-line-inner');
         if (lines.length > 0) {
-          gsap.set(lines, { yPercent: 0, opacity: 1, filter: 'none', clearProps: 'all' });
+          gsap.set(lines, { clearProps: 'all' });
         }
       }
       return;
@@ -169,52 +188,89 @@ export default function Hero() {
     // Mark as animated immediately to lock it to a single execution
     hasAnimatedRef.current = true;
 
-    // Set video container to resting position without motion
-    gsap.set(liquidFillRef.current, { y: 0 });
-    if (stageContentRef.current) {
-      gsap.set(stageContentRef.current, { opacity: 0, y: 12 });
+    // While the opening intro covers the page, hold the entrance until the intro starts lifting
+    const holdForIntro = Boolean(window.__introPlaying);
+    const tl = gsap.timeline({ defaults: { ease: 'expo.out' }, paused: holdForIntro });
+    entranceTlRef.current = tl;
+
+    // Only inner/child elements move: the rows and button row themselves are measured to build
+    // the card notch, so their boxes must never shift.
+    const card = wrapperRef.current;
+    const media = liquidFillRef.current;
+    const lineInners = controlsRef.current ? controlsRef.current.querySelectorAll('.hero-line-inner') : [];
+    const buttons = btnRowRef.current ? btnRowRef.current.children : [];
+    // Navbar lives in its own component; pick up whatever of it is visible at this size
+    const navItems = [
+      ...document.querySelectorAll('#navbar .nav-brand, #navbar .nav-links-desktop li, #navbar .nav-actions > *'),
+    ].filter((el) => el.offsetParent !== null);
+
+    // Start states first (a tween that begins later in the timeline would otherwise leave its target
+    // visible until the playhead reaches it), then drop the first-paint CSS cover
+    if (navItems.length) gsap.set(navItems, { y: -22, opacity: 0, transition: 'none' });
+    if (card) gsap.set(card, { y: 70, opacity: 0 });
+    if (media) gsap.set(media, { scale: 1.12 });
+    if (lineInners.length) gsap.set(lineInners, { yPercent: 130, rotate: 2.5 });
+    if (buttons.length) gsap.set(buttons, { y: 24, opacity: 0 });
+    if (stageContentRef.current) gsap.set(stageContentRef.current, { opacity: 0, y: 12 });
+    document.documentElement.classList.remove('hero-entrance-pending');
+
+    // 1. Navbar drops in
+    if (navItems.length) {
+      tl.to(
+        navItems,
+        { y: 0, opacity: 1, duration: 0.9, stagger: 0.06, clearProps: 'transform,opacity,transition' },
+        0
+      );
     }
 
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-    // 2. Stage content spec pill
-    if (stageContentRef.current) {
-      tl.to(stageContentRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.55,
-      }, '-=0.55');
+    // 2. The dark card rises into place while its video settles from a gentle zoom
+    if (card) {
+      tl.to(
+        card,
+        { y: 0, opacity: 1, duration: 1.25, clearProps: 'transform,opacity' },
+        0.05
+      );
+    }
+    if (media) {
+      tl.to(media, { scale: 1, duration: 1.6, ease: 'expo.out', clearProps: 'transform' }, 0.05);
     }
 
-    // 3. Clean, unified headline reveal without multiple separate staggered steps
-    if (controlsRef.current) {
-      const lines = controlsRef.current.querySelectorAll('.hero-anim-line');
-      if (lines.length > 0) {
-        tl.fromTo(
-          lines,
-          {
-            yPercent: 35,
-            opacity: 0,
-          },
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.65,
-            stagger: 0.08,
-            ease: 'power3.out',
-            clearProps: 'transform,opacity',
-          },
-          '-=0.65'
-        );
-      }
+    // 3. Headline lines roll up out of their own masks, one after another
+    if (lineInners.length) {
+      tl.to(
+        lineInners,
+        { yPercent: 0, rotate: 0, duration: 1.1, stagger: 0.11, clearProps: 'transform' },
+        0.25
+      );
+    }
+
+    // 4. Buttons follow
+    if (buttons.length) {
+      tl.to(
+        buttons,
+        { y: 0, opacity: 1, duration: 0.9, stagger: 0.08, clearProps: 'transform,opacity' },
+        0.6
+      );
+    }
+
+    if (stageContentRef.current) {
+      tl.to(stageContentRef.current, { opacity: 1, y: 0, duration: 0.6 }, 0.7);
+    }
+
+    if (holdForIntro) {
+      const start = () => tl.play();
+      window.addEventListener('intro:reveal', start, { once: true });
+      window.addEventListener('intro:done', start, { once: true });
     }
   }, [layout.cardHeight, cardPath]);
 
   useEffect(() => {
     const updateDimensions = () => {
       if (!heroRef.current) return;
-      const w = heroRef.current.clientWidth || window.innerWidth;
-      const h = heroRef.current.clientHeight || window.innerHeight;
+      const clientW = heroRef.current.clientWidth;
+      const clientH = heroRef.current.clientHeight;
+      const w = clientW > 100 ? clientW : (typeof window !== 'undefined' ? window.innerWidth : 1400);
+      const h = clientH > 100 ? clientH : (typeof window !== 'undefined' ? window.innerHeight : 750);
 
       const isMobile = w < 768;
       const { paddingLeft, cardTop, cardHeight, cardWidth, W_left } = getCardBox(w, h);
@@ -342,40 +398,42 @@ export default function Hero() {
           height: `${cardHeight}px`,
         }}
       >
-        <svg
-          className="hero-orange-card-svg"
-          viewBox={`0 0 ${cardWidth} ${cardHeight}`}
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <defs>
-            <filter id="heroOrangeGlow" x="-4%" y="-4%" width="108%" height="112%">
-              <feDropShadow dx="0" dy="16" stdDeviation="20" floodColor="var(--hero-orange-glow, rgba(0, 0, 0, 0.25))" floodOpacity="0.35" />
-            </filter>
-            <clipPath id="heroCanvasClip">
-              {cardPath ? <path d={cardPath} /> : null}
-            </clipPath>
-          </defs>
-          
-          {/* Base shadow layer cast by the path shape */}
-          {cardPath && (
-            <path
-              d={cardPath}
-              fill="none"
-              filter="url(#heroOrangeGlow)"
-            />
-          )}
+        {cardWidth > 0 && cardHeight > 0 && (
+          <svg
+            className="hero-orange-card-svg"
+            viewBox={`0 0 ${cardWidth} ${cardHeight}`}
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <defs>
+              <filter id="heroOrangeGlow" x="-4%" y="-4%" width="108%" height="112%">
+                <feDropShadow dx="0" dy="16" stdDeviation="20" floodColor="var(--hero-orange-glow, rgba(0, 0, 0, 0.25))" floodOpacity="0.35" />
+              </filter>
+              <clipPath id="heroCanvasClip">
+                {cardPath ? <path d={cardPath} /> : null}
+              </clipPath>
+            </defs>
+            
+            {/* Base shadow layer cast by the path shape */}
+            {cardPath && (
+              <path
+                d={cardPath}
+                fill="none"
+                filter="url(#heroOrangeGlow)"
+              />
+            )}
 
-          {/* Base fallback fill in SVG */}
-          <g clipPath={cardPath ? 'url(#heroCanvasClip)' : undefined}>
-            <rect
-              width={cardWidth}
-              height={cardHeight}
-              rx={cardPath ? 0 : (isMobile ? 18 : 28)}
-              fill="var(--hero-canvas-bg, #0E0F12)"
-            />
-          </g>
-        </svg>
+            {/* Base fallback fill in SVG */}
+            <g clipPath={cardPath ? 'url(#heroCanvasClip)' : undefined}>
+              <rect
+                width={cardWidth}
+                height={cardHeight}
+                rx={cardPath ? 0 : (isMobile ? 18 : 28)}
+                fill="var(--hero-canvas-bg, #0E0F12)"
+              />
+            </g>
+          </svg>
+        )}
 
         {/* Stepped Media Canvas Container - Clipped precisely to cardPath across all devices */}
         <div
@@ -432,9 +490,9 @@ export default function Hero() {
         }}
       >
         <h1 className="hero-studio-title hero-title-large">
-          <span ref={row1Ref} className="title-text-line hero-anim-line">One Stop Solution for</span>
-          <span ref={row2Ref} className="title-text-line hero-anim-line">all creative needs</span>
-          <span ref={row3Ref} className="title-text-line hero-anim-line">and goals</span>
+          <span ref={row1Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">One Stop Solution for</span></span>
+          <span ref={row2Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">all creative needs</span></span>
+          <span ref={row3Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">and goals</span></span>
         </h1>
 
         <div ref={btnRowRef} className="hero-btn-row">

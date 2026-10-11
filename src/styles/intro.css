@@ -1,0 +1,138 @@
+/* ==========================================================================
+   OPENING INTRO (IntroSequence.jsx)
+   ========================================================================== */
+
+/* Until the intro mounts, index.html marks <html> so the page never flashes underneath */
+html.intro-pending body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: #0E0F12;
+}
+
+html.intro-running,
+html.intro-running body {
+  overflow: hidden;
+}
+
+.intro-sequence {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+  clip-path: inset(0% 0% 0% 0%);
+  cursor: progress;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.intro-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.intro-panel--base,
+.intro-panel--final {
+  background: #0E0F12;
+}
+
+/* The point */
+.intro-dot {
+  width: clamp(18px, 3.2vw, 30px);
+  height: clamp(18px, 3.2vw, 30px);
+  border-radius: 50%;
+  background: #FF5520;
+  box-shadow: 0 0 0 0 rgba(255, 85, 32, 0.35);
+}
+
+/* Words on the colour fields */
+.intro-word,
+.intro-brand {
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+  font-family: 'Schibsted Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+}
+
+.intro-word {
+  font-size: clamp(3.4rem, 15vw, 11rem);
+  color: #0E0F12;
+}
+
+.intro-brand {
+  font-size: clamp(3.8rem, 17vw, 13rem);
+  color: #F5F3EE;
+}
+
+.intro-letter-mask {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.06em 0 0.1em;
+  margin: -0.06em 0 -0.1em;
+}
+
+.intro-letter {
+  display: inline-block;
+  will-change: transform;
+}
+
+.intro-word-stop {
+  color: #FFFFFF;
+}
+
+.intro-brand-dot {
+  display: inline-block;
+  width: 0.2em;
+  height: 0.2em;
+  margin-left: 0.06em;
+  border-radius: 50%;
+  background: #FF5520;
+  will-change: transform;
+}
+
+/* Corner furniture, readable over every field */
+.intro-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: #FFFFFF;
+  mix-blend-mode: difference;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.intro-hud > * {
+  position: absolute;
+}
+
+.intro-hud-tl { top: clamp(1.1rem, 3vw, 2rem); left: clamp(1.1rem, 3vw, 2.5rem); letter-spacing: 0.04em; font-size: 0.85rem; }
+.intro-hud-tr { top: clamp(1.1rem, 3vw, 2rem); right: clamp(1.1rem, 3vw, 2.5rem); }
+.intro-hud-bl { bottom: clamp(1.1rem, 3vw, 2rem); left: clamp(1.1rem, 3vw, 2.5rem); max-width: 50vw; }
+
+.intro-hud-br {
+  bottom: clamp(0.9rem, 2.4vw, 1.6rem);
+  right: clamp(1.1rem, 3vw, 2.5rem);
+  font-family: 'Schibsted Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(2.2rem, 7vw, 4.5rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+@media (max-width: 600px) {
+  .intro-hud-tr { display: none; }
+  .intro-hud-bl { max-width: 42vw; font-size: 0.62rem; line-height: 1.5; }
+}

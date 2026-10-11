@@ -7,7 +7,7 @@
  * flowing. Returns style props to spread onto the element (empty when there is no path yet).
  */
 export function pathMaskStyle(d, width, height) {
-  if (!d || !width || !height) return {};
+  if (!d || !width || !height || width <= 0 || height <= 0) return {};
   const svg =
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" ` +
     `viewBox="0 0 ${width} ${height}" preserveAspectRatio="none"><path d="${d}" fill="#000"/></svg>`;

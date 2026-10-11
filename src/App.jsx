@@ -7,6 +7,8 @@ import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
 import ServiceDetailPage from './pages/ServiceDetailPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ProjectPage from './pages/ProjectPage';
+import IntroSequence from './components/common/IntroSequence';
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -24,6 +26,7 @@ function ScrollToTop() {
 export default function App() {
   return (
     <Router>
+      <IntroSequence />
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -33,6 +36,7 @@ export default function App() {
         <Route path="/what-we-do" element={<ServicesPage />} />
         <Route path="/what-we-do/:slug" element={<ServiceDetailPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/work/:slug" element={<ProjectPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

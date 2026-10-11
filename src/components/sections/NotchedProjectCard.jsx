@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import NotchedCard from '../common/NotchedCard';
 import KineticStage from '../common/KineticStage';
 import { ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -89,7 +90,7 @@ export default function NotchedProjectCard({
 
       if (besideEl) {
         const items = besideEl.querySelectorAll(
-          '.project-beside-meta-row, .featured-project-headline, .featured-project-desc, .project-beside-stats-row, .featured-project-bottom-rail'
+          '.project-beside-meta-row, .featured-project-headline, .featured-project-desc, .project-case-study-link, .project-beside-stats-row, .featured-project-bottom-rail'
         );
         if (items.length > 0) {
           gsap.fromTo(
@@ -236,6 +237,13 @@ export default function NotchedProjectCard({
 
         {(project.description || project.desc || project.subtitle) && (
           <p className="featured-project-desc">{project.description || project.desc || project.subtitle}</p>
+        )}
+
+        {/* Crawlable link to the project's own case-study page */}
+        {project.slug && (
+          <Link to={`/work/${project.slug}`} className="project-case-study-link">
+            Read the case study <ArrowUpRight size={15} strokeWidth={2.2} aria-hidden="true" />
+          </Link>
         )}
 
         {/* Highlight Metrics */}

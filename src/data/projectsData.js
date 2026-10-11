@@ -1,6 +1,7 @@
 export const PROJECTS_DATA = {
   siriarts: {
     id: "siriarts",
+    slug: "siri-arts-and-crafts", // case-study URL: /work/siri-arts-and-crafts
     num: "01",
     tag: "01 / FREELANCE CLIENT",
     service: "Production Website & Visual Storefront",
@@ -45,6 +46,7 @@ export const PROJECTS_DATA = {
   },
   akulas_kitchen: {
     id: "akulas_kitchen",
+    slug: "akulas-kitchen", // case-study URL: /work/akulas-kitchen
     num: "02",
     tag: "02 / PRODUCTION CLIENT",
     service: "Food E-Commerce & Cloud Kitchen Portal",
@@ -89,6 +91,7 @@ export const PROJECTS_DATA = {
   },
   cakepoprush: {
     id: "cakepoprush",
+    slug: "cakepoprush", // case-study URL: /work/cakepoprush
     num: "03",
     tag: "03 / E-COMMERCE STOREFRONT",
     service: "Artisan Dessert Storefront & Experience",
@@ -133,6 +136,7 @@ export const PROJECTS_DATA = {
   },
   ragchatbot: {
     id: "ragchatbot",
+    slug: "tutorboard", // case-study URL: /work/tutorboard
     num: "04",
     tag: "04 / INTELLIGENT SYSTEM",
     service: "AI / Retrieval-Augmented Generation",
@@ -175,3 +179,7 @@ export const PROJECTS_DATA = {
     repoLink: "https://github.com/Dhanush1376"
   }
 };
+
+export function getProjectBySlug(slug) {
+  return Object.values(PROJECTS_DATA).find((p) => p.slug === slug) || null;
+}
