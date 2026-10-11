@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ArrowUpRight } from 'lucide-react';
 import { useLoopingVideo } from '../../hooks/useLoopingVideo';
+import { pathMaskStyle } from '../../utils/pathMask';
 
 const De = (e) => Math.round(e * 100) / 100;
 const St = (e, t, n, r) => `A ${De(e)} ${De(e)} 0 0 ${t} ${De(n)} ${De(r)}`;
@@ -380,8 +381,8 @@ export default function Hero() {
         <div
           className="hero-canvas-media-layer"
           style={{
-            clipPath: cardPath ? `path("${cardPath}")` : undefined,
-            WebkitClipPath: cardPath ? `path("${cardPath}")` : undefined,
+            // Masked rather than clip-pathed so Safari keeps repainting the video (see pathMask.js)
+            ...pathMaskStyle(cardPath, cardWidth, cardHeight),
             borderRadius: cardPath ? undefined : (isMobile ? '18px' : '28px'),
           }}
           aria-hidden="true"

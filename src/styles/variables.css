@@ -23,9 +23,13 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  forced-color-adjust: none;
 }
 
 :root {
+  /* Strict baseline color-scheme declaration */
+  color-scheme: light dark;
+
   /* Brand Accents */
   --orange: #FF5520;
   --orange-hover: #E64510;
@@ -37,10 +41,29 @@
   --font: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'SF Mono', 'Fira Code', 'Roboto Mono', monospace;
+  --font-sans: var(--font);
 
   /* Easing */
   --transition: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+
+  /* Core Palette (Universal) */
+  --black: #0E0F12;
+  --white: #FFFFFF;
+  --pure-black: #000000;
+  --pure-white: #FFFFFF;
+
+  /* Neutrals / Grays (Universal) */
+  --gray-50: #F9FAFB;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-400: #9CA3AF;
+  --gray-500: #6B7280;
+  --gray-600: #4B5563;
+  --gray-700: #374151;
+  --gray-800: #1F2937;
+  --gray-900: #111827;
 
   /* Dark Theme Tokens (Default) */
   --bg: #0A0A0D;
@@ -51,10 +74,12 @@
   --text-secondary: #A2A4B0;
   --text-muted: #6E707D;
   --text-faint: #43444E;
+  --text-dim: #6E707D;
 
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.18);
   --border-subtle: rgba(255, 255, 255, 0.04);
+  --surface-border: rgba(255, 255, 255, 0.08);
 
   --surface: rgba(255, 255, 255, 0.04);
   --surface-hover: rgba(255, 255, 255, 0.07);
@@ -67,6 +92,7 @@
   --accent: var(--orange);
   --accent-hover: var(--orange-light);
   --accent-soft: var(--orange-soft);
+  --brand-color: var(--accent);
 
   --pill-bg: #FFFFFF;
   --pill-text: #0A0A0D;
@@ -75,10 +101,55 @@
 
   --cursor-color: #FFFFFF;
   --cursor-outline: rgba(255, 255, 255, 0.4);
+  --outline-stroke: rgba(255, 255, 255, 0.3);
+  --hero-brightness: 0.85;
+}
+
+/* Explicit Dark Theme Selector to match Light specificity */
+[data-theme="dark"],
+.theme-dark {
+  --bg: #0A0A0D;
+  --bg-alt: #111217;
+  --bg-card: #15161D;
+  --bg-card-subtle: #1C1D26;
+  --text: #F5F5F7;
+  --text-secondary: #A2A4B0;
+  --text-muted: #6E707D;
+  --text-faint: #43444E;
+  --text-dim: #6E707D;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --surface-border: rgba(255, 255, 255, 0.08);
+
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-hover: rgba(255, 255, 255, 0.07);
+  --surface-active: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+
+  --nav-bg: rgba(10, 10, 13, 0.85);
+  --nav-border: rgba(255, 255, 255, 0.08);
+
+  --accent: var(--orange);
+  --accent-hover: var(--orange-light);
+  --accent-soft: var(--orange-soft);
+  --brand-color: var(--accent);
+
+  --pill-bg: #FFFFFF;
+  --pill-text: #0A0A0D;
+  --pill-dark-bg: #1A1B22;
+  --pill-dark-text: #F5F5F7;
+
+  --cursor-color: #FFFFFF;
+  --cursor-outline: rgba(255, 255, 255, 0.4);
+  --outline-stroke: rgba(255, 255, 255, 0.3);
+  --hero-brightness: 0.85;
 }
 
 /* Light Theme (Warm Off-White / Cream Base) */
-[data-theme="light"] {
+[data-theme="light"],
+.theme-light {
   --bg: #FBF9F5;
   --bg-alt: #F2EFE8;
   --bg-card: #FFFFFF;
@@ -87,10 +158,12 @@
   --text-secondary: #484A54;
   --text-muted: #7E808F;
   --text-faint: #B5B6C2;
+  --text-dim: #7E808F;
 
   --border: rgba(14, 15, 18, 0.08);
   --border-strong: rgba(14, 15, 18, 0.18);
   --border-subtle: rgba(14, 15, 18, 0.04);
+  --surface-border: rgba(14, 15, 18, 0.08);
 
   --surface: rgba(0, 0, 0, 0.03);
   --surface-hover: rgba(0, 0, 0, 0.06);
@@ -103,6 +176,7 @@
   --accent: var(--orange);
   --accent-hover: var(--orange-hover);
   --accent-soft: rgba(255, 85, 32, 0.1);
+  --brand-color: var(--accent);
 
   --pill-bg: #0E0F12;
   --pill-text: #FFFFFF;
@@ -111,6 +185,40 @@
 
   --cursor-color: #0E0F12;
   --cursor-outline: rgba(14, 15, 18, 0.4);
+  --outline-stroke: rgba(14, 15, 18, 0.3);
+  --hero-brightness: 1.0;
+}
+
+/* ==========================================================================
+   STRICT OPT-OUT FROM BROWSER/DEVICE AUTO DARK MODE & COLOR BLENDING
+   The 'only' keyword instructs Chromium/WebKit/Gecko engines to strictly disable
+   heuristic auto-darkening and force-dark algorithms in all user agents.
+   ========================================================================== */
+:root[data-theme="light"],
+html[data-theme="light"],
+body[data-theme="light"],
+[data-theme="light"] {
+  color-scheme: only light !important;
+  forced-color-adjust: none !important;
+}
+
+:root[data-theme="dark"],
+html[data-theme="dark"],
+body[data-theme="dark"],
+[data-theme="dark"] {
+  color-scheme: only dark !important;
+  forced-color-adjust: none !important;
+}
+
+img,
+svg,
+video,
+canvas,
+input,
+textarea,
+select,
+button {
+  forced-color-adjust: none !important;
 }
 
 html {
@@ -120,6 +228,9 @@ html {
   overflow-x: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+  forced-color-adjust: none !important;
 }
 
 html.lenis,
@@ -162,8 +273,8 @@ body::-webkit-scrollbar {
 
 body {
   font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
   width: 100%;
   min-height: 100%;
   margin: 0;
@@ -171,7 +282,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   cursor: auto;
-  transition: background 0.5s, color 0.5s;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  forced-color-adjust: none !important;
 }
 
 /* Allow position: sticky on Home page while clipping standalone pages */

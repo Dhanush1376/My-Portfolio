@@ -1,4 +1,5 @@
 import React, { useRef, useState, useCallback, useLayoutEffect, useEffect } from 'react';
+import { pathMaskStyle } from '../../utils/pathMask';
 
 /**
  * Mathematical SVG Path calculation for the dual-notched card.
@@ -70,6 +71,8 @@ export default function NotchedCard({
 
   const [clipPath, setClipPath] = useState(null);
   const [dimensions, setDimensions] = useState(null);
+  // Size the path was generated for (the mask must use exactly these, not the debounced dimensions)
+  const [pathBox, setPathBox] = useState(null);
 
   const updatePath = useCallback(() => {
     const el = container.current;
@@ -134,6 +137,7 @@ export default function NotchedCard({
 
     const pathString = generateNotchedPath(L, H, safeW, safeI, P, safeA);
     setClipPath((prev) => (prev === pathString ? prev : pathString));
+    setPathBox((prev) => (prev && prev.w === L && prev.h === H ? prev : { w: L, h: H }));
   }, [container]);
 
   useLayoutEffect(() => {
@@ -228,8 +232,8 @@ export default function NotchedCard({
         <div
           className={`notched-clipped-surface ${radiusClassName} ${surfaceClassName}`}
           style={{
-            clipPath: clipPath ? `path("${clipPath}")` : undefined,
-            WebkitClipPath: clipPath ? `path("${clipPath}")` : undefined,
+            // Masked rather than clip-pathed so Safari keeps repainting videos inside (see pathMask.js)
+            ...pathMaskStyle(clipPath, pathBox?.w, pathBox?.h),
             boxShadow:
               bezelWidth && !clipPath ? `inset 0 0 0 ${bezelWidth}px ${bezelColor}` : undefined,
           }}

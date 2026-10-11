@@ -5,8 +5,21 @@ const REVEAL_DURATION = 1000;
 const REVEAL_EASING = 'cubic-bezier(0.55, 0, 0.25, 1)';
 
 function applyTheme(theme) {
+  const isDark = theme === 'dark';
+  const scheme = isDark ? 'only dark' : 'only light';
+  const themeColor = isDark ? '#0A0A0D' : '#FBF9F5';
+
   document.documentElement.setAttribute('data-theme', theme);
-  document.body.setAttribute('data-theme', theme);
+  if (document.body) {
+    document.body.setAttribute('data-theme', theme);
+    document.body.style.colorScheme = scheme;
+  }
+  document.documentElement.style.colorScheme = scheme;
+
+  const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+  if (metaThemeColor) {
+    metaThemeColor.setAttribute('content', themeColor);
+  }
 }
 
 export function useTheme() {
@@ -25,6 +38,7 @@ export function useTheme() {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (!document.startViewTransition || reduceMotion) {
+      applyTheme(next);
       setTheme(next);
       return;
     }

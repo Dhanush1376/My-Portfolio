@@ -127,8 +127,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  clip-path: url(#heroCanvasClip);
-  -webkit-clip-path: url(#heroCanvasClip);
+  /* Shaped with a mask set inline in Hero.jsx (clip-path freezes video frames in Safari) */
   pointer-events: none;
   overflow: hidden;
   z-index: 5;
@@ -178,9 +177,6 @@
   object-position: center center;
   display: block;
   z-index: 1;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  will-change: opacity, transform;
   pointer-events: none !important;
   user-select: none !important;
   -webkit-user-select: none !important;

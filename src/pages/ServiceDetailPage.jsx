@@ -5,7 +5,7 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import { getServiceBySlug } from '../data/servicesData';
+import { SERVICES_DATA, getServiceBySlug } from '../data/servicesData';
 import { useTheme } from '../hooks/useTheme';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';

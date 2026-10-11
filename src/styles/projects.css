@@ -829,13 +829,10 @@ html[data-theme="light"] .projects-title-stroke {
   pointer-events: none !important;
   user-select: none !important;
   -webkit-user-select: none !important;
-  filter: brightness(1.05) contrast(1.02);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  will-change: opacity;
-  opacity: 0;
+  /* Always visible and unfiltered: Safari skips autoplay for invisible videos and renders
+     filtered ones poorly. The poster attribute covers the moment before the first frame. */
+  opacity: 1;
   visibility: visible !important;
-  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
   image-rendering: -webkit-optimize-contrast;
 }
 
@@ -942,11 +939,6 @@ html[data-theme="light"] .projects-title-stroke {
   }
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .featured-project-interactive-group:hover .kinetic-preview-video {
-    filter: brightness(1.14) contrast(1.04);
-  }
-}
 
 /* Suppress all native browser play buttons, overlays, and controls with individual rules to prevent parser rejection */
 .kinetic-preview-video::-webkit-media-controls {

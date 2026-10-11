@@ -18,7 +18,24 @@
   <meta name="description"
     content="Software Engineer &amp; AI Systems Builder building modern web applications and intelligent systems." />
   <link rel="canonical" href="https://dhanu.me/" />
-  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="color-scheme" content="light dark" />
+  <meta id="theme-color-meta" name="theme-color" content="#FBF9F5" />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var theme = (saved === 'dark') ? 'dark' : 'light';
+        var scheme = (theme === 'dark') ? 'only dark' : 'only light';
+        var color = (theme === 'dark') ? '#0A0A0D' : '#FBF9F5';
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.style.colorScheme = scheme;
+        var meta = document.getElementById('theme-color-meta');
+        if (meta) {
+          meta.setAttribute('content', color);
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <!-- Open Graph -->
   <meta property="og:title" content="Dhanush — Software Engineer &amp; AI Systems Builder" />
