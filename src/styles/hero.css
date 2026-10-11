@@ -181,7 +181,6 @@
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   will-change: opacity, transform;
-  filter: brightness(1.05) contrast(1.02);
   pointer-events: none !important;
   user-select: none !important;
   -webkit-user-select: none !important;

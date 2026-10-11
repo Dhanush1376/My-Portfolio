@@ -1,13 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Linkedin, Phone } from 'lucide-react';
+import { Mail, Linkedin, Phone, ArrowUpRight } from 'lucide-react';
 import { SOCIAL_LINKS } from '../../data/socialLinks';
+
+function ThemeIcon({ theme }) {
+  return theme === 'dark' ? (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="12" cy="12" r="5" />
+      <line x1="12" y1="1" x2="12" y2="3" />
+      <line x1="12" y1="21" x2="12" y2="23" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      <line x1="1" y1="12" x2="3" y2="12" />
+      <line x1="21" y1="12" x2="23" y2="12" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    </svg>
+  ) : (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  );
+}
 
 export default function Navbar({ theme, toggleTheme, transparent = false }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const drawerRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // The drawer grows out of the menu button as a circle (and shrinks back into it on close)
+  const toggleMenu = (e) => {
+    const drawer = drawerRef.current;
+    if (drawer && !isMobileMenuOpen) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+      drawer.style.setProperty('--menu-x', `${x}px`);
+      drawer.style.setProperty('--menu-y', `${y}px`);
+      drawer.style.setProperty('--menu-r', `${Math.ceil(radius)}px`);
+    }
+    setIsMobileMenuOpen((prev) => !prev);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,11 +96,15 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
   };
 
   const navItems = [
-    { label: 'Work', href: '#work', num: '01' },
-    { label: 'Services', href: '/services', num: '02' },
-    { label: 'About', href: '/about', num: '03' },
-    { label: 'Contact', href: '/contact', num: '04' }
+    { label: 'Work', href: '#work', num: '01', swatch: '#94CF4E' },
+    { label: 'Services', href: '/services', num: '02', swatch: '#FF6058' },
+    { label: 'About', href: '/about', num: '03', swatch: '#F2A93B' },
+    { label: 'Contact', href: '/contact', num: '04', swatch: '#FF5520' }
   ];
+
+  const isActiveItem = (item) =>
+    location.pathname === item.href ||
+    (item.href === '/services' && (location.pathname === '/services' || location.pathname === '/what-we-do'));
 
   return (
     <>
@@ -79,8 +119,7 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
           {/* Center: Desktop Nav Links */}
           <ul className="nav-links-desktop">
             {navItems.map((item) => {
-              const isActive = location.pathname === item.href || 
-                (item.href === '/services' && (location.pathname === '/services' || location.pathname === '/what-we-do'));
+              const isActive = isActiveItem(item);
               return (
                 <li key={item.num}>
                   <a
@@ -103,23 +142,7 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
               onClick={toggleTheme}
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
-              {theme === 'dark' ? (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="5" />
-                  <line x1="12" y1="1" x2="12" y2="3" />
-                  <line x1="12" y1="21" x2="12" y2="23" />
-                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                  <line x1="1" y1="12" x2="3" y2="12" />
-                  <line x1="21" y1="12" x2="23" y2="12" />
-                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </svg>
-              ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                </svg>
-              )}
+              <ThemeIcon theme={theme} />
             </button>
 
             <a
@@ -134,7 +157,7 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
             {/* Mobile Hamburger toggle button */}
             <button
               className={`nav-menu-btn ${isMobileMenuOpen ? 'open' : ''}`}
-              onClick={() => setIsMobileMenuOpen(prev => !prev)}
+              onClick={toggleMenu}
               aria-label={isMobileMenuOpen ? 'Close Navigation' : 'Open Navigation'}
               aria-expanded={isMobileMenuOpen}
             >
@@ -147,114 +170,126 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
         </div>
       </nav>
 
-      {/* Intentionally Art-Directed Full-Screen Mobile Drawer */}
+      {/* Mobile menu: a full-screen sheet revealed as a circle from the menu button */}
       <div
+        ref={drawerRef}
         className={`mobile-drawer-overlay ${isMobileMenuOpen ? 'active' : ''}`}
-        onClick={closeMenu}
         aria-hidden={!isMobileMenuOpen}
       >
-        <div
-          className="mobile-drawer-content"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="mobile-drawer-content" data-lenis-prevent>
+          {/* Mirrors the navbar so the brand and buttons stay where they were */}
           <div className="drawer-header">
-            <span className="drawer-eyebrow">• NAVIGATION</span>
-            <button
-              className="drawer-close-btn"
-              onClick={closeMenu}
-              aria-label="Close menu"
-            >
-              ✕
-            </button>
+            <a href="#hero" className="drawer-brand" aria-label="Dhanush - Home" onClick={(e) => handleNavClick(e, '#hero')}>
+              <span className="brand-slash">//</span>
+              <span className="brand-name">DHANUSH<span className="brand-dot">.</span></span>
+            </a>
+            <div className="drawer-header-actions">
+              <button
+                className="drawer-icon-btn"
+                onClick={toggleTheme}
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              >
+                <ThemeIcon theme={theme} />
+              </button>
+              <button className="drawer-icon-btn drawer-close-btn" onClick={closeMenu} aria-label="Close menu">
+                <span className="drawer-close-icon" aria-hidden="true"><span></span><span></span></span>
+              </button>
+            </div>
           </div>
 
-          <ul className="drawer-nav-list">
-            {navItems.map((item) => (
-              <li key={item.num} className="drawer-nav-item">
-                <a
-                  href={item.href}
-                  className={`drawer-nav-link ${location.pathname === item.href ? 'active' : ''}`}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                >
-                  <span className="drawer-num">{item.num}</span>
-                  <span className="drawer-label">{item.label}</span>
-                  <span className="drawer-arrow">↗</span>
-                </a>
-              </li>
-            ))}
-          </ul>
+          <nav className="drawer-nav" aria-label="Mobile">
+            <div className="drawer-caption drawer-stagger" style={{ '--i': 0 }}>
+              <span>Menu</span>
+              <span className="drawer-caption-rule" aria-hidden="true"></span>
+              <span>({String(navItems.length).padStart(2, '0')})</span>
+            </div>
+
+            <ul className="drawer-nav-list">
+              {navItems.map((item, idx) => {
+                const isActive = isActiveItem(item);
+                return (
+                  <li key={item.num} className="drawer-nav-item drawer-stagger" style={{ '--i': idx + 1 }}>
+                    <a
+                      href={item.href}
+                      className={`drawer-nav-link ${isActive ? 'active' : ''}`}
+                      style={{ '--swatch': item.swatch }}
+                      aria-current={isActive ? 'page' : undefined}
+                      onClick={(e) => handleNavClick(e, item.href)}
+                    >
+                      <span className="drawer-num">{item.num}</span>
+                      <span className="drawer-label">
+                        {item.label}
+                        {isActive && <span className="drawer-active-dot">.</span>}
+                      </span>
+                      <span className="drawer-arrow" aria-hidden="true">
+                        <ArrowUpRight size={18} strokeWidth={2.2} />
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
           <div className="drawer-footer">
-            {/* Availability Status */}
-            <div className="drawer-status">
-              <span className="status-dot"></span>
-              <span>Available for select projects &amp; contracts</span>
-            </div>
+            <div className="drawer-bottom-row drawer-stagger" style={{ '--i': navItems.length + 1 }}>
+              <div className="drawer-social-row">
+                <a
+                  href={SOCIAL_LINKS.email.mailtoUrl}
+                  className="drawer-social-pill drawer-social-pill-email"
+                  aria-label={`Email Dhanush (${SOCIAL_LINKS.email.address})`}
+                  title={`Email: ${SOCIAL_LINKS.email.address}`}
+                >
+                  <Mail size={16} />
+                </a>
 
-            {/* Circular Social / Contact Pills */}
-            <div className="drawer-social-row">
-              <a
-                href={SOCIAL_LINKS.email.mailtoUrl}
-                className="drawer-social-pill"
-                aria-label={`Email Dhanush (${SOCIAL_LINKS.email.address})`}
-                title={`Email: ${SOCIAL_LINKS.email.address}`}
-              >
-                <Mail size={16} />
-              </a>
+                <a
+                  href={SOCIAL_LINKS.linkedin.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="drawer-social-pill drawer-social-pill-linkedin"
+                  aria-label="LinkedIn Profile"
+                  title="LinkedIn Profile"
+                >
+                  <Linkedin size={16} />
+                </a>
 
-              <a
-                href={SOCIAL_LINKS.linkedin.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="drawer-social-pill"
-                aria-label="LinkedIn Profile"
-                title="LinkedIn Profile"
-              >
-                <Linkedin size={16} />
-              </a>
+                <a
+                  href={SOCIAL_LINKS.whatsapp.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="drawer-social-pill drawer-social-pill-whatsapp"
+                  aria-label="WhatsApp Chat"
+                  title="Direct WhatsApp Chat"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
+                    <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
+                  </svg>
+                </a>
 
-              <a
-                href={SOCIAL_LINKS.whatsapp.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="drawer-social-pill"
-                aria-label="WhatsApp Chat"
-                title="Direct WhatsApp Chat"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
-                  <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
-                </svg>
-              </a>
+                <a
+                  href={SOCIAL_LINKS.x.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="drawer-social-pill drawer-social-pill-x"
+                  aria-label="X (Twitter) Profile"
+                  title="X (Twitter) Profile"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+                  </svg>
+                </a>
 
-              <a
-                href={SOCIAL_LINKS.x.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="drawer-social-pill"
-                aria-label="X (Twitter) Profile"
-                title="X (Twitter) Profile"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
-                </svg>
-              </a>
-
-              <a
-                href={SOCIAL_LINKS.phone.telUrl}
-                className="drawer-social-pill"
-                aria-label={`Call Dhanush (${SOCIAL_LINKS.phone.number})`}
-                title={`Call: ${SOCIAL_LINKS.phone.number}`}
-              >
-                <Phone size={16} />
-              </a>
-            </div>
-
-            {/* Footer-style Bottom Signature Bar */}
-            <div className="drawer-bottom-bar">
-              <span className="drawer-brand-logo">
-                DHANUSH<span className="brand-dot">.</span>
-              </span>
+                <a
+                  href={SOCIAL_LINKS.phone.telUrl}
+                  className="drawer-social-pill drawer-social-pill-phone"
+                  aria-label={`Call Dhanush (${SOCIAL_LINKS.phone.number})`}
+                  title={`Call: ${SOCIAL_LINKS.phone.number}`}
+                >
+                  <Phone size={16} />
+                </a>
+              </div>
               <span className="drawer-copyright">© 2026</span>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -53,7 +53,6 @@ export function HubDiscoveryCard({
 
     const ctx = gsap.context(() => {
       const cardEl = cardRef.current;
-      const innerEl = innerRef.current;
       const belowInfoEl = belowInfoRef.current;
       const tagPills = cardEl.querySelectorAll('.project-tag-pill');
       const metaRow = cardEl.querySelector('.project-meta-row');

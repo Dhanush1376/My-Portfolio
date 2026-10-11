@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ArrowUpRight } from 'lucide-react';
+import { useLoopingVideo } from '../../hooks/useLoopingVideo';
 
 const De = (e) => Math.round(e * 100) / 100;
 const St = (e, t, n, r) => `A ${De(e)} ${De(e)} 0 0 ${t} ${De(n)} ${De(r)}`;
@@ -82,6 +83,27 @@ function generateStudioCanvasPath(cardWidth, cardHeight, lines, r, s, W_left = 0
   return u.join(" ");
 }
 
+// Card geometry for a hero of size w × h (shared by the first render and live measurement)
+function getCardBox(w, h) {
+  const isMobile = w < 768;
+  const isTablet = w >= 768 && w < 1100;
+  const paddingLeft = isMobile ? 12 : isTablet ? 24 : Math.max(36, Math.min(64, Math.round(w * 0.035)));
+  const cardTop = isMobile ? 74 : Math.round(Math.max(84, Math.min(105, h * 0.11)));
+  const bottomPadding = isMobile ? 16 : 28;
+  const minCardH = isMobile ? 420 : 500;
+  const cardHeight = Math.max(minCardH, Math.round(h - cardTop - bottomPadding));
+  const cardWidth = Math.round(w - paddingLeft * 2);
+  const W_left = isMobile ? 0 : Math.round(Math.max(80, Math.min(130, cardWidth * 0.09)));
+  return { paddingLeft, cardTop, cardHeight, cardWidth, W_left };
+}
+
+// Loops rendered from /hero-video, each composed for its card shape. Anchoring keeps the
+// focal content (bottom-right on desktop, bottom on mobile) clear of the stepped headline notch.
+const HERO_MEDIA = {
+  landscape: { video: '/assets/hero/hero-desktop.mp4', poster: '/assets/hero/hero-desktop-poster.webp', position: '100% 100%' },
+  portrait: { video: '/assets/hero/hero-mobile.mp4', poster: '/assets/hero/hero-mobile-poster.webp', position: '50% 100%' },
+};
+
 export default function Hero() {
   const heroRef = useRef(null);
   const wrapperRef = useRef(null);
@@ -93,129 +115,36 @@ export default function Hero() {
   const navigate = useNavigate();
 
   const [cardPath, setCardPath] = useState('');
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [layout, setLayout] = useState(() => {
     const isClient = typeof window !== 'undefined';
     const w = isClient ? window.innerWidth : 1400;
     const h = isClient ? window.innerHeight : 750;
-    const isMobile = w < 768;
-    return {
-      w,
-      h,
-      paddingLeft: isMobile ? 12 : 48,
-      cardTop: isMobile ? 74 : 96,
-      cardHeight: 600,
-      cardWidth: isMobile ? w - 24 : 1300,
-      W_left: isMobile ? 0 : 110,
-    };
+    return { w, h, ...getCardBox(w, h) };
   });
+  // Reduced motion: keep the static poster (the loop's first frame) and skip the video entirely
+  const [prefersReducedMotion] = useState(
+    () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  );
 
   const isMobile = layout.w < 768;
-  const currentVideoSrc = isMobile ? '/assets/mobile-hero.MP4' : '/assets/laptop-hero.MP4';
-  const currentPosterSrc = isMobile ? '/assets/mobile-hero-poster.webp' : '/assets/laptop-hero-poster.webp';
+  // Pick by the card's actual shape, so portrait tablets get the portrait composition too
+  const heroMedia = layout.cardWidth / layout.cardHeight < 1 ? HERO_MEDIA.portrait : HERO_MEDIA.landscape;
+  const currentVideoSrc = heroMedia.video;
+  const currentPosterSrc = heroMedia.poster;
 
   const liquidFillRef = useRef(null);
   const stageContentRef = useRef(null);
   const hasAnimatedRef = useRef(false);
   const videoRef = useRef(null);
 
-  const setVideoElement = (el) => {
-    videoRef.current = el;
-    if (el) {
-      el.defaultMuted = true;
-      el.muted = true;
-      el.playsInline = true;
-      el.setAttribute('muted', '');
-      el.setAttribute('playsinline', '');
-      el.setAttribute('webkit-playsinline', '');
-      el.setAttribute('x5-playsinline', '');
-      el.setAttribute('autoplay', '');
-      try {
-        const p = el.play();
-        if (p && typeof p.then === 'function') {
-          p.then(() => setIsVideoPlaying(true)).catch(() => {});
-        }
-      } catch (_) {}
-    }
-  };
-
-  // Autoplay management: Guarantees instantaneous, uninterrupted looping playback without user touch
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    let isSubscribed = true;
-
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-
-    const startPlayback = () => {
-      if (!video || !isSubscribed) return;
-      video.muted = true;
-      video.defaultMuted = true;
-
-      if (!video.paused) {
-        setIsVideoPlaying(true);
-        return;
-      }
-
-      const p = video.play();
-      if (p !== undefined) {
-        p.then(() => {
-          if (isSubscribed) setIsVideoPlaying(true);
-        }).catch(() => {
-          if (!isSubscribed) return;
-          video.muted = true;
-          video.play().then(() => {
-            if (isSubscribed) setIsVideoPlaying(true);
-          }).catch(() => {});
-        });
-      }
-    };
-
-    startPlayback();
-
-    const handlePlaying = () => {
-      if (isSubscribed) {
-        setIsVideoPlaying(true);
-      }
-    };
-
-    video.addEventListener('playing', handlePlaying);
-    video.addEventListener('canplay', startPlayback);
-    video.addEventListener('loadeddata', startPlayback);
-
-    // If device switched tabs or resumed from sleep
-    const onVisibilityChange = () => {
-      if (!document.hidden && video && video.paused) {
-        startPlayback();
-      }
-    };
-    document.addEventListener('visibilitychange', onVisibilityChange);
-
-    // Discrete listener fallback in case ultra-aggressive OS battery savers pause background media
-    const interactionEvents = ['touchstart', 'pointerdown', 'click', 'keydown', 'scroll'];
-    const onInteraction = () => {
-      if (video && video.paused) {
-        startPlayback();
-      }
-    };
-    interactionEvents.forEach((evt) => {
-      window.addEventListener(evt, onInteraction, { once: true, passive: true });
-    });
-
-    return () => {
-      isSubscribed = false;
-      video.removeEventListener('playing', handlePlaying);
-      video.removeEventListener('canplay', startPlayback);
-      video.removeEventListener('loadeddata', startPlayback);
-      document.removeEventListener('visibilitychange', onVisibilityChange);
-      interactionEvents.forEach((evt) => {
-        window.removeEventListener(evt, onInteraction);
-      });
-    };
-  }, [currentVideoSrc]);
+  // Seamless loop with no tap needed; pauses while the hero is scrolled away to free the decoder
+  // for the project videos. A new source (portrait <-> landscape) shows its poster until it plays.
+  const isVideoPlaying = useLoopingVideo(videoRef, {
+    src: currentVideoSrc,
+    enabled: !prefersReducedMotion,
+    inViewOnly: true,
+    threshold: 0.01,
+  });
 
   // Entrance Animation: Runs strictly ONCE on mount, never repeats on layout recalculations
   useEffect(() => {
@@ -287,16 +216,7 @@ export default function Hero() {
       const h = heroRef.current.clientHeight || window.innerHeight;
 
       const isMobile = w < 768;
-      const isTablet = w >= 768 && w < 1100;
-
-      const paddingLeft = isMobile ? 12 : isTablet ? 24 : Math.max(36, Math.min(64, Math.round(w * 0.035)));
-      const cardTop = isMobile ? 74 : Math.round(Math.max(84, Math.min(105, h * 0.11)));
-      const bottomPadding = isMobile ? 16 : 28;
-      const minCardH = isMobile ? 420 : 500;
-      const cardHeight = Math.max(minCardH, Math.round(h - cardTop - bottomPadding));
-      const cardWidth = Math.round(w - paddingLeft * 2);
-
-      const W_left = isMobile ? 0 : Math.round(Math.max(80, Math.min(130, cardWidth * 0.09)));
+      const { paddingLeft, cardTop, cardHeight, cardWidth, W_left } = getCardBox(w, h);
 
       setLayout({
         w,
@@ -475,32 +395,26 @@ export default function Hero() {
               src={currentPosterSrc}
               alt="Hero interactive background preview"
               className={`hero-canvas-poster ${isVideoPlaying ? 'poster-faded' : ''}`}
+              style={{ objectPosition: heroMedia.position }}
               aria-hidden="true"
             />
-            <video
-              ref={setVideoElement}
-              src={currentVideoSrc}
-              autoPlay
-              loop
-              muted
-              playsInline
-              controls={false}
-              disablePictureInPicture
-              disableRemotePlayback
-              tabIndex={-1}
-              webkit-playsinline="true"
-              x5-playsinline="true"
-              preload="auto"
-              className={`hero-canvas-video ${isVideoPlaying ? 'video-playing' : ''}`}
-              onPlaying={() => setIsVideoPlaying(true)}
-              onLoadedData={(e) => {
-                try { e.target.play().catch(() => {}); } catch (_) {}
-              }}
-              onCanPlay={(e) => {
-                try { e.target.play().catch(() => {}); } catch (_) {}
-              }}
-              aria-hidden="true"
-            />
+            {!prefersReducedMotion && (
+              <video
+                ref={videoRef}
+                src={currentVideoSrc}
+                style={{ objectPosition: heroMedia.position }}
+                loop
+                muted
+                playsInline
+                controls={false}
+                disablePictureInPicture
+                disableRemotePlayback
+                tabIndex={-1}
+                preload="auto"
+                className={`hero-canvas-video ${isVideoPlaying ? 'video-playing' : ''}`}
+                aria-hidden="true"
+              />
+            )}
           </div>
         </div>
 
@@ -517,9 +431,9 @@ export default function Hero() {
         }}
       >
         <h1 className="hero-studio-title hero-title-large">
-          <span ref={row1Ref} className="title-text-line hero-anim-line">Building modern software for</span>
-          <span ref={row2Ref} className="title-text-line hero-anim-line">high growth businesses</span>
-          <span ref={row3Ref} className="title-text-line hero-anim-line">and AI products</span>
+          <span ref={row1Ref} className="title-text-line hero-anim-line">One Stop Solution for</span>
+          <span ref={row2Ref} className="title-text-line hero-anim-line">all creative needs</span>
+          <span ref={row3Ref} className="title-text-line hero-anim-line">and goals</span>
         </h1>
 
         <div ref={btnRowRef} className="hero-btn-row">

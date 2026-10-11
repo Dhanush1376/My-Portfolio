@@ -1,22 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useLoopingVideo } from '../../hooks/useLoopingVideo';
 import { PROJECTS_DATA } from '../../data/projectsData';
 
 export default function CaseStudyModal({ isOpen, projectId, onClose }) {
   const project = projectId ? PROJECTS_DATA[projectId] : null;
+  const videoRef = useRef(null);
+  useLoopingVideo(videoRef, { src: isOpen ? project?.video : null });
 
   useEffect(() => {
+    // Only touch the scroll lock while open, so re-renders don't clear a lock the mobile menu holds
+    if (!isOpen) return undefined;
+
     const onKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === 'Escape') {
         onClose();
       }
     };
 
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', onKeyDown);
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
 
     return () => {
       document.body.style.overflow = '';
@@ -62,24 +64,17 @@ export default function CaseStudyModal({ isOpen, projectId, onClose }) {
           <div className="cs-hero-img-box">
             {project.video ? (
               <video
+                ref={videoRef}
                 src={project.video}
                 poster={project.img}
-                autoPlay
                 loop
                 muted
                 playsInline
-                webkit-playsinline="true"
-                x5-playsinline="true"
+                preload="auto"
                 disablePictureInPicture
                 disableRemotePlayback
                 className="cs-hero-video"
-                onEnded={(e) => {
-                  e.target.currentTime = 0;
-                  e.target.play().catch(() => {});
-                }}
-              >
-                <source src={project.video} type="video/mp4" />
-              </video>
+              />
             ) : (
               <img src={project.img} alt={`${project.title} Interface Preview`} className="cs-hero-img" />
             )}

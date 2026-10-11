@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUp, Linkedin, Phone, Mail, MapPin } from 'lucide-react';
@@ -284,7 +285,7 @@ export default function Footer() {
             href={SOCIAL_LINKS.linkedin.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="social-pill"
+            className="social-pill social-pill-linkedin"
             aria-label="LinkedIn"
             title="LinkedIn Profile"
           >
@@ -294,7 +295,7 @@ export default function Footer() {
             href={SOCIAL_LINKS.whatsapp.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="social-pill"
+            className="social-pill social-pill-whatsapp"
             aria-label="WhatsApp"
             title="WhatsApp Chat"
           >
@@ -307,7 +308,7 @@ export default function Footer() {
             href={SOCIAL_LINKS.x.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="social-pill"
+            className="social-pill social-pill-x"
             aria-label="X (Twitter)"
             title="X (Twitter) Profile"
           >
@@ -317,7 +318,7 @@ export default function Footer() {
           </a>
           <a
             href={SOCIAL_LINKS.phone.telUrl}
-            className="social-pill"
+            className="social-pill social-pill-phone"
             aria-label={`Call ${SOCIAL_LINKS.phone.number}`}
             title={`Call: ${SOCIAL_LINKS.phone.number}`}
           >
@@ -346,9 +347,17 @@ export default function Footer() {
           <div className="footer-brand-callout">
             <TypewriterText />
             <div className="footer-action-row">
-              <a href={SOCIAL_LINKS.email.mailtoUrl} className="footer-start-btn">
+              <Link 
+                to="/contact" 
+                className="footer-start-btn"
+                onClick={() => {
+                  if (window.location.pathname === '/contact') {
+                    scrollToTop();
+                  }
+                }}
+              >
                 Start a project <span className="arrow-icon">↗</span>
-              </a>
+              </Link>
               <p className="footer-tiny-desc">
                 <strong>End-to-end development</strong>
                 Tailored to your vision
@@ -360,11 +369,11 @@ export default function Footer() {
             <div className="footer-link-col">
               <h4>EXPLORE</h4>
               <ul>
-                <li><a href="/">Home</a></li>
+                <li><Link to="/">Home</Link></li>
                 <li><a href="/#work">Work</a></li>
-                <li><a href="/services">Services</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
+                <li><Link to="/services">Services</Link></li>
+                <li><Link to="/about">About</Link></li>
+                <li><Link to="/contact">Contact</Link></li>
               </ul>
             </div>
             

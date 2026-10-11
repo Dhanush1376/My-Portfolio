@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import AlternativeDiscoveryHub from './AlternativeDiscoveryHub';
 import { 
   ArrowLeft, 
   ArrowRight, 
-  ArrowUpRight,
   Globe, 
   Cpu, 
   Smartphone, 
-  Palette, 
   Layers, 
-  Lightbulb, 
   Sparkles,
   Send,
   Clock,
@@ -21,8 +17,6 @@ import {
   AlertCircle,
   RotateCcw,
   User,
-  Mail,
-  Phone,
   MessageSquare,
   ShoppingBag,
   Zap,
@@ -201,7 +195,6 @@ const trackAnalytics = (eventName, data = {}) => {
 };
 
 export default function ContactForm() {
-  const navigate = useNavigate();
   const [selectedServices, setSelectedServices] = useState(['General Conversation']);
   const [step, setStep] = useState(1); // 1: Services, 2: Details, 3: Brief (mobile wizard)
   const [formData, setFormData] = useState({
@@ -525,17 +518,12 @@ export default function ContactForm() {
     trackAnalytics('contact_form_submitted', { services: selectedServices.join(', ') });
 
     const fullPhone = `${selectedCountry.dial} ${formData.phone.trim()}`;
-    const countryInfo = `${selectedCountry.name} (${selectedCountry.dial})`;
     const web3formsKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '1b7c64cf-872f-4a9a-8645-c94982d436d9';
     const formspreeId = import.meta.env.VITE_FORMSPREE_FORM_ID;
 
     try {
       let response;
       let result;
-
-      const cleanDial = selectedCountry.dial.replace(/[^0-9]/g, '');
-      const cleanPhoneDigits = formData.phone.replace(/[^0-9]/g, '');
-      const whatsappQuickLink = `https://wa.me/${cleanDial}${cleanPhoneDigits}`;
 
       if (formspreeId) {
         // Formspree static submission (clean & studio-branded)
@@ -649,7 +637,7 @@ export default function ContactForm() {
 
       <div className="studio-contact-container">
         
-        <div className="studio-contact-grid">
+        <div className={`studio-contact-grid ${countryDropdownOpen ? 'has-dropdown-open' : ''}`}>
           
           {/* Left Column: Direct Studio Line & Trust Perks (Desktop) */}
           <div className="studio-info-col">
@@ -693,7 +681,7 @@ export default function ContactForm() {
 
           {/* Right Column: Refined Studio Card */}
           <div className="studio-form-col">
-            <div className="studio-form-card">
+            <div className={`studio-form-card ${countryDropdownOpen ? 'has-dropdown-open' : ''}`}>
               
               {status === 'sent' ? (
                 <div className="studio-step-pane is-active-step studio-success-box">

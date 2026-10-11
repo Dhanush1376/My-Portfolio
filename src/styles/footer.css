@@ -158,13 +158,33 @@
   font-size: 0.75rem;
   font-weight: 700;
   text-decoration: none;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .social-pill:hover {
-  transform: scale(1.1);
+  transform: scale(1.12);
+  color: #FFFFFF;
+}
+
+/* Individual distinctive brand colors on hover */
+.social-pill.social-pill-linkedin:hover {
+  background: #0A66C2;
+  box-shadow: 0 4px 14px rgba(10, 102, 194, 0.45);
+}
+
+.social-pill.social-pill-whatsapp:hover {
+  background: #25D366;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.45);
+}
+
+.social-pill.social-pill-x:hover {
+  background: #1D9BF0;
+  box-shadow: 0 4px 14px rgba(29, 155, 240, 0.45);
+}
+
+.social-pill.social-pill-phone:hover {
   background: var(--accent);
-  color: #fff;
+  box-shadow: 0 4px 14px rgba(255, 85, 32, 0.45);
 }
 
 /* --- Left Extension & Inverted Notch --- */
@@ -711,8 +731,17 @@
 }
 
 .marquee-star {
-  color: var(--accent);
+  color: #FFB800; /* Radiant Solar Star Gold */
   font-size: clamp(1.1rem, 2vw, 1.6rem);
+  display: inline-block;
+  vertical-align: middle;
+  filter: drop-shadow(0 0 6px rgba(255, 184, 0, 0.45));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+[data-theme="light"] .marquee-star {
+  color: #D97706; /* Rich Amber Gold for clean contrast on light cream footer */
+  filter: drop-shadow(0 0 4px rgba(217, 119, 6, 0.3));
 }
 
 @media (max-width: 768px) {

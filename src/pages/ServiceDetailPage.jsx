@@ -5,7 +5,7 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import { SERVICES_DATA, getServiceBySlug } from '../data/servicesData';
+import { getServiceBySlug } from '../data/servicesData';
 import { useTheme } from '../hooks/useTheme';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
@@ -30,27 +30,295 @@ const TECH_ICONS = {
   figma: "M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981z",
   graphql: "M12.002 0a2.138 2.138 0 1 0 0 4.277 2.138 2.138 0 1 0 0-4.277zm8.54 4.931a2.138 2.138 0 1 0 0 4.277 2.138 2.138 0 1 0 0-4.277zm0 9.862a2.138 2.138 0 1 0 0 4.277 2.138 2.138 0 1 0 0-4.277zm-8.54 4.931a2.138 2.138 0 1 0 0 4.276 2.138 2.138 0 1 0 0-4.276zm-8.542-4.93a2.138 2.138 0 1 0 0 4.276 2.138 2.138 0 1 0 0-4.277zm0-9.863a2.138 2.138 0 1 0 0 4.277 2.138 2.138 0 1 0 0-4.277z",
   stripe: "M13.976 9.15c0-.84-.71-1.32-1.92-1.32-.97 0-1.85.34-2.58.78l-.66-1.52c.98-.53 2.15-.84 3.39-.84 2.45 0 4.02 1.25 4.02 3.23 0 2.92-3.87 3.03-3.87 4.54 0 .97.87 1.34 2.14 1.34 1.13 0 2.22-.44 3.03-.98l.63 1.57c-1.1.66-2.45 1.05-3.85 1.05-2.67 0-4.25-1.35-4.25-3.34 0-3.08 3.96-3.17 3.96-4.5z",
-  supabase: "M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C-.33 13.427.65 15.455 2.409 15.455h9.579l.113 7.51c.014.985 1.259 1.408 1.873.636l9.262-11.653c1.093-1.375.113-3.403-1.645-3.403h-9.642z"
+  supabase: "M11.9 1.036c-.015-.986-1.26-1.41-1.874-.637L.764 12.05C-.33 13.427.65 15.455 2.409 15.455h9.579l.113 7.51c.014.985 1.259 1.408 1.873.636l9.262-11.653c1.093-1.375.113-3.403-1.645-3.403h-9.642z",
+  openai: "M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zm-1.22-9.46a4.453 4.453 0 0 1 2.36-1.996V12.4a.79.79 0 0 0 .392.682l5.843 3.37-2.02 1.168a.08.08 0 0 1-.07.005l-4.84-2.794a4.504 4.504 0 0 1-1.665-6.091zm16.147 3.388-5.843-3.37 2.02-1.168a.08.08 0 0 1 .07-.005l4.84 2.795a4.504 4.504 0 0 1 1.665 6.09 4.468 4.468 0 0 1-2.36 1.997V12.914a.79.79 0 0 0-.392-.682zm2.013-3.023-.14-.085-4.784-2.759a.776.776 0 0 0-.78 0L9.193 9.734V7.402a.08.08 0 0 1 .033-.062l4.84-2.795a4.5 4.5 0 0 1 6.14 1.646 4.458 4.458 0 0 1 .535 3.014zM8.077 10.98l3.923-2.264 3.923 2.265v4.529l-3.923 2.264-3.923-2.264z",
+  redis: "M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.64 6.72L12 9.96 6.36 6.72 12 3.48l5.64 3.24zm-11.28 2.4L11 11.5v6.52l-4.64-2.38V9.12zm11.28 0v6.52L13 18.02V11.5l4.64-2.38z",
+  langchain: "M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-1.875 5.25a2.25 2.25 0 0 1 2.25 2.25v1.5a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 0-.75-.75h-2.25a.75.75 0 0 0-.75.75v1.5a.75.75 0 0 1-1.5 0v-1.5a2.25 2.25 0 0 1 2.25-2.25h2.25zm5.625 6.75a.75.75 0 0 1 0 1.5h-7.5a.75.75 0 0 1 0-1.5h7.5zm-3.75 4.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1-.75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5a.75.75 0 0 0 .75.75h.75v-2.25a.75.75 0 0 1 .75-.75z",
+  razorpay: "M22.436 0l-11.91 7.773-4.99 4.316 4.195 2.738 8.16-5.328-4.717 8.358 4.37 2.853L22.436 0zM1.564 24l7.158-4.673 4.99-4.316-4.195-2.738-4.708 3.073 4.717-8.358-4.37-2.853L1.564 24z",
+  cloudinary: "M19.78 9.38C19.26 6.33 16.63 4 13.5 4 10.97 4 8.79 5.53 7.8 7.76 7.42 7.6 7.02 7.5 6.6 7.5 4.06 7.5 2 9.56 2 12.1c0 2.45 1.93 4.45 4.34 4.58.26.02.53.02.8.02h12.36c2.49 0 4.5-2.01 4.5-4.5 0-2.31-1.74-4.22-3.98-4.47-.08-.12-.16-.24-.24-.35z",
+  zapier: "M20.25 10.5h-5.625L18 5.625l-2.625-1.5-3.375 5.25L8.625 4.125 6 5.625l3.375 4.875H3.75V13.5h5.625L6 18.375l2.625 1.5 3.375-5.25 3.375 5.25 2.625-1.5-3.375-4.875h5.625V10.5z",
+  css3: "M4.192 3.143h15.615l-1.42 15.908-6.387 1.806-6.386-1.806zm13.111 3.51H6.697l.278 3.12h9.458l-.348 3.904-4.086 1.134-4.086-1.134-.176-1.95H5.161l.348 4.316 6.491 1.8 6.491-1.8z",
+  lighthouse: "M12 2L8.5 7h7L12 2zm-4 7l-2 13h12l-2-13H8zm2 2h4l.3 2h-4.6l.3-2zm-.6 4h5.2l.3 2H9.1l.3-2z",
+  websockets: "M16 3l5 5-5 5V9H8v4H5V7a2 2 0 0 1 2-2h9V3zm-8 18l-5-5 5-5v4h8v-4h3v6a2 2 0 0 1-2 2H8v2z",
+  gsap: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5",
+  chart: "M3 3v18h18v-2H5V3H3zm4 14h2v-6H7v6zm4 0h2V9h-2v8zm4 0h2V5h-2v12z"
 };
 
-function getToolIconPath(toolName) {
+// Official brand colors & icons for all technologies
+function getToolBrandMeta(toolName, isDark) {
   const norm = toolName.toLowerCase().replace(/[^a-z0-9]/g, '');
-  if (norm.includes('next')) return TECH_ICONS.nextjs;
-  if (norm.includes('react')) return TECH_ICONS.react;
-  if (norm.includes('typescript')) return TECH_ICONS.typescript;
-  if (norm.includes('vite')) return TECH_ICONS.vite;
-  if (norm.includes('flutter')) return TECH_ICONS.flutter;
-  if (norm.includes('node')) return TECH_ICONS.nodejs;
-  if (norm.includes('postgre') || norm.includes('sql')) return TECH_ICONS.postgresql;
-  if (norm.includes('tailwind')) return TECH_ICONS.tailwindcss;
-  if (norm.includes('python')) return TECH_ICONS.python;
-  if (norm.includes('fastapi')) return TECH_ICONS.fastapi;
-  if (norm.includes('figma')) return TECH_ICONS.figma;
-  if (norm.includes('graphql')) return TECH_ICONS.graphql;
-  if (norm.includes('stripe')) return TECH_ICONS.stripe;
-  if (norm.includes('supabase')) return TECH_ICONS.supabase;
-  return null;
+
+  if (norm.includes('reactnative')) {
+    return {
+      color: isDark ? '#61DAFB' : '#087EA4',
+      bg: isDark ? 'rgba(97, 218, 251, 0.12)' : 'rgba(8, 126, 164, 0.08)',
+      icon: TECH_ICONS.react,
+    };
+  }
+  if (norm.includes('react')) {
+    return {
+      color: isDark ? '#00D8FE' : '#087EA4',
+      bg: isDark ? 'rgba(0, 216, 254, 0.12)' : 'rgba(8, 126, 164, 0.08)',
+      icon: TECH_ICONS.react,
+    };
+  }
+  if (norm.includes('typescript')) {
+    return {
+      color: isDark ? '#38BDF8' : '#3178C6',
+      bg: isDark ? 'rgba(56, 189, 248, 0.14)' : 'rgba(49, 120, 198, 0.08)',
+      icon: TECH_ICONS.typescript,
+    };
+  }
+  if (norm.includes('next') && norm.includes('vite')) {
+    return {
+      color: isDark ? '#BD34FE' : '#646CFF',
+      bg: isDark ? 'rgba(189, 52, 254, 0.14)' : 'rgba(100, 108, 255, 0.08)',
+      icon: TECH_ICONS.vite,
+    };
+  }
+  if (norm.includes('next')) {
+    return {
+      color: isDark ? '#FFFFFF' : '#000000',
+      bg: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)',
+      icon: TECH_ICONS.nextjs,
+    };
+  }
+  if (norm.includes('vite')) {
+    return {
+      color: '#646CFF',
+      bg: isDark ? 'rgba(100, 108, 255, 0.14)' : 'rgba(100, 108, 255, 0.08)',
+      icon: TECH_ICONS.vite,
+    };
+  }
+  if (norm.includes('flutter')) {
+    return {
+      color: isDark ? '#54C5F8' : '#02569B',
+      bg: isDark ? 'rgba(84, 197, 248, 0.12)' : 'rgba(2, 86, 155, 0.08)',
+      icon: TECH_ICONS.flutter,
+    };
+  }
+  if (norm.includes('node')) {
+    return {
+      color: isDark ? '#68A063' : '#43853D',
+      bg: isDark ? 'rgba(104, 160, 99, 0.14)' : 'rgba(67, 133, 61, 0.08)',
+      icon: TECH_ICONS.nodejs,
+    };
+  }
+  if (norm.includes('fastapi')) {
+    return {
+      color: isDark ? '#009688' : '#059669',
+      bg: isDark ? 'rgba(0, 150, 136, 0.14)' : 'rgba(5, 150, 105, 0.08)',
+      icon: TECH_ICONS.fastapi,
+    };
+  }
+  if (norm.includes('postgre') || norm.includes('sql')) {
+    return {
+      color: isDark ? '#4169E1' : '#336791',
+      bg: isDark ? 'rgba(65, 105, 225, 0.14)' : 'rgba(51, 103, 145, 0.08)',
+      icon: TECH_ICONS.postgresql,
+    };
+  }
+  if (norm.includes('tailwind')) {
+    return {
+      color: isDark ? '#38BDF8' : '#06B6D4',
+      bg: isDark ? 'rgba(56, 189, 248, 0.14)' : 'rgba(6, 182, 212, 0.08)',
+      icon: TECH_ICONS.tailwindcss,
+    };
+  }
+  if (norm.includes('stripe')) {
+    return {
+      color: isDark ? '#7A73FF' : '#635BFF',
+      bg: isDark ? 'rgba(122, 115, 255, 0.14)' : 'rgba(99, 91, 255, 0.08)',
+      icon: TECH_ICONS.stripe,
+    };
+  }
+  if (norm.includes('python')) {
+    return {
+      color: isDark ? '#4B8BBE' : '#306998',
+      bg: isDark ? 'rgba(75, 139, 190, 0.14)' : 'rgba(48, 105, 152, 0.08)',
+      icon: TECH_ICONS.python,
+    };
+  }
+  if (norm.includes('langchain')) {
+    return {
+      color: isDark ? '#10B981' : '#047857',
+      bg: isDark ? 'rgba(16, 185, 129, 0.14)' : 'rgba(4, 120, 87, 0.08)',
+      icon: TECH_ICONS.langchain,
+    };
+  }
+  if (norm.includes('llama')) {
+    return {
+      color: isDark ? '#A855F7' : '#7C3AED',
+      bg: isDark ? 'rgba(168, 85, 247, 0.14)' : 'rgba(124, 58, 237, 0.08)',
+      icon: null,
+    };
+  }
+  if (norm.includes('chroma')) {
+    return {
+      color: isDark ? '#FF6B4A' : '#E64A19',
+      bg: isDark ? 'rgba(255, 107, 74, 0.14)' : 'rgba(230, 74, 25, 0.08)',
+      icon: null,
+    };
+  }
+  if (norm.includes('pinecone')) {
+    return {
+      color: isDark ? '#22C55E' : '#15803D',
+      bg: isDark ? 'rgba(34, 197, 94, 0.14)' : 'rgba(21, 128, 61, 0.08)',
+      icon: null,
+    };
+  }
+  if (norm.includes('openai') || norm.includes('claude')) {
+    return {
+      color: isDark ? '#10A37F' : '#0D8C6C',
+      bg: isDark ? 'rgba(163, 163, 127, 0.14)' : 'rgba(13, 140, 108, 0.08)',
+      icon: TECH_ICONS.openai,
+    };
+  }
+  if (norm.includes('razorpay')) {
+    return {
+      color: isDark ? '#3395FF' : '#0066FF',
+      bg: isDark ? 'rgba(51, 149, 255, 0.14)' : 'rgba(0, 102, 255, 0.08)',
+      icon: TECH_ICONS.razorpay,
+    };
+  }
+  if (norm.includes('cloudinary')) {
+    return {
+      color: isDark ? '#4353FF' : '#3448C5',
+      bg: isDark ? 'rgba(67, 83, 255, 0.14)' : 'rgba(52, 72, 197, 0.08)',
+      icon: TECH_ICONS.cloudinary,
+    };
+  }
+  if (norm.includes('make') || norm.includes('zapier')) {
+    return {
+      color: isDark ? '#FF4A00' : '#E03E00',
+      bg: isDark ? 'rgba(255, 74, 0, 0.14)' : 'rgba(224, 62, 0, 0.08)',
+      icon: TECH_ICONS.zapier,
+    };
+  }
+  if (norm.includes('webhook')) {
+    return {
+      color: isDark ? '#818CF8' : '#6366F1',
+      bg: isDark ? 'rgba(129, 140, 248, 0.14)' : 'rgba(99, 102, 241, 0.08)',
+      icon: null,
+    };
+  }
+  if (norm.includes('redis')) {
+    return {
+      color: isDark ? '#FF4438' : '#DC382D',
+      bg: isDark ? 'rgba(255, 68, 56, 0.14)' : 'rgba(220, 56, 45, 0.08)',
+      icon: TECH_ICONS.redis,
+    };
+  }
+  if (norm.includes('gsap') || norm.includes('scrolltrigger')) {
+    return {
+      color: isDark ? '#88CE02' : '#659B01',
+      bg: isDark ? 'rgba(136, 206, 2, 0.14)' : 'rgba(101, 155, 1, 0.08)',
+      icon: TECH_ICONS.gsap,
+    };
+  }
+  if (norm.includes('lenis')) {
+    return {
+      color: isDark ? '#2DD4BF' : '#0D9488',
+      bg: isDark ? 'rgba(45, 212, 191, 0.14)' : 'rgba(13, 148, 136, 0.08)',
+      icon: null,
+    };
+  }
+  if (norm.includes('vanillacss') || norm.includes('css3')) {
+    return {
+      color: isDark ? '#38BDF8' : '#264DE4',
+      bg: isDark ? 'rgba(56, 189, 248, 0.14)' : 'rgba(38, 77, 228, 0.08)',
+      icon: TECH_ICONS.css3,
+    };
+  }
+  if (norm.includes('figma')) {
+    return {
+      color: isDark ? '#FF7262' : '#F24E1E',
+      bg: isDark ? 'rgba(255, 114, 98, 0.14)' : 'rgba(242, 78, 30, 0.08)',
+      icon: TECH_ICONS.figma,
+    };
+  }
+  if (norm.includes('lighthouse')) {
+    return {
+      color: isDark ? '#FF5E57' : '#EA580C',
+      bg: isDark ? 'rgba(255, 94, 87, 0.14)' : 'rgba(234, 88, 12, 0.08)',
+      icon: TECH_ICONS.lighthouse,
+    };
+  }
+  if (norm.includes('recharts') || norm.includes('chart')) {
+    return {
+      color: isDark ? '#22D3EE' : '#0891B2',
+      bg: isDark ? 'rgba(34, 211, 238, 0.14)' : 'rgba(8, 145, 178, 0.08)',
+      icon: TECH_ICONS.chart,
+    };
+  }
+  if (norm.includes('websocket')) {
+    return {
+      color: isDark ? '#FBBF24' : '#D97706',
+      bg: isDark ? 'rgba(251, 191, 36, 0.14)' : 'rgba(217, 119, 6, 0.08)',
+      icon: TECH_ICONS.websockets,
+    };
+  }
+  if (norm.includes('graphql')) {
+    return {
+      color: isDark ? '#F472B6' : '#E10098',
+      bg: isDark ? 'rgba(244, 114, 182, 0.14)' : 'rgba(225, 0, 152, 0.08)',
+      icon: TECH_ICONS.graphql,
+    };
+  }
+  if (norm.includes('supabase')) {
+    return {
+      color: isDark ? '#3ECF8E' : '#10B981',
+      bg: isDark ? 'rgba(62, 207, 142, 0.14)' : 'rgba(16, 185, 129, 0.08)',
+      icon: TECH_ICONS.supabase,
+    };
+  }
+
+  // Fallback
+  return {
+    color: isDark ? '#94A3B8' : '#64748B',
+    bg: isDark ? 'rgba(148, 163, 184, 0.12)' : 'rgba(100, 116, 139, 0.08)',
+    icon: null,
+  };
 }
+
+// Editorial highlighted overview statements matching the home page 2nd section aesthetic
+const OVERVIEW_STATEMENTS = {
+  'web-development': (
+    <>
+      &ldquo;I engineer <span className="service-accent-tag accent-resilient">high-performance web applications</span> and cross-platform mobile apps with <span className="service-accent-tag accent-ai">fluid user journeys</span>, <span className="service-accent-tag accent-utility">secure cloud architecture</span>, and <span className="service-accent-tag accent-lime">sub-second responsiveness</span>.&rdquo;
+    </>
+  ),
+  'web-app-development': (
+    <>
+      &ldquo;I engineer <span className="service-accent-tag accent-resilient">high-performance web applications</span> and cross-platform mobile apps with <span className="service-accent-tag accent-ai">fluid user journeys</span>, <span className="service-accent-tag accent-utility">secure cloud architecture</span>, and <span className="service-accent-tag accent-lime">sub-second responsiveness</span>.&rdquo;
+    </>
+  ),
+  'ai-rag-applications': (
+    <>
+      &ldquo;Transform proprietary documents into <span className="service-accent-tag accent-resilient">lightning-fast, production-grade AI systems</span> with <span className="service-accent-tag accent-ai">semantic vector search</span> and verified <span className="service-accent-tag accent-utility">zero-hallucination accuracy</span>.&rdquo;
+    </>
+  ),
+  'ecommerce-development': (
+    <>
+      &ldquo;I build <span className="service-accent-tag accent-resilient">lightning-fast storefronts</span> with <span className="service-accent-tag accent-ai">friction-free checkouts</span>, <span className="service-accent-tag accent-utility">dynamic inventory syncing</span>, and automated funnels designed to <span className="service-accent-tag accent-lime">maximize conversion</span>.&rdquo;
+    </>
+  ),
+  'ai-automation-integrations': (
+    <>
+      &ldquo;Automate repetitive operational workflows with <span className="service-accent-tag accent-resilient">intelligent pipelines</span> that connect your <span className="service-accent-tag accent-ai">CRMs, documents, and business tools 24/7</span> with <span className="service-accent-tag accent-utility">zero human error</span>.&rdquo;
+    </>
+  ),
+  'landing-pages': (
+    <>
+      &ldquo;Art-directed editorial landing pages engineered with <span className="service-accent-tag accent-resilient">fluid motion physics</span> and <span className="service-accent-tag accent-ai">top-tier performance</span> to captivate visitors and <span className="service-accent-tag accent-utility">convert them into clients</span>.&rdquo;
+    </>
+  ),
+  'business-dashboards': (
+    <>
+      &ldquo;Turn complex company data into <span className="service-accent-tag accent-resilient">clear, real-time executive dashboards</span> with <span className="service-accent-tag accent-ai">live telemetry</span>, <span className="service-accent-tag accent-utility">interactive charts</span>, and <span className="service-accent-tag accent-lime">actionable operational metrics</span>.&rdquo;
+    </>
+  ),
+};
 
 export default function ServiceDetailPage() {
   const { slug } = useParams();
@@ -90,6 +358,8 @@ export default function ServiceDetailPage() {
         touchMultiplier: 0,
         infinite: false,
       });
+
+      window.lenis = lenis;
 
       lenis.on('scroll', ScrollTrigger.update);
       updateLenis = (time) => {
@@ -203,21 +473,20 @@ export default function ServiceDetailPage() {
           );
         }
 
-        // Entire Paragraph: Smooth upward reveal with de-blur when opened/viewed
+        // Entire Paragraph: Smooth upward reveal when opened/viewed
         if (statement) {
           gsap.fromTo(
             statement,
-            { opacity: 0, y: 28, filter: 'blur(6px)' },
+            { opacity: 0, y: 22 },
             {
               opacity: 1,
               y: 0,
-              filter: 'blur(0px)',
               duration: 0.65,
               ease: 'power3.out',
-              clearProps: 'transform,filter,opacity',
+              clearProps: 'transform,opacity',
               scrollTrigger: {
                 trigger: statement,
-                start: 'top 88%',
+                start: 'top 95%',
                 once: true,
               },
             }
@@ -472,17 +741,16 @@ export default function ServiceDetailPage() {
         if (ctaHeadline) {
           gsap.fromTo(
             ctaHeadline,
-            { opacity: 0, y: 22, filter: 'blur(4px)' },
+            { opacity: 0, y: 22 },
             {
               opacity: 1,
               y: 0,
-              filter: 'blur(0px)',
               duration: 0.55,
               ease: 'power4.out',
-              clearProps: 'transform,filter,opacity',
+              clearProps: 'transform,opacity',
               scrollTrigger: {
                 trigger: ctaBox,
-                start: 'top 80%',
+                start: 'top 85%',
                 once: true,
               },
             }
@@ -555,7 +823,10 @@ export default function ServiceDetailPage() {
     return () => {
       window.removeEventListener('resize', handleResize);
       if (updateLenis) gsap.ticker.remove(updateLenis);
-      if (lenis) lenis.destroy();
+      if (lenis) {
+        lenis.destroy();
+        window.lenis = null;
+      }
       ctx.revert();
     };
   }, [slug, service]);
@@ -639,6 +910,16 @@ export default function ServiceDetailPage() {
       <CustomCursor />
       <Navbar theme={theme} toggleTheme={toggleTheme} />
 
+      {/* Architectural Background Grid Overlay & Content Guidelines */}
+      <div className="service-detail-grid-overlay" aria-hidden="true">
+        <div className="service-detail-grid-pattern" />
+        <div className="service-detail-grid-v-line v-line-left" />
+        <div className="service-detail-grid-v-line v-line-right" />
+      </div>
+
+      {/* Atmospheric Top Blend Overlay */}
+      <div className="service-detail-top-blend" aria-hidden="true" />
+
       <main className="service-detail-main" ref={mainRef}>
         {/* Top Back Navigation & Header Row (Side by side on mobile) */}
         <div className="service-detail-top-bar" ref={topBarRef}>
@@ -651,6 +932,7 @@ export default function ServiceDetailPage() {
             <span>Back to services</span>
           </Link>
           <span className="service-kicker-badge">
+            <span className="service-kicker-dot" aria-hidden="true">•</span>
             SERVICE / {serviceIndexStr} — {totalCount}
           </span>
         </div>
@@ -676,18 +958,21 @@ export default function ServiceDetailPage() {
         {/* 2. Overview & Outcomes Section (12-Col Desktop, Stacked Mobile) */}
         <section className="service-overview-section" ref={overviewRef}>
           <div className="service-overview-left">
-            <p className="service-section-kicker">OVERVIEW</p>
+            <p className="service-section-kicker">
+              <span className="service-kicker-dot" aria-hidden="true">•</span>
+              OVERVIEW
+            </p>
           </div>
           <div className="service-overview-right">
             <p className="service-overview-statement">
-              &ldquo;{service.description}&rdquo;
+              {OVERVIEW_STATEMENTS[service.slug] || `\u201C${service.description}\u201D`}
             </p>
 
-            {/* Outcomes 3-box Grid with 1px border gap */}
+            {/* Outcomes 3-box Grid with chromatic accents */}
             {service.outcomes && service.outcomes.length > 0 && (
               <div className="service-outcomes-grid">
                 {service.outcomes.map((outcome, idx) => (
-                  <div key={idx} className="service-outcome-box">
+                  <div key={idx} className={`service-outcome-box outcome-accent-${idx % 3}`}>
                     <span className="service-outcome-idx">0{idx + 1}</span>
                     <p className="service-outcome-text">{outcome}</p>
                   </div>
@@ -700,13 +985,18 @@ export default function ServiceDetailPage() {
         {/* 3. What I Build (Deliverables) Section (12-Col Desktop, Stacked Mobile) */}
         <section className="service-build-section" ref={buildRef}>
           <div className="service-build-left">
-            <p className="service-section-kicker">WHAT I BUILD</p>
-            <h2 className="service-section-heading">A clear, useful scope.</h2>
+            <p className="service-section-kicker">
+              <span className="service-kicker-dot" aria-hidden="true">•</span>
+              WHAT I BUILD
+            </p>
+            <h2 className="service-section-heading">
+              A clear, useful <span className="service-accent-tag accent-resilient">scope</span>.
+            </h2>
           </div>
           <div className="service-build-right">
             <ul className="service-deliverables-grid">
               {service.deliverables.map((item, idx) => (
-                <li key={idx} className="service-deliverable-card">
+                <li key={idx} className={`service-deliverable-card deliverable-accent-${idx % 4}`}>
                   <span className="service-check-pill">
                     <Check className="service-check-icon" strokeWidth={3} />
                   </span>
@@ -717,12 +1007,15 @@ export default function ServiceDetailPage() {
           </div>
         </section>
 
-        {/* 4. How I Work (Process) Section (4 Inverted Contrast Cards) */}
+        {/* 4. How I Work (Process) Section (4 Inverted Contrast Cards with Chromatic Accents) */}
         <section className="service-process-section" ref={processRef}>
-          <p className="service-section-kicker">HOW I WORK</p>
+          <p className="service-section-kicker">
+            <span className="service-kicker-dot" aria-hidden="true">•</span>
+            HOW I WORK
+          </p>
           <div className="service-process-grid">
             {service.process.map((step, idx) => (
-              <article key={idx} className="service-process-card">
+              <article key={idx} className={`service-process-card process-accent-${idx % 4}`}>
                 <span className="service-process-idx">0{idx + 1}</span>
                 <p className="service-process-title">{step}</p>
               </article>
@@ -733,8 +1026,13 @@ export default function ServiceDetailPage() {
         {/* 5. Technology & Products Section (12-Col Desktop, Stacked Mobile) */}
         <section className="service-tech-section" ref={techRef}>
           <div className="service-tech-left">
-            <p className="service-section-kicker">TECHNOLOGY &amp; PRODUCTS</p>
-            <h2 className="service-section-heading">Tools chosen for the work.</h2>
+            <p className="service-section-kicker">
+              <span className="service-kicker-dot" aria-hidden="true">•</span>
+              TECHNOLOGY &amp; PRODUCTS
+            </p>
+            <h2 className="service-section-heading">
+              Tools chosen for the <span className="service-accent-tag accent-ai">work</span>.
+            </h2>
             <p className="service-tech-desc">
               I select the stack after discovery. These are technologies I regularly use—tailored directly to project requirements.
             </p>
@@ -742,29 +1040,34 @@ export default function ServiceDetailPage() {
           <div className="service-tech-right">
             <div className="service-tech-pills">
               {service.tools.map((tool, idx) => {
-                const iconPath = getToolIconPath(tool);
+                const brand = getToolBrandMeta(tool, isDark);
                 return (
-                  <span key={idx} className="service-tool-pill">
-                    {iconPath ? (
+                  <span
+                    key={idx}
+                    className="service-tool-pill"
+                    style={{
+                      '--brand-color': brand.color,
+                      '--brand-bg': brand.bg,
+                    }}
+                  >
+                    {brand.icon ? (
                       <svg
                         className="service-tool-icon"
                         viewBox="0 0 24 24"
                         aria-hidden="true"
+                        style={{ fill: brand.color }}
                       >
-                        <path d={iconPath} />
+                        <path d={brand.icon} />
                       </svg>
                     ) : (
                       <span
+                        className="service-tool-dot"
                         style={{
-                          width: '6px',
-                          height: '6px',
-                          borderRadius: '50%',
-                          backgroundColor: 'currentColor',
-                          display: 'inline-block'
+                          backgroundColor: brand.color,
                         }}
                       />
                     )}
-                    {tool}
+                    <span className="service-tool-name">{tool}</span>
                   </span>
                 );
               })}
@@ -775,8 +1078,13 @@ export default function ServiceDetailPage() {
         {/* 6. Next Step (CTA Callout Box) (High Contrast Inverted Block) */}
         <section className="service-next-step-box" ref={ctaRef}>
           <div className="service-next-step-left">
-            <p className="service-cta-kicker">NEXT STEP</p>
-            <h2 className="service-cta-headline">Tell me what needs to change.</h2>
+            <p className="service-cta-kicker">
+              <span className="service-kicker-dot" aria-hidden="true">•</span>
+              NEXT STEP
+            </p>
+            <h2 className="service-cta-headline">
+              Tell me what needs to <span className="service-accent-tag accent-resilient">change</span>.
+            </h2>
             <p className="service-cta-subtext">
               I will review your requirements, recommend the right architecture and scope, and deliver high-impact results.
             </p>
@@ -790,7 +1098,10 @@ export default function ServiceDetailPage() {
         {/* 7. Other Services Quick-Switch Strip */}
         <section className="service-other-services" ref={otherRef}>
           <div className="other-services-header">
-            <p className="service-section-kicker other-kicker">OTHER SERVICES</p>
+            <p className="service-section-kicker other-kicker">
+              <span className="service-kicker-dot" aria-hidden="true">•</span>
+              OTHER SERVICES
+            </p>
             <Link to="/services" className="service-view-all-link">
               <span>View all</span>
               <ArrowUpRight className="view-all-arrow" size={14} />
@@ -802,6 +1113,9 @@ export default function ServiceDetailPage() {
                 key={other.slug}
                 to={`/services/${other.slug}`}
                 className="other-service-card-link"
+                style={{
+                  backgroundColor: other.color,
+                }}
               >
                 <div className="other-service-card-top">
                   <span className="other-service-num">{other.num} / {other.display}</span>

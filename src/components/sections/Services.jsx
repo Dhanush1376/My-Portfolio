@@ -164,8 +164,6 @@ export default function Services() {
       if (rows && rows.length > 0) {
         rows.forEach((row, i) => {
           const iconBox = row.querySelector('.expertise-icon-box');
-          const rowName = row.querySelector('.expertise-row-name');
-          const rowDesc = row.querySelector('.expertise-row-desc');
 
           // Row elevation and opacity
           gsap.fromTo(

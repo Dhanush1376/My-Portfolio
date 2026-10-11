@@ -315,219 +315,396 @@
 }
 
 /* ==========================================================================
-   MOBILE FULL-SCREEN DRAWER (ART-DIRECTED)
+   MOBILE MENU (FULL-SCREEN SHEET)
+   Revealed as a circle from the menu button (origin set in Navbar.jsx),
+   dressed in the hero's language: grid paper, display type, palette swatches.
    ========================================================================== */
 
 .mobile-drawer-overlay {
+  --menu-x: calc(100% - 40px);
+  --menu-y: 40px;
+  --menu-r: 150vmax;
+  --drawer-grid: rgba(255, 255, 255, 0.05);
+  --drawer-ink: #0E0F12;
   position: fixed;
   inset: 0;
   z-index: 2000;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  display: flex;
-  justify-content: flex-end;
-  opacity: 0;
+  background: var(--bg);
+  clip-path: circle(0px at var(--menu-x) var(--menu-y));
   visibility: hidden;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
+  transition:
+    clip-path 0.55s cubic-bezier(0.65, 0, 0.35, 1),
+    visibility 0s linear 0.55s;
+}
+
+[data-theme="light"] .mobile-drawer-overlay {
+  --drawer-grid: rgba(14, 15, 18, 0.055);
 }
 
 .mobile-drawer-overlay.active {
-  opacity: 1;
+  clip-path: circle(var(--menu-r) at var(--menu-x) var(--menu-y));
   visibility: visible;
+  transition:
+    clip-path 0.8s cubic-bezier(0.55, 0, 0.25, 1),
+    visibility 0s;
+}
+
+/* Grid paper, fading out towards the bottom */
+.mobile-drawer-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--drawer-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--drawer-grid) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 92%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 45%, transparent 92%);
 }
 
 .mobile-drawer-content {
-  width: 100%;
-  max-width: 480px;
+  position: relative;
   height: 100%;
-  background: var(--bg);
-  border-left: 1px solid var(--border);
-  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0.85rem 1.25rem max(1.1rem, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  transform: translateX(100%);
-  transition: transform 0.4s var(--transition);
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
-.mobile-drawer-overlay.active .mobile-drawer-content {
-  transform: translateX(0);
-}
-
+/* --- Header (mirrors the navbar) --- */
 .drawer-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border);
+  padding: 0.25rem 0.15rem;
+  flex-shrink: 0;
 }
 
-.drawer-eyebrow {
-  font-family: var(--font-mono, monospace);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+.drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 1.05rem;
+}
+
+.drawer-brand .brand-dot {
   color: var(--accent);
 }
 
-.drawer-close-btn {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  width: 36px;
-  height: 36px;
+.drawer-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.drawer-icon-btn {
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  color: var(--text);
-  font-size: 0.9rem;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  padding: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 
-.drawer-close-btn:hover {
+.drawer-icon-btn:hover {
   background: var(--surface-hover);
   border-color: var(--border-strong);
 }
 
-.drawer-nav-list {
-  list-style: none;
-  padding: 2.5rem 0;
-  margin: 0;
+.drawer-icon-btn:active {
+  transform: scale(0.94);
+}
+
+.drawer-close-icon {
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.drawer-close-icon span {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  margin-top: -0.75px;
+  border-radius: 2px;
+  background: currentColor;
+  transform: rotate(45deg);
+}
+
+.drawer-close-icon span:last-child {
+  transform: rotate(-45deg);
+}
+
+/* --- Navigation --- */
+.drawer-nav {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  justify-content: center;
+  padding: clamp(1.25rem, 4vh, 2.5rem) 0 clamp(1rem, 3vh, 2rem);
+}
+
+.drawer-caption {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.drawer-caption-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border-strong);
+}
+
+.drawer-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .drawer-nav-link {
-  display: flex;
-  align-items: baseline;
-  text-decoration: none;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 2.25rem 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: clamp(0.55rem, 1.9vh, 1.05rem) 0.15rem;
+  border-bottom: 1px solid var(--border);
   color: var(--text);
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 6vw, 2.5rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  transition: color 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.35s ease;
 }
 
-.drawer-nav-link:hover {
-  color: var(--accent);
-  transform: translateX(6px);
+/* Colour field that sweeps in behind the row on press / hover */
+.drawer-nav-link::before {
+  content: '';
+  position: absolute;
+  inset: 5px -0.65rem;
+  z-index: -1;
+  border-radius: 18px;
+  background: var(--swatch);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s var(--transition);
 }
 
 .drawer-num {
+  align-self: start;
+  padding-top: 0.45em;
   font-family: var(--font-mono, monospace);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--accent);
-  width: 32px;
-  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  transition: color 0.35s ease;
 }
 
 .drawer-label {
-  flex: 1;
+  font-family: 'Schibsted Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(2rem, min(11.5vw, 6.4vh), 3.4rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.drawer-active-dot {
+  color: var(--accent);
+  transition: color 0.35s ease;
 }
 
 .drawer-arrow {
-  font-size: 1.25rem;
-  color: var(--text-muted);
-  opacity: 0;
-  transform: translate(-6px, 6px);
-  transition: all 0.25s ease;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--swatch);
+  color: var(--drawer-ink);
+  transition: background 0.35s ease, color 0.35s ease, transform 0.35s var(--transition);
 }
 
-.drawer-nav-link:hover .drawer-arrow {
-  opacity: 1;
-  transform: translate(0, 0);
-  color: var(--accent);
+.drawer-nav-link:active::before,
+.drawer-nav-link:focus-visible::before {
+  transform: scaleX(1);
 }
 
-/* --- Sidenav Footer (Styled identically to the Signature Footer) --- */
+.drawer-nav-link:active,
+.drawer-nav-link:focus-visible {
+  color: #FFFFFF;
+  outline: none;
+}
+
+.drawer-nav-link:active .drawer-num,
+.drawer-nav-link:focus-visible .drawer-num,
+.drawer-nav-link:active .drawer-active-dot,
+.drawer-nav-link:focus-visible .drawer-active-dot {
+  color: #FFFFFF;
+}
+
+.drawer-nav-link:active .drawer-arrow,
+.drawer-nav-link:focus-visible .drawer-arrow {
+  background: #FFFFFF;
+  color: var(--swatch);
+  transform: rotate(45deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .drawer-nav-link:hover::before {
+    transform: scaleX(1);
+  }
+
+  .drawer-nav-link:hover,
+  .drawer-nav-link:hover .drawer-num,
+  .drawer-nav-link:hover .drawer-active-dot {
+    color: #FFFFFF;
+  }
+
+  .drawer-nav-link:hover .drawer-arrow {
+    background: #FFFFFF;
+    color: var(--swatch);
+    transform: rotate(45deg);
+  }
+}
+
+/* --- Footer: socials --- */
 .drawer-footer {
-  padding-top: 1.25rem;
-  margin-top: auto;
-  border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-
-/* 1. Live Studio Availability - Compact */
-.drawer-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font, sans-serif);
-  font-size: 0.72rem;
-  color: var(--text-secondary);
-  letter-spacing: 0.01em;
-}
-
-.drawer-status .status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+  gap: 0.9rem;
   flex-shrink: 0;
 }
 
-/* 3. Circular Social Pills (Identical to Footer .footer-social-bar .social-pill) */
+.drawer-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 0.15rem;
+}
+
 .drawer-social-row {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  padding-top: 0.25rem;
+  gap: 0.5rem;
 }
 
 .drawer-social-pill {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: var(--text);
-  color: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, color 0.2s ease;
   flex-shrink: 0;
-}
-
-.drawer-social-pill:hover {
-  transform: scale(1.12);
-  background: var(--accent);
-  color: #FFFFFF;
-}
-
-/* 4. Bottom Signature (Identical to Footer .footer-main-bottom) */
-.drawer-bottom-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 0.85rem;
-  border-top: 1px solid var(--border);
-  font-size: 0.78rem;
-}
-
-.drawer-brand-logo {
-  font-family: var(--font-display, sans-serif);
-  font-weight: 800;
-  font-size: 1rem;
-  letter-spacing: -0.02em;
+  background: transparent;
+  border: 1px solid var(--border-strong);
   color: var(--text);
+  text-decoration: none;
+  transition: transform 0.2s var(--transition), background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-.drawer-brand-logo .brand-dot {
-  color: var(--accent);
+.drawer-social-pill:active {
+  transform: scale(0.92);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .drawer-social-pill:hover {
+    color: #FFFFFF;
+    transform: scale(1.1);
+  }
+  .drawer-social-pill.drawer-social-pill-linkedin:hover {
+    background: #0A66C2;
+    border-color: #0A66C2;
+    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.4);
+  }
+  .drawer-social-pill.drawer-social-pill-whatsapp:hover {
+    background: #25D366;
+    border-color: #25D366;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+  }
+  .drawer-social-pill.drawer-social-pill-x:hover {
+    background: #1D9BF0;
+    border-color: #1D9BF0;
+    box-shadow: 0 4px 12px rgba(29, 155, 240, 0.4);
+  }
+  .drawer-social-pill.drawer-social-pill-email:hover {
+    background: #EA4335;
+    border-color: #EA4335;
+    box-shadow: 0 4px 12px rgba(234, 67, 53, 0.4);
+  }
+  .drawer-social-pill.drawer-social-pill-phone:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px rgba(255, 85, 32, 0.4);
+  }
 }
 
 .drawer-copyright {
   font-family: var(--font-mono, monospace);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* --- Entrance: rows rise in one after another as the circle opens --- */
+.drawer-stagger {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.mobile-drawer-overlay.active .drawer-stagger {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.6s ease calc(0.18s + var(--i, 0) * 0.06s),
+    transform 0.75s var(--transition) calc(0.18s + var(--i, 0) * 0.06s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-drawer-overlay,
+  .mobile-drawer-overlay.active {
+    clip-path: none;
+    opacity: 0;
+    transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+  }
+
+  .mobile-drawer-overlay.active {
+    opacity: 1;
+    transition: opacity 0.2s ease, visibility 0s;
+  }
+
+  .drawer-stagger,
+  .mobile-drawer-overlay.active .drawer-stagger {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

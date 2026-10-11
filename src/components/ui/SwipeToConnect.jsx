@@ -33,10 +33,6 @@ export default function SwipeToConnect({ onConnect, variant: propVariant }) {
       setActiveVariant('orange');
     }
   }, [propVariant]);
-  
-  const MAX_DRAG = containerRef.current && knobRef.current 
-    ? containerRef.current.offsetWidth - knobRef.current.offsetWidth - 16 // 8px padding each side
-    : 200;
 
   useEffect(() => {
     // If we have refs, set exact max drag width dynamically

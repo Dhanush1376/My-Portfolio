@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowUpRight, Phone, Mail } from 'lucide-react';
+import { Phone, Mail, ArrowUpRight } from 'lucide-react';
 
 import { SERVICES_DATA } from '../data/servicesData';
 import { SOCIAL_LINKS } from '../data/socialLinks';
@@ -284,7 +284,6 @@ export default function ServicesPage() {
 
         const updateDeckCards = (progress) => {
           const isMobile = window.innerWidth < 860;
-          const activeIdx = Math.min(totalServices - 1, Math.max(0, Math.round(progress * (totalServices - 1))));
 
           for (let i = 0; i < totalServices; i++) {
             const cardEl = cardRefs.current[i];

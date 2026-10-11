@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from '../../hooks/useTheme';
 import SwipeToConnect from '../ui/SwipeToConnect';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -17,7 +16,6 @@ export default function Contact({
   const buttonRef = useRef(null);
   const headerRef = useRef(null);
   const navigate = useNavigate();
-  const { theme, isDark } = useTheme();
 
   useEffect(() => {
     if (!sectionRef.current || !headerRef.current) return;

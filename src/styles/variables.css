@@ -135,6 +135,24 @@ html.lenis body {
   overflow: hidden;
 }
 
+/* Theme switch: the new theme is revealed as a circle growing from the navbar toggle (see useTheme) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* Land every colour on its final value at once, so the revealed area is never mid-fade */
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: none !important;
+}
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;

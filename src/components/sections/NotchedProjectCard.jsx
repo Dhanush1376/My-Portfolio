@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import NotchedCard from '../common/NotchedCard';
@@ -62,31 +62,31 @@ export default function NotchedProjectCard({
         );
       }
 
-      // 2. Card Container Smooth Elevation Reveal
+      // 2 + 3. Alternating side entrance: 1st row glides in from the left, 2nd from the right, and so on.
+      // Card and text travel together from the same side, so the row never splits apart, and the
+      // short travel keeps everything inside the section. It plays through once on entry rather
+      // than being tied to the scrollbar, so it can never be left frozen halfway.
+      const fromSide = index % 2 === 0 ? -1 : 1;
+      const travel = Math.min(window.innerWidth * 0.08, 110);
+      const reveal = { trigger: cardEl, start: 'top 85%', once: true };
+
       if (groupEl) {
+        // The stylesheet's transform transition would restart on every frame and make the glide stutter
+        gsap.set(groupEl, { transition: 'none' });
         gsap.fromTo(
           groupEl,
+          { x: fromSide * travel, opacity: 0 },
           {
-            y: 48,
-            opacity: 0.15,
-            scale: 0.965,
-          },
-          {
-            y: 0,
+            x: 0,
             opacity: 1,
-            scale: 1,
-            duration: 0.85,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: cardEl,
-              start: 'top 86%',
-              once: true,
-            },
+            duration: 1.2,
+            ease: 'power4.out',
+            clearProps: 'transform,transition',
+            scrollTrigger: reveal,
           }
         );
       }
 
-      // 3. Editorial Beside Content Staggered Reveal
       if (besideEl) {
         const items = besideEl.querySelectorAll(
           '.project-beside-meta-row, .featured-project-headline, .featured-project-desc, .project-beside-stats-row, .featured-project-bottom-rail'
@@ -94,21 +94,16 @@ export default function NotchedProjectCard({
         if (items.length > 0) {
           gsap.fromTo(
             items,
+            { x: fromSide * travel * 0.6, opacity: 0 },
             {
-              y: 26,
-              opacity: 0.1,
-            },
-            {
-              y: 0,
+              x: 0,
               opacity: 1,
-              duration: 0.75,
-              stagger: 0.08,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: cardEl,
-                start: 'top 82%',
-                once: true,
-              },
+              duration: 1.05,
+              delay: 0.12,
+              stagger: 0.07,
+              ease: 'power4.out',
+              clearProps: 'transform',
+              scrollTrigger: reveal,
             }
           );
         }

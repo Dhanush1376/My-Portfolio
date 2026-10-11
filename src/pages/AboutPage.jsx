@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Sparkles, Terminal, Cpu, Layers, ArrowUpRight, Compass, Code2, Phone, Mail, Plus } from 'lucide-react';
+import { Phone, Mail, Plus } from 'lucide-react';
 import '../styles/about-page.css';
 import { useTheme } from '../hooks/useTheme';
 import Navbar from '../components/layout/Navbar';
@@ -111,7 +110,6 @@ export default function AboutPage() {
   const bentoRef = useRef(null);
 
   const { theme, toggleTheme, isDark } = useTheme();
-  const navigate = useNavigate();
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
   const toggleFaq = (index) => {
