@@ -13,7 +13,6 @@ import StatementSection from '../components/sections/StatementSection';
 import Projects from '../components/sections/Projects';
 import Services from '../components/sections/Services';
 import Contact from '../components/sections/Contact';
-import CaseStudyModal from '../components/modals/CaseStudyModal';
 import SEO from '../components/common/SEO';
 import { PAGE_META, absoluteUrl, homeSchema as buildHomeSchema } from '../data/site';
 import { PROJECTS_DATA } from '../data/projectsData';
@@ -24,17 +23,6 @@ const homeSchema = buildHomeSchema(Object.values(PROJECTS_DATA));
 
 export default function Home() {
   const { theme, toggleTheme } = useTheme();
-  const [activeCaseStudy, setActiveCaseStudy] = useState(null);
-  const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
-
-  const openCaseStudy = (projectId) => {
-    setActiveCaseStudy(projectId);
-    setIsCaseStudyOpen(true);
-  };
-
-  const closeCaseStudy = () => {
-    setIsCaseStudyOpen(false);
-  };
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -259,20 +247,13 @@ export default function Home() {
       <main id="main-content">
         <Hero />
         <StatementSection />
-        <Projects onOpenCaseStudy={openCaseStudy} />
+        <Projects />
         <Services />
         <Contact />
       </main>
 
       {/* Footer */}
       <Footer />
-
-      {/* Case Study Drawer / Modal */}
-      <CaseStudyModal
-        isOpen={isCaseStudyOpen}
-        projectId={activeCaseStudy}
-        onClose={closeCaseStudy}
-      />
     </div>
   );
 }

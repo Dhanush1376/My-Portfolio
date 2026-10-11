@@ -109,8 +109,8 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
       return;
     }
 
-    const badge = e.currentTarget.querySelector('.drawer-arrow') || e.currentTarget;
-    const rect = badge.getBoundingClientRect();
+    const originEl = e.currentTarget.querySelector('.drawer-line') || e.currentTarget;
+    const rect = originEl.getBoundingClientRect();
     const isSamePage = item.href.startsWith('#') && location.pathname === '/';
     setSelectedHref(item.href);
 
@@ -130,11 +130,12 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
     }, 260);
   };
 
+  // Swatches are the exact hero-panel colours of each page, so the flood lands on them seamlessly
   const navItems = [
     { label: 'Work', href: '#work', num: '01', swatch: '#94CF4E' },
-    { label: 'Services', href: '/services', num: '02', swatch: '#FF6058' },
-    { label: 'About', href: '/about', num: '03', swatch: '#F2A93B' },
-    { label: 'Contact', href: '/contact', num: '04', swatch: '#FF5520' }
+    { label: 'Services', href: '/services', num: '02', swatch: '#FF5E57' },
+    { label: 'About', href: '/about', num: '03', swatch: '#FFA820' },
+    { label: 'Contact', href: '/contact', num: '04', swatch: '#FF5E3A' }
   ];
 
   const isActiveItem = (item) =>
@@ -251,14 +252,9 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
                       aria-current={isActive ? 'page' : undefined}
                       onClick={(e) => handleDrawerNav(e, item)}
                     >
+                      <span className="drawer-line" aria-hidden="true" />
                       <span className="drawer-num">{item.num}</span>
-                      <span className="drawer-label">
-                        {item.label}
-                        {isActive && <span className="drawer-active-dot">.</span>}
-                      </span>
-                      <span className="drawer-arrow" aria-hidden="true">
-                        <ArrowUpRight size={18} strokeWidth={2.2} />
-                      </span>
+                      <span className="drawer-label">{item.label}</span>
                     </a>
                   </li>
                 );

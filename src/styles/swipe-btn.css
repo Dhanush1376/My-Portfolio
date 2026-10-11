@@ -81,6 +81,9 @@
   align-items: center;
   justify-content: center;
   cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
   z-index: 3;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   will-change: transform;

@@ -16,6 +16,8 @@ import Contact from '../components/sections/Contact';
 import SEO from '../components/common/SEO';
 import '../styles/services-page.css';
 import { PAGE_META, absoluteUrl } from '../data/site';
+import { navigateWithColor } from '../utils/pageTransition';
+import { isFloodArriving, floodLandingDelay } from '../utils/pageTransition';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -61,6 +63,10 @@ const servicesSchema = {
 
 export default function ServicesPage() {
   const navigate = useNavigate();
+
+  // Opening a service floods its colour from the tap, then the service page arrives underneath
+  const openService = (e, service) =>
+    navigateWithColor(e, { to: `/services/${service.slug}`, color: service.color, label: service.title, navigate });
   const { theme, toggleTheme, isDark } = useTheme();
 
   const containerRef = useRef(null);
@@ -122,7 +128,10 @@ export default function ServicesPage() {
 
     const ctx = gsap.context(() => {
       // 1. Entrance Animation Sequence (Exact Contact Page Motion)
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      // Arriving through the menu's colour flood: the panel is already in place under the colour,
+      // so skip its slide-down and start the rest of the entrance as the colour lands on the card
+      const arriving = isFloodArriving();
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: floodLandingDelay() });
 
       // Theme portal atmosphere transition
       if (portalRef.current) {
@@ -134,7 +143,7 @@ export default function ServicesPage() {
       }
 
       // Peach red hero panel descends with corner morph
-      if (heroRef.current) {
+      if (heroRef.current && !arriving) {
         tl.fromTo(
           heroRef.current,
           {
@@ -408,7 +417,7 @@ export default function ServicesPage() {
       <Navbar theme={theme} toggleTheme={toggleTheme} transparent />
 
       {/* 1. PEACH RED HERO HEADER (#FF5E57) — Exact Contact Page Architecture & Motion */}
-      <div className="services-hero-panel" ref={heroRef}>
+      <div className="services-hero-panel" ref={heroRef} data-flood-target>
         {/* Architectural Hero Grid Lines */}
         <div className="hero-grid-overlay" aria-hidden="true">
           <div className="hero-grid-pattern" />
@@ -506,13 +515,14 @@ export default function ServicesPage() {
                   backgroundColor: service.color,
                   cursor: 'pointer'
                 }}
-                onClick={() => navigate(`/services/${service.slug}`)}
+                onClick={(e) => openService(e, service)}
                 role="link"
                 tabIndex={0}
                 aria-label={`Open details for ${service.title}`}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    navigate(`/services/${service.slug}`);
+                    e.preventDefault();
+                    openService(e, service);
                   }
                 }}
               >
@@ -553,7 +563,10 @@ export default function ServicesPage() {
                       to={`/services/${service.slug}`}
                       className="card-cta-btn"
                       aria-label={`View full details for ${service.title}`}
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openService(e, service);
+                      }}
                     >
                       <span>View more details</span>
                       <span className="btn-circle-arrow">

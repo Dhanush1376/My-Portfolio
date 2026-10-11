@@ -149,6 +149,12 @@ export default function Contact({
   }, [headline, tag]);
 
   const handleOpenContact = () => {
+    const isDark = typeof document !== 'undefined' && (
+      document.documentElement.getAttribute('data-theme') === 'dark' ||
+      document.body.classList.contains('theme-dark') ||
+      (!document.documentElement.getAttribute('data-theme') && window.matchMedia?.('(prefers-color-scheme: dark)').matches)
+    );
+
     // Theme-dependent transition overlay: dark (#0A0A0D) or white/cream (#FBF9F5)
     const fakeBg = document.createElement('div');
     fakeBg.style.position = 'fixed';

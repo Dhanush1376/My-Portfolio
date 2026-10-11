@@ -1,5 +1,7 @@
 import React, { useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { getServiceBySlug } from '../../data/servicesData';
+import { navigateWithColor } from '../../utils/pageTransition';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
@@ -62,6 +64,13 @@ const EXPERTISE_SERVICES = [
 
 export default function Services() {
   const sectionRef = useRef(null);
+  const navigate = useNavigate();
+
+  // Opening a service floods its colour from the tap, then the service page arrives underneath
+  const openService = (e, slug) => {
+    const svc = getServiceBySlug(slug);
+    navigateWithColor(e, { to: `/services/${slug}`, color: svc?.color, label: svc?.title, navigate });
+  };
   const headerRef = useRef(null);
 
   useEffect(() => {
@@ -269,6 +278,7 @@ export default function Services() {
               <Link
                 to={`/services/${service.slug}`}
                 key={service.id}
+                onClick={(e) => openService(e, service.slug)}
                 className="expertise-row"
                 aria-label={`${service.name} — ${service.desc}`}
               >

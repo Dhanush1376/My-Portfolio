@@ -112,10 +112,11 @@ export default function Footer() {
       const bottomBar = footerEl.querySelector('.footer-main-bottom');
       const scrollBtn = footerEl.querySelector('.footer-bottom-scroll-cutout');
 
-      // 1. Main Footer Curved Block Smooth Elevation
+      // 1. Main Footer Curved Block & Left Column Smooth Elevation Together
+      const leftCol = footerEl.querySelector('.footer-left-column');
       if (mainBlock) {
         gsap.fromTo(
-          mainBlock,
+          leftCol ? [mainBlock, leftCol] : mainBlock,
           { y: 40, opacity: 0.2, scale: 0.98 },
           {
             y: 0,

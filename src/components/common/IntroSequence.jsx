@@ -19,8 +19,14 @@ const SEEN_KEY = 'introSeen';
 export function shouldPlayIntro() {
   if (typeof window === 'undefined') return false;
   try {
+    const isLocalhost = Boolean(
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname.endsWith('.localhost')
+    );
     if (new URLSearchParams(window.location.search).has('intro')) return true;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+    if (isLocalhost) return true;
     return !window.localStorage.getItem(SEEN_KEY);
   } catch (_) {
     return false;
@@ -67,7 +73,16 @@ export default function IntroSequence() {
     const finish = () => {
       if (finished || cancelled) return;
       finished = true;
-      try { window.localStorage.setItem(SEEN_KEY, '1'); } catch (_) {}
+      try {
+        const isLocal = Boolean(
+          window.location.hostname === 'localhost' ||
+          window.location.hostname === '127.0.0.1' ||
+          window.location.hostname.endsWith('.localhost')
+        );
+        if (!isLocal) {
+          window.localStorage.setItem(SEEN_KEY, '1');
+        }
+      } catch (_) {}
       window.__introPlaying = false;
       document.documentElement.classList.remove('intro-running');
       window.removeEventListener('wheel', blockScroll, blockOpts);

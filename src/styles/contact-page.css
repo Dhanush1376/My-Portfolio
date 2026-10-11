@@ -82,8 +82,8 @@
 
 [data-theme="dark"] .contact-hero-headline,
 .theme-dark .contact-hero-headline,
-[data-theme="dark"] .hero-line-inner,
-.theme-dark .hero-line-inner,
+[data-theme="dark"] .contact-hero-panel .hero-line-inner,
+.theme-dark .contact-hero-panel .hero-line-inner,
 [data-theme="dark"] .contact-hero-badge,
 .theme-dark .contact-hero-badge {
   color: #0d0d0d;
@@ -317,13 +317,13 @@
 }
 
 /* Line masking for world-class editorial typography roll-up */
-.hero-line-mask {
+.contact-hero-panel .hero-line-mask {
   overflow: hidden;
   display: block;
   padding-bottom: 0.08em;
 }
 
-.hero-line-inner {
+.contact-hero-panel .hero-line-inner {
   display: inline-block;
   width: 100%;
   transform-origin: 0% 100%;

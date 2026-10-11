@@ -329,11 +329,29 @@ video::-webkit-media-controls {
   font-weight: 500;
   line-height: 1.04;
   letter-spacing: -0.028em;
-  color: var(--hero-title);
+  color: var(--hero-title, #FFFFFF);
   margin: 0;
   display: flex;
   flex-direction: column;
   transition: color 0.3s ease;
+}
+
+.hero-studio-title .hero-line-inner {
+  color: inherit;
+}
+
+[data-theme="dark"] .hero-studio-title,
+[data-theme="dark"] .hero-studio-title .hero-line-inner,
+.theme-dark .hero-studio-title,
+.theme-dark .hero-studio-title .hero-line-inner {
+  color: #FFFFFF;
+}
+
+[data-theme="light"] .hero-studio-title,
+[data-theme="light"] .hero-studio-title .hero-line-inner,
+.theme-light .hero-studio-title,
+.theme-light .hero-studio-title .hero-line-inner {
+  color: #0E0F12;
 }
 
 /* Each line masks its own text so the entrance can roll it up into place. A clip-path (with a little

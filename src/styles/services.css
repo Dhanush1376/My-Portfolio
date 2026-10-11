@@ -561,15 +561,20 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
     opacity: 1 !important;
   }
 
+  .expertise-list {
+    border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
+  }
+
   .expertise-row {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: clamp(0.4rem, 1vh, 0.65rem) 0 !important;
-    min-height: clamp(86px, 20vw, 104px);
+    padding: clamp(0.7rem, 2vh, 0.95rem) 0 !important;
+    min-height: clamp(74px, 18vw, 92px);
     gap: 0;
     opacity: 1 !important;
     visibility: visible !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16) !important;
   }
 
   .expertise-row-left {
@@ -638,16 +643,9 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
     color: #FFFFFF !important;
   }
 
-  /* Subtitle description visible underneath title */
+  /* Hide description on mobile so items remain clean, high-contrast and minimal */
   .expertise-row-desc {
-    display: block !important;
-    font-size: clamp(0.74rem, 2.5vw, 0.82rem) !important;
-    line-height: 1.4 !important;
-    color: rgba(255, 255, 255, 0.6) !important;
-    letter-spacing: normal !important;
-    font-weight: 400 !important;
-    margin: 0 !important;
-    word-break: break-word !important;
+    display: none !important;
   }
 
   /* Hide right arrow button on mobile as per reference design */
@@ -656,6 +654,16 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
   }
 
   /* Mobile light mode overrides */
+  [data-theme="light"] .expertise-list,
+  body[data-theme="light"] .expertise-list {
+    border-top: 1px solid rgba(0, 0, 0, 0.12) !important;
+  }
+
+  [data-theme="light"] .expertise-row,
+  body[data-theme="light"] .expertise-row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important;
+  }
+
   [data-theme="light"] .expertise-icon-box,
   body[data-theme="light"] .expertise-icon-box {
     background: #FFFFFF !important;
@@ -672,10 +680,5 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
   [data-theme="light"] .expertise-row-name,
   body[data-theme="light"] .expertise-row-name {
     color: #0E0F12 !important;
-  }
-
-  [data-theme="light"] .expertise-row-desc,
-  body[data-theme="light"] .expertise-row-desc {
-    color: #555562 !important;
   }
 }

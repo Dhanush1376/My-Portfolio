@@ -1612,55 +1612,5 @@
     justify-content: center;
   }
 
-  /* Mobile Bottom Sheet Drawer for Case Studies */
-  .case-study-modal {
-    align-items: flex-end !important;
-  }
-
-  .case-study-sheet {
-    width: 100% !important;
-    max-width: 100% !important;
-    max-height: 90vh !important;
-    border-radius: 24px 24px 0 0 !important;
-    border-bottom: none !important;
-    border-left: none !important;
-    border-right: none !important;
-    padding: 1.5rem 1.25rem 2.5rem !important;
-    transform: translateY(100%);
-  }
-
-  .case-study-modal.active .case-study-sheet {
-    transform: translateY(0) !important;
-    opacity: 1 !important;
-  }
-
-  .drawer-handle-bar {
-    display: flex !important;
-    justify-content: center;
-    padding: 0 0 1rem;
-    width: 100%;
-  }
-
-  .drawer-handle {
-    width: 44px;
-    height: 5px;
-    border-radius: 100px;
-    background: rgba(255, 255, 255, 0.25);
-  }
-
-  .case-study-close-btn {
-    top: 1rem;
-    right: 1rem;
-    width: 36px;
-    height: 36px;
-    font-size: 1.25rem;
-  }
-
-  .cs-title {
-    font-size: 2rem;
-  }
-
-  .cs-features-grid {
-    grid-template-columns: 1fr;
-  }
+  /* Case study app drawer styles are cleanly handled in modal.css */
 }

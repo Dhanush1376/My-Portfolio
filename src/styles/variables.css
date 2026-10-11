@@ -103,6 +103,7 @@
   --cursor-outline: rgba(255, 255, 255, 0.4);
   --outline-stroke: rgba(255, 255, 255, 0.3);
   --hero-brightness: 0.85;
+  --hero-title: #FFFFFF;
 }
 
 /* Explicit Dark Theme Selector to match Light specificity */
@@ -145,6 +146,7 @@
   --cursor-outline: rgba(255, 255, 255, 0.4);
   --outline-stroke: rgba(255, 255, 255, 0.3);
   --hero-brightness: 0.85;
+  --hero-title: #FFFFFF;
 }
 
 /* Light Theme (Warm Off-White / Cream Base) */
@@ -187,6 +189,7 @@
   --cursor-outline: rgba(14, 15, 18, 0.4);
   --outline-stroke: rgba(14, 15, 18, 0.3);
   --hero-brightness: 1.0;
+  --hero-title: #0E0F12;
 }
 
 /* ==========================================================================

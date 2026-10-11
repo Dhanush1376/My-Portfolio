@@ -11,6 +11,7 @@ import CustomCursor from '../components/common/CustomCursor';
 import SEO from '../components/common/SEO';
 import { SOCIAL_LINKS } from '../data/socialLinks';
 import { PAGE_META, absoluteUrl } from '../data/site';
+import { isFloodArriving, floodLandingDelay } from '../utils/pageTransition';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -71,7 +72,10 @@ export default function ContactPage() {
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      // Arriving through the menu's colour flood: the panel is already in place under the colour,
+      // so skip its slide-down and start the rest of the entrance as the colour lands on the card
+      const arriving = isFloodArriving();
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: floodLandingDelay() });
 
       // 1. Theme portal atmosphere transition
       if (portalRef.current) {
@@ -83,7 +87,7 @@ export default function ContactPage() {
       }
 
       // 2. The vibrant orange hero panel descends
-      if (panelRef.current) {
+      if (panelRef.current && !arriving) {
         tl.fromTo(
           panelRef.current,
           {
@@ -306,7 +310,7 @@ export default function ContactPage() {
 
       <Navbar theme={theme} toggleTheme={toggleTheme} transparent />
 
-      <div className="contact-hero-panel" ref={panelRef}>
+      <div className="contact-hero-panel" ref={panelRef} data-flood-target>
         {/* Architectural Hero Grid Lines */}
         <div className="hero-grid-overlay" aria-hidden="true">
           <div className="hero-grid-pattern" />

@@ -4,7 +4,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import NotchedCard from '../common/NotchedCard';
 import KineticStage from '../common/KineticStage';
 import { ArrowUpRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { navigateWithColor } from '../../utils/pageTransition';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,7 +22,6 @@ gsap.registerPlugin(ScrollTrigger);
 export default function NotchedProjectCard({
   project,
   index,
-  onOpenCaseStudy,
   className = '',
   style = {},
 }) {
@@ -29,6 +29,17 @@ export default function NotchedProjectCard({
   const interactiveGroupRef = useRef(null);
   const watermarkRef = useRef(null);
   const besideRef = useRef(null);
+  const navigate = useNavigate();
+
+  const handleExploreClick = (e) => {
+    navigateWithColor(e, {
+      to: `/work/${project.slug}`,
+      color: project.accent,
+      label: project.title,
+      navigate,
+      from: e.currentTarget.querySelector('.project-case-study-arrow') || e.currentTarget,
+    });
+  };
 
   // Determine tone and bezel color
   const tone = project.stage?.tone || (index % 2 === 0 ? 'light' : 'dark');
@@ -215,34 +226,62 @@ export default function NotchedProjectCard({
         </div>
 
         <h3 className="featured-project-headline">
-          <a
-            href={project.liveUrl || '#contact'}
-            target={project.liveUrl ? '_blank' : '_self'}
-            rel="noopener noreferrer"
-            className="featured-project-title-link"
-          >
-            {project.logo && (
-              <span className={`project-title-logo-wrap logo-wrap-${project.id}`}>
-                <img
-                  src={project.logo}
-                  alt={`${project.title} logo`}
-                  className={`project-title-logo-img logo-img-${project.id}`}
-                  loading="lazy"
-                />
-              </span>
-            )}
-            <span className="project-title-text">{project.title}</span>
-          </a>
+          {project.slug ? (
+            <Link
+              to={`/work/${project.slug}`}
+              className="featured-project-title-link"
+              title={`View ${project.title} project details`}
+            >
+              {project.logo && (
+                <span className={`project-title-logo-wrap logo-wrap-${project.id}`}>
+                  <img
+                    src={project.logo}
+                    alt={`${project.title} logo`}
+                    className={`project-title-logo-img logo-img-${project.id}`}
+                    loading="lazy"
+                  />
+                </span>
+              )}
+              <span className="project-title-text">{project.title}</span>
+            </Link>
+          ) : (
+            <a
+              href={project.liveUrl || '#contact'}
+              target={project.liveUrl ? '_blank' : '_self'}
+              rel="noopener noreferrer"
+              className="featured-project-title-link"
+            >
+              {project.logo && (
+                <span className={`project-title-logo-wrap logo-wrap-${project.id}`}>
+                  <img
+                    src={project.logo}
+                    alt={`${project.title} logo`}
+                    className={`project-title-logo-img logo-img-${project.id}`}
+                    loading="lazy"
+                  />
+                </span>
+              )}
+              <span className="project-title-text">{project.title}</span>
+            </a>
+          )}
         </h3>
 
         {(project.description || project.desc || project.subtitle) && (
           <p className="featured-project-desc">{project.description || project.desc || project.subtitle}</p>
         )}
 
-        {/* Crawlable link to the project's own case-study page */}
+        {/* Direct link to project detail page (/work/:slug) */}
         {project.slug && (
-          <Link to={`/work/${project.slug}`} className="project-case-study-link">
-            Read the case study <ArrowUpRight size={15} strokeWidth={2.2} aria-hidden="true" />
+          <Link
+            to={`/work/${project.slug}`}
+            className="project-case-study-link"
+            title={`Explore ${project.title} project`}
+            onClick={handleExploreClick}
+          >
+            <span>Explore project</span>
+            <span className="project-case-study-arrow" aria-hidden="true">
+              <ArrowUpRight size={14} strokeWidth={2.4} />
+            </span>
           </Link>
         )}
 

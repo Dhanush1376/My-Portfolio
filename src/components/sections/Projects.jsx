@@ -6,7 +6,7 @@ import NotchedProjectCard from './NotchedProjectCard';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Projects({ onOpenCaseStudy }) {
+export default function Projects() {
   const projectsList = Object.values(PROJECTS_DATA);
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
@@ -134,7 +134,6 @@ export default function Projects({ onOpenCaseStudy }) {
               key={project.id}
               project={project}
               index={index}
-              onOpenCaseStudy={onOpenCaseStudy}
               className="featured-project-row-item"
             />
           ))}

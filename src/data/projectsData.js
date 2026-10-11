@@ -1,6 +1,7 @@
 export const PROJECTS_DATA = {
   siriarts: {
     id: "siriarts",
+    accent: "#F2A93B", // colour field for its case-study page
     slug: "siri-arts-and-crafts", // case-study URL: /work/siri-arts-and-crafts
     num: "01",
     tag: "01 / FREELANCE CLIENT",
@@ -11,8 +12,8 @@ export const PROJECTS_DATA = {
     tags: ["Freelance Client", "Event Decor", "Custom Gifts"],
     title: "Siri Arts & Crafts",
     logo: "/assets/siriarts_circle_logo.png",
-    description: "Production client storefront featuring high-speed event visual galleries and direct 1-click WhatsApp customer bookings.",
-    subtitle: "A production client website featuring high-speed event visual galleries and direct 1-click WhatsApp customer bookings.",
+    description: "Full-scale modern e-commerce storefront with high-performance product browsing and instant order checkout.",
+    subtitle: "Full-scale modern e-commerce storefront with high-performance product browsing and instant order checkout.",
     img: "/assets/siriarts_poster.jpg",
     video: "/assets/siri_arts_demo.mp4",
     liveUrl: "https://siriartsandcrafts.com/",
@@ -25,9 +26,20 @@ export const PROJECTS_DATA = {
         { words: ["Custom", "crafts"], color: "#2563EB" }
       ]
     },
-    overview: "Designed and developed for Siri Arts & Crafts, a real-world business providing wedding stage decor, traditional pooja setups, floral arrangements, and personalized handmade gifts. Built to give customers an effortless photo-browsing experience while providing the owner with direct, qualified WhatsApp bookings.",
+    overview: "Production storefront engineered for instant event photo browsing and direct 1-click WhatsApp bookings.",
+    overviewHighlights: [
+      "Sub-second visual galleries for wedding stage decor and custom crafts",
+      "Direct 1-click WhatsApp inquiry funnel with pre-filled event templates",
+      "Cloudinary CDN image pipeline optimized for fast mobile discovery"
+    ],
     problem: "The client was losing potential bookings through disorganized social media messages, manual photo sharing, and having no centralized catalog for pricing and custom craft inquiries.",
     solution: "Engineered a fast, lightweight digital storefront featuring high-res Cloudinary CDN photo delivery, categorized galleries, and a one-click WhatsApp inquiry funnel with pre-filled event specifications.",
+    // Short before -> after pairs shown on the case study (problem/solution above stay as the full story)
+    challenge: [
+      { problem: "Bookings lost in messy DMs", solution: "One-tap WhatsApp booking, details pre-filled" },
+      { problem: "Photos sent by hand, one by one", solution: "Fast, categorised galleries on a CDN" },
+      { problem: "No catalogue or prices to share", solution: "One catalogue for decor, gifts and pricing" },
+    ],
     features: [
       "Visual showcase for wedding stage decor, pooja setups, and birthday events",
       "Handcrafted custom gift catalog with item specifications and pricing guidance",
@@ -35,7 +47,8 @@ export const PROJECTS_DATA = {
       "Cloudinary CDN image pipeline ensuring sub-second visual load times on mobile",
       "SEO-optimized and PWA-ready for local discovery and bookmarking"
     ],
-    role: "Full-Stack Freelance Developer — Handled client discovery, UI/UX design, frontend development in React/Vite, media CDN pipeline, and live custom domain deployment.",
+    scope: ["Client discovery", "UI/UX design", "React + Vite build", "Media CDN", "Domain launch"], // short role summary for the case study
+    role: "Full-Stack Developer — Handled client discovery, UI/UX design, frontend development in React/Vite, media CDN pipeline, and live custom domain deployment.",
     tech: ["React", "Vite", "Cloudinary CDN", "WhatsApp API", "PWA & SEO", "Responsive UX"],
     stats: [
       { label: "Load Time", val: "< 1.2s" },
@@ -46,6 +59,7 @@ export const PROJECTS_DATA = {
   },
   akulas_kitchen: {
     id: "akulas_kitchen",
+    accent: "#94CF4E", // colour field for its case-study page
     slug: "akulas-kitchen", // case-study URL: /work/akulas-kitchen
     num: "02",
     tag: "02 / PRODUCTION CLIENT",
@@ -70,9 +84,20 @@ export const PROJECTS_DATA = {
         { words: ["Live", "tracking"], color: "#2563EB" }
       ]
     },
-    overview: "Architected and engineered for Akula's Kitchen, an authentic South Indian culinary brand and cloud kitchen serving stone-ground batters, organic condiments, traditional pickles, and Andhra snacks. Features an end-to-end e-commerce ecosystem connecting customers with zero-hassle online ordering, automated invoicing, and live preparation tracking.",
+    overview: "Full-stack food commerce ecosystem connecting customers with authentic South Indian staples and real-time order tracking.",
+    overviewHighlights: [
+      "Automated Razorpay checkout with instant tax invoicing and Brevo email delivery",
+      "Live kitchen preparation and dispatch status via real-time WebSockets",
+      "High-throughput TypeScript API with Redis caching and rate-limited security"
+    ],
     problem: "The kitchen faced operational bottlenecks managing orders across phone calls and chat apps, calculating manual delivery zones, generating compliant tax invoices, and preventing stock overselling during peak morning breakfast rushes.",
     solution: "Developed a secure, hardened monorepo architecture with a gold-morphic React 19 storefront, TypeScript/Express API, MongoDB Atlas database, Razorpay payment gateway integration, Brevo automated transactional emailing, and real-time Socket.io kitchen updates.",
+    // Short before -> after pairs shown on the case study (problem/solution above stay as the full story)
+    challenge: [
+      { problem: "Orders scattered across calls and chats", solution: "One storefront with secure Razorpay checkout" },
+      { problem: "Tax invoices written by hand", solution: "PDF invoices emailed automatically" },
+      { problem: "Stock oversold in the breakfast rush", solution: "Live kitchen and stock updates in real time" },
+    ],
     features: [
       "Dynamic product catalog with freshness indicators, dietary tags, and spice level filters",
       "Frictionless Razorpay payment gateway integration with instant transaction reconciliation",
@@ -80,6 +105,7 @@ export const PROJECTS_DATA = {
       "Real-time kitchen order tracking and admin dispatch dashboard via WebSockets",
       "Strict rate-limiting, JWT security hardening, and Redis caching for sub-second responses"
     ],
+    scope: ["Brand identity", "React storefront", "TypeScript API", "Payment webhooks", "Production deploy"], // short role summary for the case study
     role: "Lead Full-Stack Developer — Designed brand identity, engineered the React storefront with tokenized CSS, built the Express/TypeScript backend API, integrated payment webhooks, and deployed on production domains.",
     tech: ["React 19", "Node.js", "TypeScript", "MongoDB", "Razorpay API", "Socket.io", "Brevo API", "Cloudinary"],
     stats: [
@@ -91,11 +117,12 @@ export const PROJECTS_DATA = {
   },
   cakepoprush: {
     id: "cakepoprush",
+    accent: "#EF7AA0", // colour field for its case-study page
     slug: "cakepoprush", // case-study URL: /work/cakepoprush
     num: "03",
     tag: "03 / E-COMMERCE STOREFRONT",
     service: "Artisan Dessert Storefront & Experience",
-    category: "Gourmet Bakery & E-Commerce",
+    category: "Dessert Storefront & E-Commerce",
     year: "2026",
     client: "Cake Pop Rush",
     tags: ["E-Commerce", "React 19", "TypeScript"],
@@ -115,9 +142,20 @@ export const PROJECTS_DATA = {
         { words: ["Instant", "checkout"], color: "#06B6D4" }
       ]
     },
-    overview: "Designed and built for CakePopRush, an artisan confectionery and bespoke dessert brand crafting handcrafted cake pops, gourmet cookies, chocolate brownies, and customized event favors. Delivers a delightful, playful digital storefront with high aesthetic appeal and smooth purchasing flows.",
+    overview: "Artisanal confectionery storefront featuring playful mascot interactions, customizable gifting, and frictionless checkout.",
+    overviewHighlights: [
+      "Modular dessert catalog for gourmet cake pops, cookies, and party favors",
+      "Interactive SVG mascot animations delivering delightful customer micro-moments",
+      "Lightweight slide-out cart drawer with instant quantity calculations"
+    ],
     problem: "Custom dessert bakers struggle to showcase diverse confectionery flavors, seasonal party packages, and customized gifting sets with standard cookie-cutter templates that lack brand personality.",
     solution: "Created a boutique frontend application featuring modular dessert cards, interactive SVG mascot micro-interactions, responsive cart flyout, tokenized typography system, and seamless client-side state orchestration.",
+    // Short before -> after pairs shown on the case study (problem/solution above stay as the full story)
+    challenge: [
+      { problem: "Cookie-cutter templates with no personality", solution: "A boutique storefront with its own mascot" },
+      { problem: "Flavours and party packs hard to browse", solution: "Modular dessert cards, easy to explore" },
+      { problem: "Clunky ordering for custom gift sets", solution: "A smooth cart flyout that keeps the order" },
+    ],
     features: [
       "Interactive product showcases for gourmet cake pops, brownies, cookies, and party favors",
       "Interactive SVG mascot animations providing playful customer delight throughout the browsing journey",
@@ -125,6 +163,7 @@ export const PROJECTS_DATA = {
       "Fully typed TypeScript architecture with modular Vanilla CSS token design system",
       "Optimized Single Page Application bundle with sub-second page loads and zero layout shift"
     ],
+    scope: ["Component system", "Illustrations", "Mascot motion", "Cart state", "Vercel launch"], // short role summary for the case study
     role: "Frontend UI/UX Engineer — Built responsive component system, designed custom illustrations & mascot interactions, implemented cart state store, and deployed to Vercel.",
     tech: ["React 19", "TypeScript", "Vite", "Framer Motion", "Vanilla CSS Tokens", "Lucide Icons"],
     stats: [
@@ -136,6 +175,7 @@ export const PROJECTS_DATA = {
   },
   ragchatbot: {
     id: "ragchatbot",
+    accent: "#9D8CFF", // colour field for its case-study page
     slug: "tutorboard", // case-study URL: /work/tutorboard
     num: "04",
     tag: "04 / INTELLIGENT SYSTEM",
@@ -160,15 +200,27 @@ export const PROJECTS_DATA = {
         { words: ["Grounded", "answers"], color: "#FFFFFF" }
       ]
     },
-    overview: "A production-grade Retrieval-Augmented Generation (RAG) platform that ingests unstructured technical documents, extracts contextual chunks, computes dense vector embeddings, and performs hybrid semantic search to eliminate LLM hallucinations.",
+    overview: "Production RAG engine performing hybrid semantic search to eliminate LLM hallucinations on complex technical documents.",
+    overviewHighlights: [
+      "Dense vector embedding pipeline with ChromaDB similarity indexing",
+      "Strict source attribution and citation footnotes for grounded answers",
+      "Sub-200ms hybrid search response latency with production reliability"
+    ],
     problem: "Vanilla generative models hallucinate and fail on proprietary domain knowledge or corporate documentation without verifiable source attribution.",
     solution: "Engineered a low-latency retrieval pipeline combining ChromaDB vector stores, dense embedding indexing, metadata filtering, and strict source citation prompting.",
+    // Short before -> after pairs shown on the case study (problem/solution above stay as the full story)
+    challenge: [
+      { problem: "AI that makes up answers", solution: "Answers grounded in your own documents" },
+      { problem: "No idea where an answer came from", solution: "Every answer cites its source" },
+      { problem: "Generic models miss domain knowledge", solution: "Vector search over the private knowledge base" },
+    ],
     features: [
       "Multi-format document ingestion pipeline (PDFs, Markdown, Web)",
       "Semantic chunking with contextual overlap preservation",
       "ChromaDB dense vector indexing and cosine similarity retrieval",
       "Grounded generation with inline citation footnotes and confidence scoring"
     ],
+    scope: ["Vector embeddings", "Semantic search", "Chunking", "Prompt engineering"], // short role summary for the case study
     role: "AI Systems Engineer — Implemented vector embedding pipelines, semantic similarity search, chunking heuristics, and prompt engineering with LangChain and FastAPI.",
     tech: ["Python", "LangChain", "ChromaDB", "FastAPI", "OpenAI API", "Docker"],
     stats: [

@@ -12,6 +12,7 @@ import AlternativeDiscoveryHub from '../components/sections/AlternativeDiscovery
 import SEO from '../components/common/SEO';
 import { SOCIAL_LINKS } from '../data/socialLinks';
 import { PAGE_META, absoluteUrl } from '../data/site';
+import { isFloodArriving, floodLandingDelay } from '../utils/pageTransition';
 
 const aboutSchema = {
   "@context": "https://schema.org",
@@ -154,7 +155,10 @@ export default function AboutPage() {
 
   useEffect(() => {
     let ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      // Arriving through the menu's colour flood: the panel is already in place under the colour,
+      // so skip its slide-down and start the rest of the entrance as the colour lands on the card
+      const arriving = isFloodArriving();
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: floodLandingDelay() });
 
       // Theme portal atmosphere transition
       if (portalRef.current) {
@@ -166,7 +170,7 @@ export default function AboutPage() {
       }
 
       // The vibrant Solar Yellow hero panel descends with corner morph (exact Contact Page motion)
-      if (panelRef.current) {
+      if (panelRef.current && !arriving) {
         tl.fromTo(
           panelRef.current,
           {
@@ -499,7 +503,7 @@ export default function AboutPage() {
       <Navbar theme={theme} toggleTheme={toggleTheme} transparent />
 
       {/* Radiant Solar Yellow Architectural Hero Drop Panel */}
-      <div className="about-hero-panel" ref={panelRef}>
+      <div className="about-hero-panel" ref={panelRef} data-flood-target>
         {/* Subtle Architectural Grid Pattern */}
         <div className="hero-grid-overlay" aria-hidden="true">
           <div className="hero-grid-pattern" />
