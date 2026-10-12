@@ -8,7 +8,12 @@ html.intro-pending body::before {
   position: fixed;
   inset: 0;
   z-index: 9998;
-  background: #0E0F12;
+  background: #FBF9F5;
+}
+
+[data-theme="dark"] html.intro-pending body::before,
+html[data-theme="dark"].intro-pending body::before {
+  background: #0A0A0D;
 }
 
 html.intro-running,
@@ -25,6 +30,20 @@ html.intro-running body {
   cursor: progress;
   -webkit-user-select: none;
   user-select: none;
+  /* Light theme default tokens */
+  --intro-base-bg: #FBF9F5;
+  --intro-brand-color: #0E0F12;
+  --intro-hud-color: #0E0F12;
+  --intro-stop-color: #0E0F12;
+}
+
+/* Dark theme overrides when theme is dark */
+[data-theme="dark"] .intro-sequence,
+html[data-theme="dark"] .intro-sequence {
+  --intro-base-bg: #0A0A0D;
+  --intro-brand-color: #F5F3EE;
+  --intro-hud-color: #FFFFFF;
+  --intro-stop-color: #FFFFFF;
 }
 
 .intro-panel {
@@ -38,7 +57,8 @@ html.intro-running body {
 
 .intro-panel--base,
 .intro-panel--final {
-  background: #0E0F12;
+  background: var(--intro-base-bg);
+  transition: background-color 0.3s ease;
 }
 
 /* The point */
@@ -70,7 +90,8 @@ html.intro-running body {
 
 .intro-brand {
   font-size: clamp(3.8rem, 17vw, 13rem);
-  color: #F5F3EE;
+  color: var(--intro-brand-color);
+  transition: color 0.3s ease;
 }
 
 .intro-letter-mask {

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import gsap from 'gsap';
-import { ArrowLeft, ArrowRight, ArrowUpRight, X, Smartphone, Monitor } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Maximize2, X, Smartphone, Monitor } from 'lucide-react';
 
 const PLACEHOLDER_COUNT = { mobile: 7, desktop: 4 };
 const reduceMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -506,26 +506,6 @@ export default function ScreenGallery({ project, screens, label, title }) {
     }
   };
 
-  /* ------------------------------------------------------------------ */
-  /* Cursor tilt + glare (fine pointers only)                            */
-  /* ------------------------------------------------------------------ */
-  const onTiltMove = (e) => {
-    if (e.pointerType !== 'mouse' || drag.current?.moved || reduceMotion()) return;
-    const el = e.currentTarget;
-    const r = el.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width;
-    const py = (e.clientY - r.top) / r.height;
-    el.style.setProperty('--rx', `${((0.5 - py) * 9).toFixed(2)}deg`);
-    el.style.setProperty('--ry', `${((px - 0.5) * 12).toFixed(2)}deg`);
-    el.style.setProperty('--gx', `${(px * 100).toFixed(1)}%`);
-    el.style.setProperty('--gy', `${(py * 100).toFixed(1)}%`);
-  };
-  const onTiltLeave = (e) => {
-    const el = e.currentTarget;
-    el.style.setProperty('--rx', '0deg');
-    el.style.setProperty('--ry', '0deg');
-  };
-
   const hostname = (() => {
     try { return new URL(project.liveUrl).hostname.replace(/^www\./, ''); } catch (_) { return `${project.slug}.app`; }
   })();
@@ -617,8 +597,13 @@ export default function ScreenGallery({ project, screens, label, title }) {
               // --ar: the screenshot's exact shape, known before it loads, so frames never resize
               style={{ '--i': i, ...(item.w ? { '--ar': (item.w / item.h).toFixed(4) } : null) }}
             >
-              <div className="sg-tilt" onPointerMove={onTiltMove} onPointerLeave={onTiltLeave}>
+              <div className="sg-tilt">
                 <button type="button" className="sg-frame-btn" onClick={open} disabled={!open} aria-label={open ? `View ${caption} full screen` : undefined}>
+                  {open && (
+                    <span className="sg-view" aria-hidden="true">
+                      <Maximize2 size={14} strokeWidth={2.4} /> View
+                    </span>
+                  )}
                   {active === 'desktop' ? (
                     <div className="sg-browser">
                       <div className="sg-browser-bar" aria-hidden="true">
@@ -646,7 +631,7 @@ export default function ScreenGallery({ project, screens, label, title }) {
                             <rect x="12" y="0" width="2.5" height="12" rx="0.5" />
                           </svg>
                           <svg className="sg-icon-wifi" viewBox="0 0 16 12" fill="currentColor">
-                            <path d="M8 9.5a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5zm-3.5-3a5 5 0 017 0 .75.75 0 001.06-1.06 6.5 6.5 0 00-9.12 0 .75.75 0 101.06 1.06zm-2.5-3a8.5 8.5 0 0112 0 .75.75 0 001.06-1.06 10 10 0 00-14.12 0 .75.75 0 101.06 1.06z" />
+                            <path fillRule="evenodd" clipRule="evenodd" d="M8 11.2a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4zm-3.6-3.8a5.1 5.1 0 017.2 0 .8.8 0 101.14-1.12 6.7 6.7 0 00-9.48 0 .8.8 0 101.14 1.12zm-2.6-2.6a8.8 8.8 0 0112.4 0 .8.8 0 101.14-1.12 10.4 10.4 0 00-14.68 0 .8.8 0 101.14 1.12z" />
                           </svg>
                           <div className="sg-icon-battery">
                             <span className="sg-battery-fill" />

@@ -1600,7 +1600,14 @@ body[data-theme="light"] .project-case-study-arrow {
 }
 
 .project-case-study-link:hover .project-case-study-arrow {
-  background: var(--accent, #FF5520);
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #0E0F12;
+  transform: rotate(45deg);
+}
+
+[data-theme="dark"] .project-case-study-link:hover .project-case-study-arrow,
+body[data-theme="dark"] .project-case-study-link:hover .project-case-study-arrow {
+  background: #FFFFFF;
+  color: #0A0A0D;
   transform: rotate(45deg);
 }

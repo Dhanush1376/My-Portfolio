@@ -85,7 +85,8 @@ export default function CustomCursor() {
       }
 
       // 2. Editorial Expertise Row detection (keep cursor sleek & standard without 50px orange ring)
-      const isExpertiseRow = target.closest('.expertise-row');
+      // (and the Interface screenshots, which show their own "View" pill on hover)
+      const isExpertiseRow = target.closest('.expertise-row, .sg-frame-btn');
       if (isExpertiseRow) {
         dot.classList.remove('cursor-hover', 'cursor-project');
         outline.classList.remove('cursor-hover', 'cursor-project');

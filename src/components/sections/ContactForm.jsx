@@ -195,8 +195,8 @@ const trackAnalytics = (eventName, data = {}) => {
 };
 
 export default function ContactForm() {
-  const [selectedServices, setSelectedServices] = useState(['General Conversation']);
-  const [step, setStep] = useState(1); // 1: Services, 2: Details, 3: Brief (mobile wizard)
+  const [selectedServices, setSelectedServices] = useState(['General Inquiry']);
+  const [step, setStep] = useState(1); // 1: Details, 2: Brief
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -438,12 +438,6 @@ export default function ContactForm() {
 
   const handleNextStep = (targetStep) => {
     if (targetStep === 2) {
-      if (selectedServices.length === 0) {
-        setFieldErrors({ services: 'Please select at least one service.' });
-        return;
-      }
-    }
-    if (targetStep === 3) {
       const nameErr = validateField('name', formData.name);
       if (nameErr) {
         setFieldErrors({ name: nameErr });
@@ -482,15 +476,9 @@ export default function ContactForm() {
       return;
     }
 
-    if (selectedServices.length === 0) {
-      setStep(1);
-      setFieldErrors({ services: 'Please select at least one service.' });
-      return;
-    }
-
     const nameErr = validateField('name', formData.name);
     if (nameErr) {
-      setStep(2);
+      setStep(1);
       setFieldErrors({ name: nameErr });
       setTimeout(() => document.getElementById('form-name')?.focus(), 60);
       return;
@@ -498,7 +486,7 @@ export default function ContactForm() {
 
     const phoneErr = validateField('phone', formData.phone, selectedCountry);
     if (phoneErr) {
-      setStep(2);
+      setStep(1);
       setFieldErrors({ phone: phoneErr });
       setTimeout(() => document.getElementById('form-phone')?.focus(), 60);
       return;
@@ -506,7 +494,7 @@ export default function ContactForm() {
 
     const messageErr = validateField('message', formData.message);
     if (messageErr) {
-      setStep(3);
+      setStep(2);
       setFieldErrors({ message: messageErr });
       setTimeout(() => document.getElementById('form-message')?.focus(), 60);
       return;
@@ -515,7 +503,7 @@ export default function ContactForm() {
     setFieldErrors({});
     setErrorMessage('');
     setStatus('sending');
-    trackAnalytics('contact_form_submitted', { services: selectedServices.join(', ') });
+    trackAnalytics('contact_form_submitted');
 
     const fullPhone = `${selectedCountry.dial} ${formData.phone.trim()}`;
     const web3formsKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '1b7c64cf-872f-4a9a-8645-c94982d436d9';
@@ -844,26 +832,15 @@ export default function ContactForm() {
                     onChange={(e) => setFormData(prev => ({ ...prev, botcheck: e.target.checked }))}
                   />
 
-                  {/* Mobile Step Navigation Header */}
+                  {/* Step Navigation Header */}
                   <div className="mobile-step-header" aria-label="Form Progress">
-                    <div className="studio-steps-nav">
+                    <div className="studio-steps-nav is-two-steps">
                       <button 
                         type="button" 
                         className={`step-nav-tab ${step === 1 ? 'is-active' : step > 1 ? 'is-done' : ''}`}
                         onClick={() => setStep(1)}
                       >
                         <span className="step-nav-index">01</span>
-                        <span className="step-nav-name">Services</span>
-                      </button>
-
-                      <span className="step-nav-sep">/</span>
-
-                      <button 
-                        type="button" 
-                        className={`step-nav-tab ${step === 2 ? 'is-active' : step > 2 ? 'is-done' : ''}`}
-                        onClick={() => selectedServices.length > 0 && setStep(2)}
-                      >
-                        <span className="step-nav-index">02</span>
                         <span className="step-nav-name">Details</span>
                       </button>
 
@@ -871,82 +848,29 @@ export default function ContactForm() {
 
                       <button 
                         type="button" 
-                        className={`step-nav-tab ${step === 3 ? 'is-active' : ''}`}
-                        onClick={() => handleNextStep(3)}
+                        className={`step-nav-tab ${step === 2 ? 'is-active' : ''}`}
+                        onClick={() => handleNextStep(2)}
                       >
-                        <span className="step-nav-index">03</span>
+                        <span className="step-nav-index">02</span>
                         <span className="step-nav-name">Brief</span>
                       </button>
                     </div>
 
-                    <div className="step-progress-segments" aria-hidden="true">
+                    <div className="step-progress-segments is-two-steps" aria-hidden="true">
                       <div className={`step-seg-track ${step >= 1 ? 'is-active' : ''} ${step > 1 ? 'is-done' : ''}`}>
                         <div className="step-seg-fill" />
                       </div>
-                      <div className={`step-seg-track ${step >= 2 ? 'is-active' : ''} ${step > 2 ? 'is-done' : ''}`}>
-                        <div className="step-seg-fill" />
-                      </div>
-                      <div className={`step-seg-track ${step >= 3 ? 'is-active' : ''}`}>
+                      <div className={`step-seg-track ${step >= 2 ? 'is-active' : ''}`}>
                         <div className="step-seg-fill" />
                       </div>
                     </div>
                   </div>
 
-                  {/* Step 1: Services Selection */}
+                  {/* Step 1: Contact Details */}
                   <div className={`studio-step-pane step-1-pane ${step === 1 ? 'is-active-step' : ''}`}>
                     <div className="pane-header">
                       <div className="pane-kicker">STEP 01</div>
-                      <TypewriterTitle text="What are you looking to build?" stepIndex={1} currentStep={step} />
-                    </div>
-
-                    <div className="services-pills-wrap">
-                      {SERVICES.map((s) => {
-                        const active = selectedServices.includes(s.label);
-                        const Icon = s.icon;
-                        return (
-                          <button
-                            type="button"
-                            key={s.id}
-                            className={`service-pill-chip ${active ? 'is-selected' : ''}`}
-                            onClick={() => toggleService(s.label)}
-                            aria-pressed={active}
-                          >
-                            <span className="chip-icon">
-                              <Icon size={14} />
-                            </span>
-                            <span className="chip-label">{s.label}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {fieldErrors.services && (
-                      <div className="studio-bubble-tooltip" style={{ position: 'static', marginTop: '1rem' }} role="alert">
-                        <span className="bubble-badge">!</span>
-                        <span className="bubble-text">{fieldErrors.services}</span>
-                      </div>
-                    )}
-
-                    {/* Mobile Step 1 Navigation */}
-                    <div className="mobile-step-nav">
-                      <button
-                        type="button"
-                        className="studio-theme-btn mobile-step-btn"
-                        onClick={() => handleNextStep(2)}
-                      >
-                        <span className="btn-label">Next: Your Details</span>
-                        <span className="btn-arrow-bubble">
-                          <ArrowRight size={18} strokeWidth={2.5} />
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Step 2: Contact Details */}
-                  <div className={`studio-step-pane step-2-pane ${step === 2 ? 'is-active-step' : ''}`}>
-                    <div className="pane-header">
-                      <div className="pane-kicker">STEP 02</div>
-                      <TypewriterTitle text="How can I reach you?" stepIndex={2} currentStep={step} />
+                      <TypewriterTitle text="How can I reach you?" stepIndex={1} currentStep={step} />
                     </div>
 
                     <div className="form-fields-stack">
@@ -1107,20 +1031,12 @@ export default function ContactForm() {
                       </div>
                     </div>
 
-                    {/* Mobile Step 2 Navigation */}
-                    <div className="mobile-step-nav has-back">
-                      <button
-                        type="button"
-                        className="studio-back-btn"
-                        onClick={handlePrevStep}
-                      >
-                        <ArrowLeft size={16} strokeWidth={2.5} />
-                        <span>Back</span>
-                      </button>
+                    {/* Step 1 Navigation */}
+                    <div className="mobile-step-nav">
                       <button
                         type="button"
                         className="studio-theme-btn mobile-step-btn"
-                        onClick={() => handleNextStep(3)}
+                        onClick={() => handleNextStep(2)}
                       >
                         <span className="btn-label">Next: Brief</span>
                         <span className="btn-arrow-bubble">
@@ -1130,11 +1046,11 @@ export default function ContactForm() {
                     </div>
                   </div>
 
-                  {/* Step 3: Project Brief */}
-                  <div className={`studio-step-pane step-3-pane ${step === 3 ? 'is-active-step' : ''}`}>
+                  {/* Step 2: Project Brief */}
+                  <div className={`studio-step-pane step-2-pane ${step === 2 ? 'is-active-step' : ''}`}>
                     <div className="pane-header">
-                      <div className="pane-kicker">STEP 03</div>
-                      <TypewriterTitle text="Tell me about your vision" stepIndex={3} currentStep={step} />
+                      <div className="pane-kicker">STEP 02</div>
+                      <TypewriterTitle text="Tell me about your vision" stepIndex={2} currentStep={step} />
                     </div>
 
                     <div className="form-fields-stack">
