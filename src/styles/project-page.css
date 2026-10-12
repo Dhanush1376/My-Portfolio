@@ -1227,6 +1227,8 @@
 /* Track: starts aligned with the page column, bleeds off the right edge */
 .sg-track {
   --edge: max(var(--gutter), calc((100vw - var(--maxw)) / 2 + var(--gutter)));
+  /* Every phone is this tall on every screen; its width follows its own screenshot */
+  --sg-phone-h: clamp(500px, min(150vw, 74vh), 630px);
   display: flex;
   gap: clamp(1rem, 2vw, 1.5rem);
   overflow-x: auto;
@@ -1271,7 +1273,11 @@
   opacity: 0;
 }
 
-.sg-item--mobile,
+/* As wide as its phone (which is sized by its screenshot); the caption wraps under it */
+.sg-item--mobile {
+  width: min-content;
+}
+
 .sg-item--store {
   width: clamp(255px, 68vw, 305px);
 }
@@ -1346,10 +1352,13 @@
   }
 }
 
-/* Phone frame: Increased width (1 / 1.96) so the full picture width fits cleanly without cropping or disturbing height */
+/* Phone frame: status bar, the whole screenshot, home strip. The screenshot is never covered or
+   cropped: it keeps its own shape (--ar) and the bars sit above and below it. */
 .sg-phone {
   position: relative;
-  aspect-ratio: 1 / 1.96;
+  display: flex;
+  flex-direction: column;
+  height: var(--sg-phone-h);
   padding: 6px;
   border-radius: 40px;
   background: #0E0F12;
@@ -1371,21 +1380,14 @@
 
 /* Phone Top Bar (iOS Status Bar + Dynamic Island) */
 .sg-phone-topbar {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  right: 6px;
-  height: 40px;
-  z-index: 5;
+  position: relative;
+  flex: none;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 14px 0 18px;
   pointer-events: none;
-  background: #0E0F12;
-  border-top-left-radius: 34px;
-  border-top-right-radius: 34px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
 }
 
 .sg-phone-time {
@@ -1399,7 +1401,7 @@
 /* Dynamic Island */
 .sg-island {
   position: absolute;
-  top: 6px;
+  top: 4px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -1561,28 +1563,59 @@
   opacity: 0.75;
 }
 
+/* Height is what's left between the bars; the width comes from the screenshot's own shape */
 .sg-phone-screen {
   position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 34px;
+  flex: none;
+  align-self: center;
+  height: calc(var(--sg-phone-h) - 64px);
+  aspect-ratio: var(--ar, 0.485);
+  border-radius: 6px;
   overflow: hidden;
   background: #1C1D26;
-  padding-top: 0;
-  padding-bottom: 0;
-  box-sizing: border-box;
 }
 
 .sg-phone-screen > img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center center;
+  object-fit: contain;
   user-select: none;
   -webkit-user-drag: none;
-  border-radius: 34px;
+  transition: opacity 0.45s ease;
 }
+
+/* Home indicator strip under the screenshot */
+.sg-phone-home {
+  flex: none;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.sg-phone-home i {
+  width: 36%;
+  max-width: 96px;
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* Screenshots fade in as they load instead of popping in */
+.sg-phone-screen > img,
+.sg-store > img,
+.sg-browser-screen > img {
+  opacity: 0;
+}
+
+.sg-phone-screen > img.is-loaded,
+.sg-store > img.is-loaded,
+.sg-browser-screen > img.is-loaded {
+  opacity: 1;
+}
+
 
 .sg-store > img,
 .sg-browser-screen > img {
@@ -1594,7 +1627,7 @@
   user-select: none;
   -webkit-user-drag: none;
   /* Long screenshots pan down smoothly on hover */
-  transition: object-position 3.2s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: object-position 3.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.45s ease;
   will-change: object-position;
 }
 
@@ -4235,15 +4268,15 @@
   background: linear-gradient(#40414B, #26272E);
 }
 
-/* Phone leaning on the laptop's right edge */
+/* Phone leaning on the laptop's right corner, about a fifth of its width (a real phone beside a laptop) */
 .pcs-phone {
   position: absolute;
-  right: -2%;
-  bottom: -4%;
+  right: 0;
+  bottom: -3%;
   z-index: 2;
-  width: 28%;
-  min-width: 130px;
-  max-width: 220px;
+  width: 21%;
+  min-width: 96px;
+  max-width: 168px;
   animation: pcs-phone-in 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.85s both;
 }
 
@@ -4254,9 +4287,8 @@
 
 .pcs-phone-body {
   position: relative;
-  aspect-ratio: 9 / 19.5;
-  padding: 5%;
-  border-radius: 26px;
+  padding: 4.5%;
+  border-radius: 22px;
   background: #0E0F12;
   box-shadow:
     inset 0 0 0 1.5px rgba(255, 255, 255, 0.12),
@@ -4270,30 +4302,44 @@
 
 .pcs-phone-island {
   position: absolute;
-  top: 4.2%;
+  top: 0;
   left: 50%;
   z-index: 1;
   width: 30%;
-  height: 3.4%;
+  aspect-ratio: 3.6;
+  /* Centred in the status strip above the screenshot (margins resolve against the width) */
+  margin-top: 6.2%;
   border-radius: 99px;
   background: #000000;
   transform: translateX(-50%);
 }
 
+/* Status strip, the whole screenshot, home strip: the screenshot is shown in full, never cropped
+   or covered by the island */
 .pcs-phone-screen {
-  width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  border-radius: 20px;
-  background: #1C1D26;
+  border-radius: 17px;
+  background: #000000;
+}
+
+.pcs-phone-screen::before,
+.pcs-phone-screen::after {
+  content: '';
+  flex: none;
+  padding-top: 12%;
+}
+
+.pcs-phone-screen::after {
+  padding-top: 7%;
 }
 
 .pcs-phone-screen > img {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center;
+  height: auto;
+  aspect-ratio: auto 1 / 2.06;
 }
 
 /* No phone screenshot yet: an app-style splash of the project */
@@ -4303,7 +4349,7 @@
   align-items: center;
   justify-content: center;
   gap: 10%;
-  height: 100%;
+  aspect-ratio: 1 / 2.06;
   padding: 12%;
   background: var(--pa);
   color: #0E0F12;
@@ -4432,27 +4478,61 @@
     opacity: 0.88;
   }
 
+  /* Room for the deck's overhang on both sides and the phone at the corner */
   .pcs-show-stage {
-    padding: 0 9% 12% 0;
+    padding: 0 4% 9% 0;
   }
 
+  .pcs-laptop {
+    margin: 0 7%;
+  }
+
+  /* A proper bezel and lid, so it reads as a laptop even this small */
   .pcs-laptop-lid {
-    border-radius: 12px 12px 4px 4px;
+    padding: 3.2% 3.2% 3.8%;
+    border-radius: 11px 11px 3px 3px;
+  }
+
+  .pcs-laptop-cam {
+    top: 1.2%;
+    width: 4px;
+    height: 4px;
+    margin-left: -2px;
+  }
+
+  .pcs-laptop-screen {
+    border-radius: 3px;
+  }
+
+  /* Deck wider than the lid, with a hinge line and the thumb notch */
+  .pcs-laptop-base {
+    height: 11px;
+    margin: 0 -8%;
+    border-radius: 2px 2px 12px 12px;
+    box-shadow:
+      inset 0 1.5px 0 rgba(255, 255, 255, 0.55),
+      0 14px 22px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  .pcs-laptop-base span {
+    width: 18%;
+    height: 40%;
   }
 
   .pcs-phone {
-    width: 34%;
-    min-width: 110px;
-    right: -3%;
-    bottom: -5%;
+    width: 22.5%;
+    min-width: 76px;
+    right: 0;
+    bottom: -2%;
   }
 
   .pcs-phone-body {
-    border-radius: 20px;
+    padding: 5%;
+    border-radius: 14px;
   }
 
   .pcs-phone-screen {
-    border-radius: 15px;
+    border-radius: 10px;
   }
 
   /* ScreenGallery switcher: hide text in mobile layout, show only icons */

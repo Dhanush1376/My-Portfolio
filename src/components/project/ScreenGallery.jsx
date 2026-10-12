@@ -6,12 +6,21 @@ import { ArrowLeft, ArrowRight, X, Smartphone, Monitor } from 'lucide-react';
 const PLACEHOLDER_COUNT = { mobile: 7, desktop: 4 };
 const reduceMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// Reads a screenshot's own shape into --ar so its frame is sized to it (phones are never cropped),
+// and fades it in once it has loaded
+const fitShot = (img) => {
+  if (!img?.naturalWidth) return;
+  img.parentElement.style.setProperty('--ar', (img.naturalWidth / img.naturalHeight).toFixed(4));
+  img.classList.add('is-loaded');
+};
+
 /**
  * App-store style screenshot gallery for a case study.
  * Mobile: store artwork as-is + raw screens in a phone frame. Desktop: screens in a browser window.
  * Empty tabs show animated wireframe placeholders (with the file name to use, on localhost only).
  *
- * Motion: frames are dealt out from a fanned pile when the gallery enters (and on tab change),
+ * Motion: frames sweep in like a fast scroll and brake into place when the gallery enters; on tab
+ * change the current row races off and the new one sweeps in from the other side. Frames also
  * swing in 3D with scroll velocity, tilt toward the cursor, and placeholders run "live" UI loops.
  */
 export default function ScreenGallery({ project, screens, label, title }) {
@@ -29,7 +38,12 @@ export default function ScreenGallery({ project, screens, label, title }) {
   const progressRef = useRef(null);
   const counterRef = useRef(null);
   const entered = useRef(false);
-  const dealOnRender = useRef(false);
+  const landOnRender = useRef(0);
+  const landRun = useRef(0);
+  const warmed = useRef(new Set());
+  // Each tab's row height, and the height on screen when a switch swaps rows (see the layout effect)
+  const tabHeights = useRef({});
+  const heightFrom = useRef(0);
   const switching = useRef(false);
   const [edges, setEdges] = useState({ start: true, end: false });
 
@@ -45,41 +59,62 @@ export default function ScreenGallery({ project, screens, label, title }) {
   const realItems = tab.items;
 
   /* ------------------------------------------------------------------ */
-  /* Entrance: cards slide cleanly into place from the right (no overlap) */
+  /* Landing: the row sweeps in like a fast scroll and brakes into place  */
   /* ------------------------------------------------------------------ */
-  const deal = useCallback((rise) => {
+  // dir 1 = forward (frames arrive from the right), -1 = backward (from the left). Only transforms
+  // and opacity move, and only on the frames that come to rest on screen.
+  const land = useCallback((dir, entrance = false) => {
     const track = trackRef.current;
     if (!track) return;
     const els = [...track.querySelectorAll('.sg-item')];
     if (!els.length) return;
+    gsap.killTweensOf(els);
     if (reduceMotion()) {
-      gsap.set(els, { clearProps: 'all' });
+      gsap.set(els, { clearProps: 'transform,opacity' });
       return;
     }
-    gsap.killTweensOf(els);
+    const vw = window.innerWidth;
+    const onScreen = els.filter((el) => el.getBoundingClientRect().left < vw);
+    gsap.set(els.filter((el) => !onScreen.includes(el)), { clearProps: 'transform,opacity' });
 
-    // Initial position: offset to the right and slightly down, completely non-overlapping
-    gsap.set(els, {
-      x: 90,
-      y: rise ? 30 : 0,
-      scale: 0.96,
-      opacity: 0,
-    });
+    // Leading frame first: the left one when arriving from the right, the right one otherwise.
+    // Leaning into the direction of travel, like motion blur, and straightening as it brakes.
+    const lead = dir > 0 ? onScreen : [...onScreen].reverse();
+    gsap.set(lead, { x: dir * vw * (entrance ? 1 : 0.9), skewX: dir * 10, opacity: 0 });
 
-    // Smooth, elegant entrance sliding in from the right to their exact carousel slots
-    gsap.to(els, {
-      x: 0,
-      y: 0,
-      scale: 1,
-      opacity: 1,
-      duration: rise ? 0.85 : 0.6,
-      ease: 'power3.out',
-      stagger: 0.07,
-      onComplete: () => {
-        gsap.set(els, { clearProps: 'transform,opacity,zIndex,transformOrigin' });
-      },
+    // Start once the screenshots that will be on screen are decoded (waiting no more than a
+    // moment), so frames never arrive empty. Lazy images held off screen are loaded right away.
+    const run = ++landRun.current;
+    const imgs = onScreen.map((el) => el.querySelector('img')).filter(Boolean);
+    imgs.forEach((img) => { img.loading = 'eager'; });
+    Promise.race([
+      Promise.all(imgs.map((img) => img.decode().catch(() => {}))),
+      new Promise((resolve) => setTimeout(resolve, 450)),
+    ]).then(() => {
+      if (run !== landRun.current) return;
+      gsap.to(lead, {
+        x: 0,
+        skewX: 0,
+        opacity: 1,
+        duration: entrance ? 1.3 : 1,
+        ease: 'expo.out',
+        stagger: entrance ? 0.08 : 0.06,
+        clearProps: 'transform,opacity',
+      });
     });
   }, []);
+
+  // Fetch a tab's first screenshots as soon as the visitor reaches for it (hover / press / focus)
+  const warm = (id) => {
+    const t = tabs.find((x) => x.id === id);
+    t?.items.slice(0, id === 'desktop' ? 3 : 6).forEach(({ src }) => {
+      if (!src || warmed.current.has(src)) return;
+      warmed.current.add(src);
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = src;
+    });
+  };
 
   // First entrance when the gallery scrolls into view; also pause the "live" loops when off screen
   useEffect(() => {
@@ -96,34 +131,50 @@ export default function ScreenGallery({ project, screens, label, title }) {
         if (entry.isIntersecting && !entered.current) {
           entered.current = true;
           root.classList.add('has-entered');
-          deal(true);
+          land(1, true);
         }
       },
       { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
     );
     io.observe(root);
     return () => io.disconnect();
-  }, [deal]);
+  }, [land]);
 
-  // Tab change: clear the old frames away, then deal the new set in
+  // Tab change: the current row races off like a fast scroll (forward to Desktop, backward to
+  // Mobile), then the new row sweeps in from the other side and brakes onto its first frame
   const switchTab = (id) => {
     if (id === active || switching.current) return;
+    landRun.current++;
+    const dir =tabs.findIndex((t) => t.id === id) > tabs.findIndex((t) => t.id === active) ? 1 : -1;
     const els = trackRef.current ? [...trackRef.current.querySelectorAll('.sg-item')] : [];
-    if (reduceMotion() || !entered.current || !els.length) {
+    const vw = window.innerWidth;
+    const onScreen = els.filter((el) => {
+      const r = el.getBoundingClientRect();
+      return r.right > 0 && r.left < vw;
+    });
+    if (reduceMotion() || !entered.current || !onScreen.length) {
       setActive(id);
       return;
     }
     switching.current = true;
     gsap.killTweensOf(els);
-    gsap.to(els, {
-      y: 36,
-      opacity: 0,
-      scale: 0.94,
-      duration: 0.26,
-      ease: 'power2.in',
-      stagger: 0.025,
+    gsap.set(els.filter((el) => !onScreen.includes(el)), { opacity: 0 });
+    // A taller row (phones after desktop frames) gets its room while the old row leaves, so it is
+    // never clipped and the content below glides instead of jumping
+    const track = trackRef.current;
+    const nextH = tabHeights.current[id];
+    if (nextH && nextH > track.offsetHeight) gsap.to(track, { height: nextH, duration: 0.5, ease: 'power2.inOut' });
+    // One distance for the whole row (just past the far edge), so it moves as one, like a scroll
+    const rects = onScreen.map((el) => el.getBoundingClientRect());
+    const distance = dir > 0 ? Math.max(...rects.map((r) => r.right)) + 40 : vw - Math.min(...rects.map((r) => r.left)) + 40;
+    gsap.to(onScreen, {
+      x: -dir * distance,
+      skewX: dir * 10,
+      duration: 0.5,
+      ease: 'power3.in',
       onComplete: () => {
-        dealOnRender.current = true;
+        heightFrom.current = track.offsetHeight;
+        landOnRender.current = dir;
         switching.current = false;
         setActive(id);
       },
@@ -142,12 +193,25 @@ export default function ScreenGallery({ project, screens, label, title }) {
 
   useLayoutEffect(() => {
     const track = trackRef.current;
-    if (track) track.scrollLeft = 0;
-    if (dealOnRender.current) {
-      dealOnRender.current = false;
-      deal(false);
+    if (track) {
+      track.scrollLeft = 0;
+      // Record this row's natural height; after a switch, ease from the old height to it
+      gsap.killTweensOf(track);
+      track.style.height = '';
+      const natural = track.offsetHeight;
+      tabHeights.current[active] = natural;
+      const from = heightFrom.current;
+      heightFrom.current = 0;
+      if (from && Math.abs(from - natural) > 2 && !reduceMotion()) {
+        gsap.fromTo(track, { height: from }, { height: natural, duration: 0.8, ease: 'power3.inOut', clearProps: 'height' });
+      }
     }
-  }, [active, deal]);
+    if (landOnRender.current) {
+      const dir = landOnRender.current;
+      landOnRender.current = 0;
+      land(dir);
+    }
+  }, [active, land]);
 
   /* ------------------------------------------------------------------ */
   /* Scroll: edges, progress, counter, and a velocity "swing"            */
@@ -297,6 +361,9 @@ export default function ScreenGallery({ project, screens, label, title }) {
                   aria-selected={active === t.id}
                   className={`sg-tab ${active === t.id ? 'is-active' : ''}`}
                   onClick={() => switchTab(t.id)}
+                  onPointerEnter={() => warm(t.id)}
+                  onPointerDown={() => warm(t.id)}
+                  onFocus={() => warm(t.id)}
                   aria-label={t.label}
                   title={t.label}
                 >
@@ -334,7 +401,15 @@ export default function ScreenGallery({ project, screens, label, title }) {
           const media = item.placeholder ? (
             <Placeholder project={project} kind={active} num={num} variant={i} />
           ) : (
-            <img src={item.src} alt={`${project.title} — ${caption}`} loading="lazy" decoding="async" draggable="false" />
+            <img
+              ref={fitShot}
+              src={item.src}
+              alt={`${project.title} — ${caption}`}
+              loading="lazy"
+              decoding="async"
+              draggable="false"
+              onLoad={(e) => fitShot(e.currentTarget)}
+            />
           );
           const kindClass = item.kind === 'store' ? 'store' : active;
 
@@ -377,6 +452,7 @@ export default function ScreenGallery({ project, screens, label, title }) {
                         </div>
                       </div>
                       <div className="sg-phone-screen">{media}</div>
+                      <span className="sg-phone-home" aria-hidden="true"><i /></span>
                       <span className="sg-glare" aria-hidden="true" />
                     </div>
                   )}

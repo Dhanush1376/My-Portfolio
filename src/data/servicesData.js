@@ -8,6 +8,8 @@ export const SERVICES_DATA = [
     subtitle: "Fast, maintainable digital products designed around real business workflows.",
     description: "I engineer high-performance web applications and cross-platform mobile apps with fluid user journeys, secure cloud architecture, and sub-second responsiveness.",
     color: "#9B8AFF", // Vibrant Lilac / Violet
+    // Case studies shown under "Selected work" (project slugs, most relevant first)
+    work: ["akulas-kitchen", "cakepoprush", "siri-arts-and-crafts", "tutorboard"],
     outcomes: [
       "Sub-second reactive web interfaces and native-speed mobile apps",
       "Unified cross-platform codebase saving months of development",
@@ -45,7 +47,8 @@ export const SERVICES_DATA = [
     title: "AI/RAG Applications",
     subtitle: "Autonomous agents & dense vector RAG pipelines grounded in your proprietary data with verified zero-hallucination accuracy.",
     description: "Transform proprietary documents into lightning-fast, production-grade AI systems with semantic vector search and verified zero-hallucination accuracy.",
-    color: "#FF6B42", // Vibrant Studio Coral
+    color: "#2DD4BF", // Electric Teal (AI)
+    work: ["tutorboard"],
     outcomes: [
       "Sub-800ms semantic search & accurate contextual responses",
       "Zero hallucination risk with verified reference citations",
@@ -82,7 +85,8 @@ export const SERVICES_DATA = [
     title: "E-commerce Development",
     subtitle: "High-speed digital storefronts with friction-free 1-click checkouts and automated stock syncing built to maximize conversion.",
     description: "I build lightning-fast storefronts with friction-free checkouts, dynamic inventory syncing, and automated funnels designed to maximize conversion.",
-    color: "#FFB43D", // Warm Amber / Solar Gold
+    color: "#FFD23F", // Sunflower Yellow (shopping)
+    work: ["akulas-kitchen", "cakepoprush", "siri-arts-and-crafts"],
     outcomes: [
       "Sub-1.2s page visual loads with Cloudinary CDN optimization",
       "Higher checkout conversions with streamlined 1-click payment flows",
@@ -119,6 +123,7 @@ export const SERVICES_DATA = [
     subtitle: "Autonomous workflow pipelines that connect your CRM, databases, and APIs to eliminate hundreds of hours of manual labor.",
     description: "Automate repetitive operational workflows with intelligent pipelines that connect your CRMs, documents, and business tools 24/7 with zero human error.",
     color: "#5BB8E5", // Vibrant Sky Blue / Electric Cyan
+    work: ["tutorboard", "akulas-kitchen"],
     outcomes: [
       "80%+ reduction in repetitive operational task hours",
       "Zero human data entry errors with AI validation guardrails",
@@ -156,6 +161,7 @@ export const SERVICES_DATA = [
     subtitle: "Art-directed, high-converting editorial launch pages engineered with fluid motion physics to captivate visitors immediately.",
     description: "Art-directed editorial landing pages engineered with fluid motion physics and top-tier performance to captivate visitors and convert them into clients.",
     color: "#FF8CA6", // Vibrant Punchy Rose / Neon Coral Pink
+    work: ["siri-arts-and-crafts", "cakepoprush"],
     outcomes: [
       "Dramatic uplift in visitor engagement and scroll depth",
       "98+ Core Web Vitals score for maximum ad spend ROI and SEO",
@@ -191,6 +197,7 @@ export const SERVICES_DATA = [
     subtitle: "Real-time interactive intelligence dashboards that turn messy company data into clear, actionable executive decisions.",
     description: "Turn complex company data into clear, real-time executive dashboards with live telemetry, interactive charts, and actionable operational metrics.",
     color: "#BEF264", // Vibrant Neon Lime / Electric Chartreuse
+    work: ["akulas-kitchen"],
     outcomes: [
       "Instant visibility over revenue, pipeline velocity, and team performance",
       "Sub-second query response times with intelligent Redis caching",
