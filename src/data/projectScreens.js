@@ -12,6 +12,13 @@ const files = import.meta.glob('/src/assets/projects/*/*.{png,jpg,jpeg,webp,avif
   query: '?url',
   import: 'default',
 });
+// [width, height] of each image, read at build time (vite.config.js), so frames are sized before
+// the images load. Prefer .webp: same quality at a fraction of a PNG's weight.
+const sizes = import.meta.glob('/src/assets/projects/*/*.{png,jpg,jpeg,webp}', {
+  eager: true,
+  query: '?size',
+  import: 'default',
+});
 
 const NAME = /^(store|mobile|desktop)-(\d+)(?:-(.+))?\.(png|jpe?g|webp|avif)$/i;
 
@@ -28,7 +35,8 @@ for (const [path, url] of Object.entries(files)) {
   const match = NAME.exec(parts[parts.length - 1]);
   if (!match) continue;
   const [, kind, order, words] = match;
-  (bySlug[slug] ||= []).push({ kind: kind.toLowerCase(), order: Number(order), caption: toCaption(words), src: url });
+  const [w, h] = sizes[path] || [];
+  (bySlug[slug] ||= []).push({ kind: kind.toLowerCase(), order: Number(order), caption: toCaption(words), src: url, w, h });
 }
 
 export function getProjectScreens(slug) {

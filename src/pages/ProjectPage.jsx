@@ -58,9 +58,14 @@ function CaseStudy({ project }) {
   const screens = useMemo(() => getProjectScreens(project.slug), [project.slug]);
   // Hero devices: the walkthrough plays in the laptop; the phone shows the first raw phone screen
   const heroVideoRef = useRef(null);
-  useLoopingVideo(heroVideoRef, { src: project.video, inViewOnly: true, threshold: 0.05 });
+  const isHeroVideoPlaying = useLoopingVideo(heroVideoRef, {
+    src: project.video,
+    inViewOnly: true,
+    threshold: 0.01,
+  });
   const heroDesktop = screens.desktop[0]?.src;
-  const heroMobile = (screens.mobile.find((sc) => sc.kind === 'mobile') || screens.mobile[0])?.src;
+  const heroMobileShot = screens.mobile.find((sc) => sc.kind === 'mobile') || screens.mobile[0];
+  const heroMobile = heroMobileShot?.src;
 
   const [roleTitle, roleText] = project.role.includes(' — ') ? project.role.split(' — ') : ['Developer', project.role];
   const isGithub = project.liveUrl?.includes('github.com');
@@ -158,17 +163,25 @@ function CaseStudy({ project }) {
                 <span className="pcs-laptop-cam" />
                 <div className="pcs-laptop-screen">
                   {project.video ? (
-                    <video
-                      ref={heroVideoRef}
-                      src={project.video}
-                      poster={project.img}
-                      loop
-                      muted
-                      playsInline
-                      preload="metadata"
-                      disablePictureInPicture
-                      disableRemotePlayback
-                    />
+                    <>
+                      <img
+                        src={heroDesktop || project.img}
+                        alt=""
+                        className={`pcs-laptop-poster ${isHeroVideoPlaying ? 'poster-faded' : ''}`}
+                      />
+                      <video
+                        ref={heroVideoRef}
+                        src={project.video}
+                        poster={heroDesktop || project.img}
+                        loop
+                        muted
+                        playsInline
+                        preload="auto"
+                        disablePictureInPicture
+                        disableRemotePlayback
+                        className={`pcs-laptop-video ${isHeroVideoPlaying ? 'video-playing' : ''}`}
+                      />
+                    </>
                   ) : (
                     <img src={heroDesktop || project.img} alt="" />
                   )}
@@ -181,7 +194,12 @@ function CaseStudy({ project }) {
                 <span className="pcs-phone-island" />
                 <div className="pcs-phone-screen">
                   {heroMobile ? (
-                    <img src={heroMobile} alt="" />
+                    <img
+                      src={heroMobile}
+                      alt=""
+                      // its exact shape before it loads, so the phone never resizes
+                      style={heroMobileShot.w ? { aspectRatio: `${heroMobileShot.w} / ${heroMobileShot.h}` } : undefined}
+                    />
                   ) : (
                     <span className="pcs-phone-splash">
                       {project.logo && <img src={project.logo} alt="" />}

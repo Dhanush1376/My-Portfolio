@@ -6,12 +6,56 @@ import { ArrowLeft, ArrowRight, X, Smartphone, Monitor } from 'lucide-react';
 const PLACEHOLDER_COUNT = { mobile: 7, desktop: 4 };
 const reduceMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Reads a screenshot's own shape into --ar so its frame is sized to it (phones are never cropped),
-// and fades it in once it has loaded
-const fitShot = (img) => {
+// The glass behind a phone's status bar (or home strip): the screenshot's top (or bottom) rows,
+// mirrored so the row at the seam stays at the seam, and shrunk to a few pixels. Stretched back out
+// it reads as a soft blur whose colours run straight on into the screenshot, with no line between.
+// Also says whether those colours are light or dark, so the time and icons on top stay readable.
+const edgeGlass = (img, bottom) => {
+  const canvas = document.createElement('canvas');
+  canvas.width = 24;
+  canvas.height = 6;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  const slice = Math.max(1, Math.round(img.naturalHeight * 0.035));
+  ctx.translate(0, canvas.height);
+  ctx.scale(1, -1);
+  ctx.drawImage(img, 0, bottom ? img.naturalHeight - slice : 0, img.naturalWidth, slice, 0, 0, canvas.width, canvas.height);
+  const px = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+  let sum = 0;
+  for (let i = 0; i < px.length; i += 4) sum += 0.2126 * px[i] + 0.7152 * px[i + 1] + 0.0722 * px[i + 2];
+  return { url: `url(${canvas.toDataURL()})`, tone: sum / (px.length / 4) > 150 ? 'light' : 'dark' };
+};
+
+// Fades a screenshot in once it has loaded (its frame already has its exact shape, from --ar). On a
+// phone it also dresses the glass status bar and home strip from the screenshot's own edges.
+const showShot = (img) => {
   if (!img?.naturalWidth) return;
-  img.parentElement.style.setProperty('--ar', (img.naturalWidth / img.naturalHeight).toFixed(4));
   img.classList.add('is-loaded');
+  const phone = img.closest('.sg-phone');
+  if (!phone || phone.dataset.top) return;
+  try {
+    const top = edgeGlass(img, false);
+    const bottom = edgeGlass(img, true);
+    phone.style.setProperty('--glass-top', top.url);
+    phone.style.setProperty('--glass-bottom', bottom.url);
+    phone.dataset.top = top.tone;
+    phone.dataset.bottom = bottom.tone;
+  } catch (_) {
+    phone.dataset.top = 'dark';
+    phone.dataset.bottom = 'dark';
+  }
+};
+
+// Resolves once the screenshots inside `els` are decoded, or after `cap` ms, whichever comes first.
+// Lazy images are switched to eager so ones held off screen start loading straight away.
+const shotsReady = (els, cap) => {
+  const imgs = els
+    .map((el) => el.querySelector('.sg-phone-screen > img, .sg-browser-screen > img, .sg-store > img'))
+    .filter(Boolean);
+  imgs.forEach((img) => { img.loading = 'eager'; });
+  return Promise.race([
+    Promise.all(imgs.map((img) => img.decode().catch(() => {}))),
+    new Promise((resolve) => setTimeout(resolve, cap)),
+  ]);
 };
 
 /**
@@ -19,9 +63,10 @@ const fitShot = (img) => {
  * Mobile: store artwork as-is + raw screens in a phone frame. Desktop: screens in a browser window.
  * Empty tabs show animated wireframe placeholders (with the file name to use, on localhost only).
  *
- * Motion: frames sweep in like a fast scroll and brake into place when the gallery enters; on tab
- * change the current row races off and the new one sweeps in from the other side. Frames also
- * swing in 3D with scroll velocity, tilt toward the cursor, and placeholders run "live" UI loops.
+ * Motion: once the row is well in view and its screenshots are decoded, the frames rise and tilt up
+ * into place one after another. On tab change the current row races off and the new one sweeps in
+ * from the other side. Frames also swing in 3D with scroll velocity, tilt toward the cursor, and
+ * placeholders run "live" UI loops.
  */
 export default function ScreenGallery({ project, screens, label, title }) {
   const tabs = useMemo(
@@ -59,11 +104,47 @@ export default function ScreenGallery({ project, screens, label, title }) {
   const realItems = tab.items;
 
   /* ------------------------------------------------------------------ */
-  /* Landing: the row sweeps in like a fast scroll and brakes into place  */
+  /* Entrance: the frames rise and tilt up into place, one after another  */
+  /* ------------------------------------------------------------------ */
+  const enter = useCallback(() => {
+    const root = rootRef.current;
+    const track = trackRef.current;
+    if (!root || !track) return;
+    const els = [...track.querySelectorAll('.sg-item')];
+    if (reduceMotion() || !els.length) {
+      root.classList.add('has-entered');
+      return;
+    }
+    const vw = window.innerWidth;
+    const onScreen = els.filter((el) => el.getBoundingClientRect().left < vw);
+    const run = ++landRun.current;
+    // Frames stay hidden until their screenshots are ready, so none ever rises in empty
+    shotsReady(onScreen, 700).then(() => {
+      root.classList.add('has-entered');
+      if (run !== landRun.current) return;
+      gsap.fromTo(
+        onScreen,
+        { y: 90, rotateX: 18, scale: 0.94, opacity: 0, transformPerspective: 1200, transformOrigin: '50% 100%' },
+        {
+          y: 0,
+          rotateX: 0,
+          scale: 1,
+          opacity: 1,
+          duration: 1.2,
+          ease: 'expo.out',
+          stagger: 0.09,
+          clearProps: 'transform,opacity',
+        }
+      );
+    });
+  }, []);
+
+  /* ------------------------------------------------------------------ */
+  /* Tab landing: the row sweeps in like a fast scroll and brakes          */
   /* ------------------------------------------------------------------ */
   // dir 1 = forward (frames arrive from the right), -1 = backward (from the left). Only transforms
   // and opacity move, and only on the frames that come to rest on screen.
-  const land = useCallback((dir, entrance = false) => {
+  const land = useCallback((dir) => {
     const track = trackRef.current;
     if (!track) return;
     const els = [...track.querySelectorAll('.sg-item')];
@@ -80,25 +161,20 @@ export default function ScreenGallery({ project, screens, label, title }) {
     // Leading frame first: the left one when arriving from the right, the right one otherwise.
     // Leaning into the direction of travel, like motion blur, and straightening as it brakes.
     const lead = dir > 0 ? onScreen : [...onScreen].reverse();
-    gsap.set(lead, { x: dir * vw * (entrance ? 1 : 0.9), skewX: dir * 10, opacity: 0 });
+    gsap.set(lead, { x: dir * vw * 0.9, skewX: dir * 10, opacity: 0 });
 
     // Start once the screenshots that will be on screen are decoded (waiting no more than a
-    // moment), so frames never arrive empty. Lazy images held off screen are loaded right away.
+    // moment), so frames never arrive empty
     const run = ++landRun.current;
-    const imgs = onScreen.map((el) => el.querySelector('img')).filter(Boolean);
-    imgs.forEach((img) => { img.loading = 'eager'; });
-    Promise.race([
-      Promise.all(imgs.map((img) => img.decode().catch(() => {}))),
-      new Promise((resolve) => setTimeout(resolve, 450)),
-    ]).then(() => {
+    shotsReady(onScreen, 450).then(() => {
       if (run !== landRun.current) return;
       gsap.to(lead, {
         x: 0,
         skewX: 0,
         opacity: 1,
-        duration: entrance ? 1.3 : 1,
+        duration: 1,
         ease: 'expo.out',
-        stagger: entrance ? 0.08 : 0.06,
+        stagger: 0.06,
         clearProps: 'transform,opacity',
       });
     });
@@ -116,29 +192,43 @@ export default function ScreenGallery({ project, screens, label, title }) {
     });
   };
 
-  // First entrance when the gallery scrolls into view; also pause the "live" loops when off screen
+  // A screen ahead, start loading the first screenshots; once a third of the row is in view, play
+  // the entrance. Also pause the placeholders' "live" loops while the row is off screen.
   useEffect(() => {
     const root = rootRef.current;
-    if (!root) return undefined;
+    const track = trackRef.current;
+    if (!root || !track) return undefined;
     if (typeof IntersectionObserver === 'undefined') {
+      entered.current = true;
       root.classList.add('has-entered', 'is-live');
       return undefined;
     }
-    const io = new IntersectionObserver(
+    const near = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        near.disconnect();
+        [...track.querySelectorAll('.sg-item img')].slice(0, 6).forEach((img) => { img.loading = 'eager'; });
+      },
+      { rootMargin: '100% 0px 100% 0px' }
+    );
+    const view = new IntersectionObserver(
       (entries) => {
         const entry = entries[entries.length - 1];
         root.classList.toggle('is-live', entry.isIntersecting);
-        if (entry.isIntersecting && !entered.current) {
+        if (entry.intersectionRatio >= 0.3 && !entered.current) {
           entered.current = true;
-          root.classList.add('has-entered');
-          land(1, true);
+          enter();
         }
       },
-      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+      { threshold: [0, 0.3] }
     );
-    io.observe(root);
-    return () => io.disconnect();
-  }, [land]);
+    near.observe(root);
+    view.observe(track);
+    return () => {
+      near.disconnect();
+      view.disconnect();
+    };
+  }, [enter]);
 
   // Tab change: the current row races off like a fast scroll (forward to Desktop, backward to
   // Mobile), then the new row sweeps in from the other side and brakes onto its first frame
@@ -402,19 +492,24 @@ export default function ScreenGallery({ project, screens, label, title }) {
             <Placeholder project={project} kind={active} num={num} variant={i} />
           ) : (
             <img
-              ref={fitShot}
+              ref={showShot}
               src={item.src}
               alt={`${project.title} — ${caption}`}
               loading="lazy"
               decoding="async"
               draggable="false"
-              onLoad={(e) => fitShot(e.currentTarget)}
+              onLoad={(e) => showShot(e.currentTarget)}
             />
           );
           const kindClass = item.kind === 'store' ? 'store' : active;
 
           return (
-            <figure key={item.src || `ph-${active}-${i}`} className={`sg-item sg-item--${kindClass}`} style={{ '--i': i }}>
+            <figure
+              key={item.src || `ph-${active}-${i}`}
+              className={`sg-item sg-item--${kindClass}`}
+              // --ar: the screenshot's exact shape, known before it loads, so frames never resize
+              style={{ '--i': i, ...(item.w ? { '--ar': (item.w / item.h).toFixed(4) } : null) }}
+            >
               <div className="sg-tilt" onPointerMove={onTiltMove} onPointerLeave={onTiltLeave}>
                 <button type="button" className="sg-frame-btn" onClick={open} disabled={!open} aria-label={open ? `View ${caption} full screen` : undefined}>
                   {active === 'desktop' ? (

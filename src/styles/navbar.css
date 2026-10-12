@@ -702,46 +702,87 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  background: transparent;
-  border: 1px solid var(--border-strong);
-  color: var(--text);
   text-decoration: none;
-  transition: transform 0.2s var(--transition), background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.25s var(--transition), background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .drawer-social-pill:active {
   transform: scale(0.92);
 }
 
+/* Official real brand colors */
+.drawer-social-pill.drawer-social-pill-email {
+  color: #EA4335;
+  background: rgba(234, 67, 53, 0.08);
+  border: 1px solid rgba(234, 67, 53, 0.25);
+}
+
+.drawer-social-pill.drawer-social-pill-linkedin {
+  color: #0A66C2;
+  background: rgba(10, 102, 194, 0.08);
+  border: 1px solid rgba(10, 102, 194, 0.25);
+}
+
+.drawer-social-pill.drawer-social-pill-whatsapp {
+  color: #25D366;
+  background: rgba(37, 211, 102, 0.08);
+  border: 1px solid rgba(37, 211, 102, 0.25);
+}
+
+.drawer-social-pill.drawer-social-pill-x {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+[data-theme="light"] .drawer-social-pill.drawer-social-pill-x,
+.theme-light .drawer-social-pill.drawer-social-pill-x {
+  color: #000000;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.14);
+}
+
+.drawer-social-pill.drawer-social-pill-phone {
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
 @media (hover: hover) and (pointer: fine) {
   .drawer-social-pill:hover {
-    color: #FFFFFF;
-    transform: scale(1.1);
+    color: #FFFFFF !important;
+    transform: translateY(-2px) scale(1.1);
   }
   .drawer-social-pill.drawer-social-pill-linkedin:hover {
     background: #0A66C2;
     border-color: #0A66C2;
-    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.4);
+    box-shadow: 0 6px 16px rgba(10, 102, 194, 0.45);
   }
   .drawer-social-pill.drawer-social-pill-whatsapp:hover {
     background: #25D366;
     border-color: #25D366;
-    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.45);
   }
   .drawer-social-pill.drawer-social-pill-x:hover {
-    background: #1D9BF0;
-    border-color: #1D9BF0;
-    box-shadow: 0 4px 12px rgba(29, 155, 240, 0.4);
+    background: #000000;
+    border-color: #000000;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  }
+  [data-theme="dark"] .drawer-social-pill.drawer-social-pill-x:hover {
+    background: #FFFFFF;
+    color: #000000 !important;
+    border-color: #FFFFFF;
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.35);
   }
   .drawer-social-pill.drawer-social-pill-email:hover {
     background: #EA4335;
     border-color: #EA4335;
-    box-shadow: 0 4px 12px rgba(234, 67, 53, 0.4);
+    box-shadow: 0 6px 16px rgba(234, 67, 53, 0.45);
   }
   .drawer-social-pill.drawer-social-pill-phone:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    box-shadow: 0 4px 12px rgba(255, 85, 32, 0.4);
+    background: #10B981;
+    border-color: #10B981;
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
   }
 }
 
