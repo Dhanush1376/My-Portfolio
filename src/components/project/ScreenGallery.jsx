@@ -159,7 +159,10 @@ export default function ScreenGallery({ project, screens, label, title }) {
     let swing = 0;
     let target = 0;
     let raf = null;
-    const motion = !reduceMotion();
+    const isTouch =
+      typeof window !== 'undefined' &&
+      ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth <= 768);
+    const motion = !reduceMotion() && !isTouch;
 
     const paint = () => {
       const max = Math.max(1, track.scrollWidth - track.clientWidth);
@@ -178,13 +181,14 @@ export default function ScreenGallery({ project, screens, label, title }) {
       });
     };
 
-    // Frames swing in 3D against the direction of travel, then spring back to rest
+    // Frames swing gently in 3D against the direction of travel on desktop trackpad/mouse
     const loop = () => {
-      target *= 0.86;
-      swing += (target - swing) * 0.18;
+      target *= 0.88;
+      swing += (target - swing) * 0.15;
       track.style.setProperty('--sg-swing', `${swing.toFixed(2)}deg`);
-      if (Math.abs(swing) > 0.05 || Math.abs(target) > 0.05) raf = requestAnimationFrame(loop);
-      else {
+      if (Math.abs(swing) > 0.04 || Math.abs(target) > 0.04) {
+        raf = requestAnimationFrame(loop);
+      } else {
         track.style.setProperty('--sg-swing', '0deg');
         raf = null;
       }
@@ -195,7 +199,7 @@ export default function ScreenGallery({ project, screens, label, title }) {
       last = track.scrollLeft;
       paint();
       if (motion) {
-        target = Math.max(-14, Math.min(14, target + delta * -0.22));
+        target = Math.max(-8, Math.min(8, target + delta * -0.12));
         if (!raf) raf = requestAnimationFrame(loop);
       }
     };

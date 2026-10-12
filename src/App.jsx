@@ -9,6 +9,7 @@ import ServiceDetailPage from './pages/ServiceDetailPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProjectPage from './pages/ProjectPage';
 import IntroSequence from './components/common/IntroSequence';
+import { notifyRouteRendered } from './utils/pageTransition';
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -20,6 +21,10 @@ function ScrollToTop() {
       }
     }
   }, [pathname, hash]);
+  // Tells a running colour transition the new page has rendered, so it can lift (utils/pageTransition.js)
+  useEffect(() => {
+    notifyRouteRendered();
+  }, [pathname]);
   return null;
 }
 

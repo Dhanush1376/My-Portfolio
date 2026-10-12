@@ -19,9 +19,34 @@ let arriving = false;
 export const isFloodArriving = () => arriving;
 
 // When the colour will finish landing. Arriving pages delay their own entrance by this much, so
-// their headline animates onto the card the moment it is revealed.
+// their headline animates onto the card the moment it is revealed. While the new page is still
+// rendering, `landAt` is 0 and the landing is `landMs` from whenever the page asks (it asks as it mounts).
 let landAt = 0;
-export const floodLandingDelay = () => (arriving ? Math.max(0, (landAt - performance.now()) / 1000) : 0);
+let landMs = 0;
+export const floodLandingDelay = () => {
+  if (!arriving) return 0;
+  const at = landAt || performance.now() + landMs;
+  return Math.max(0, (at - performance.now()) / 1000);
+};
+
+// Leaving a heavy page (the home page tears down its scroll animations) can block the main thread
+// for a second or more on a phone. The colour holds, fully covering the screen, until the new route
+// has rendered, so the lift never freezes halfway or reveals the old page. App calls
+// notifyRouteRendered from an effect on every route change; the timeout is only a safety net.
+let routeRendered = null;
+export function notifyRouteRendered() {
+  routeRendered?.();
+}
+const waitForRoute = (ms) =>
+  new Promise((resolve) => {
+    const done = () => {
+      clearTimeout(timer);
+      if (routeRendered === done) routeRendered = null;
+      resolve();
+    };
+    const timer = setTimeout(done, ms);
+    routeRendered = done;
+  });
 
 const nextPaint = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -70,20 +95,28 @@ export async function playColorTransition({ color, label, x, y, onCovered, settl
 
     arriving = true;
     // ~2 frames for the new page to paint, the settle pause, then the morph
-    landAt = performance.now() + 34 + settleMs + MORPH_MS;
+    landMs = 34 + settleMs + MORPH_MS;
+    landAt = 0;
     const fromPath = window.location.pathname;
+    const routeReady = waitForRoute(5000);
     onCovered?.();
 
-    // A new page starts at the top. Not for in-page jumps (e.g. Work -> #work on the home page)
-    // or links to a #section, which scroll themselves.
-    if (window.location.pathname !== fromPath && !window.location.hash) {
-      window.scrollTo(0, 0);
-      if (window.lenis && typeof window.lenis.scrollTo === 'function') {
-        window.lenis.scrollTo(0, { immediate: true });
+    if (window.location.pathname !== fromPath) {
+      // A new page starts at the top. Not for links to a #section, which scroll themselves.
+      if (!window.location.hash) {
+        window.scrollTo(0, 0);
+        if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+          window.lenis.scrollTo(0, { immediate: true });
+        }
       }
+      await routeReady;
+    } else {
+      // In-page jump (e.g. Work -> #work on the home page): no new route to wait for
+      notifyRouteRendered();
     }
+    landAt = performance.now() + landMs;
 
-    // Let the new page mount and paint underneath before lifting the colour
+    // Let the new page paint underneath before lifting the colour
     await nextPaint();
     await delay(settleMs);
 

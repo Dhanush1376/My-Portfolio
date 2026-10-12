@@ -35,6 +35,10 @@ import {
   siExpress,
   siLighthouse,
   siChartdotjs,
+  siHuggingface,
+  siPytorch,
+  siOpencv,
+  siGithub,
 } from 'simple-icons';
 
 /**
@@ -79,6 +83,10 @@ const BRANDS = [
   [(n) => n.includes('express'), siExpress],
   [(n) => n.includes('lighthouse'), siLighthouse],
   [(n) => n.includes('chartjs'), siChartdotjs],
+  [(n) => n.includes('hugging'), siHuggingface],
+  [(n) => n.includes('pytorch'), siPytorch],
+  [(n) => n.includes('opencv'), siOpencv],
+  [(n) => n.includes('github') || n === 'git', siGithub],
 ];
 
 const normalize = (name) => String(name).toLowerCase().replace(/[^a-z0-9]/g, '');

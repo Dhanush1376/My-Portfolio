@@ -1073,7 +1073,6 @@ export default function ContactForm() {
                                   value={countrySearch}
                                   onChange={(e) => setCountrySearch(e.target.value)}
                                   placeholder="Search country or code..."
-                                  autoFocus
                                 />
                               </div>
                               <div className="country-list-scroll">

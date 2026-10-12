@@ -13,6 +13,7 @@ import SEO from '../components/common/SEO';
 import { SOCIAL_LINKS } from '../data/socialLinks';
 import { PAGE_META, absoluteUrl } from '../data/site';
 import { isFloodArriving, floodLandingDelay } from '../utils/pageTransition';
+import { getBrandIcon } from '../data/brandIcons';
 
 const aboutSchema = {
   "@context": "https://schema.org",
@@ -66,37 +67,37 @@ const FAQ_ITEMS = [
     num: '01',
     category: 'SERVICES',
     question: 'What kind of projects do you work on?',
-    answer: 'I build custom full-stack web applications, modern responsive websites, mobile apps, and AI-powered tools. Whether you need a product built from scratch, a sleek redesign, or complex backend APIs, I handle everything from design to final deployment.'
+    answer: 'I build custom full-stack web applications, modern responsive storefronts, and AI-powered systems. From bespoke UI design to backend APIs and cloud deployment, I handle the complete lifecycle.'
   },
   {
     num: '02',
     category: 'PRICING',
     question: 'How much do you charge for a project?',
-    answer: 'Pricing depends on the scope and features you need. I provide transparent, fixed-price quotes upfront with milestone-based payments, so you know the exact cost before work begins—with zero surprise fees.'
+    answer: 'Pricing is tailored to scope with transparent, fixed quotes and milestone-based payments. You get full clarity on deliverable timelines and investment upfront with zero surprise costs.'
   },
   {
     num: '03',
     category: 'TIMELINE',
     question: 'How long does a typical project take?',
-    answer: 'Most standard projects take between 1 to 3 weeks. For urgent MVPs, landing pages, or prototypes, I can often turn around a working build in just a few days. I establish clear delivery milestones right from day one.'
+    answer: 'Standard projects ship within 1 to 3 weeks. Urgent MVPs, prototypes, and landing pages can be turned around in days with clear delivery checkpoints established on day one.'
   },
   {
     num: '04',
     category: 'COMMUNICATION',
     question: 'How will we communicate and track progress?',
-    answer: 'Direct 1-on-1 collaboration via WhatsApp, Slack, or email—no middlemen or delays. You also get private live preview links on every update so you can test features on your own devices in real time.'
+    answer: 'Direct 1-on-1 collaboration via WhatsApp, Slack, or email with zero middlemen. You receive real-time preview links with each milestone so you can test features on your devices.'
   },
   {
     num: '05',
     category: 'AI & TECH',
     question: 'Can you integrate AI or work with my existing code?',
-    answer: 'Yes, absolutely. I frequently connect custom AI assistants, automated workflows, smart search, and third-party APIs into existing websites or codebases smoothly, with zero downtime or disruption.'
+    answer: 'Yes. I connect custom AI assistants, vector search pipelines, and third-party APIs into existing architectures smoothly with zero downtime or disruption.'
   },
   {
     num: '06',
     category: 'SUPPORT',
     question: 'Do you offer support after the project is delivered?',
-    answer: 'Yes! Every project includes dedicated post-launch support and bug fixes to ensure everything runs flawlessly. If you need ongoing maintenance, updates, or new features down the road, flexible retainers are also available.'
+    answer: 'Every project includes dedicated post-launch support and bug fixes to guarantee peak performance. Retainers are also available for continuous feature updates.'
   }
 ];
 
@@ -119,38 +120,29 @@ export default function AboutPage() {
   };
 
   const row1Skills = [
-    'Hugging Face',
-    'NumPy',
-    'Pandas',
-    'Matplotlib',
-    'OpenCV',
-    'Machine Learning',
-    'Deep Learning',
-    'Neural Networks',
-    'NLP',
-    'Computer Vision',
-    'Reinforcement Learning',
-    'PyTorch',
-    'LangChain',
-    'ChromaDB'
+    'React 19',
+    'TypeScript',
+    'Next.js',
+    'Node.js',
+    'Python',
+    'FastAPI',
+    'Tailwind CSS',
+    'Vite',
+    'Framer Motion',
+    'GSAP'
   ];
 
   const row2Skills = [
-    'LBPH',
-    'Recommendation Systems',
-    'Signal Analysis',
-    'Data Pipelines',
-    'Model Training',
-    'API Integration',
+    'MongoDB',
+    'PostgreSQL',
+    'Docker',
+    'LangChain',
     'Claude AI',
-    'Backtesting',
-    'Model Deployment',
-    'FastAPI',
-    'React.js',
-    'Next.js',
-    'TypeScript',
-    'Node.js',
-    'Docker'
+    'Hugging Face',
+    'PyTorch',
+    'OpenCV',
+    'Vercel',
+    'GitHub'
   ];
 
   useEffect(() => {
@@ -631,22 +623,56 @@ export default function AboutPage() {
             {/* Row 1 - Sliding Left */}
             <div className="tech-marquee-row">
               <div className="tech-marquee-track track-left">
-                {row1Skills.concat(row1Skills, row1Skills).map((name, idx) => (
-                  <span key={`r1-${idx}`} className="tech-marquee-pill">
-                    {name}
-                  </span>
-                ))}
+                {row1Skills.concat(row1Skills, row1Skills).map((name, idx) => {
+                  const brand = getBrandIcon(name);
+                  const color = brand?.hex || '#FFA820';
+                  return (
+                    <span
+                      key={`r1-${idx}`}
+                      className="tech-marquee-pill"
+                      style={{ '--pill-color': color }}
+                    >
+                      <span className="tech-marquee-pill-icon" aria-hidden="true">
+                        {brand?.path ? (
+                          <svg viewBox="0 0 24 24" role="presentation">
+                            <path d={brand.path} fill="currentColor" />
+                          </svg>
+                        ) : (
+                          <span style={{ width: 8, height: 8, borderRadius: '50%', background: color }} />
+                        )}
+                      </span>
+                      <span className="tech-marquee-pill-name">{name}</span>
+                    </span>
+                  );
+                })}
               </div>
             </div>
 
             {/* Row 2 - Sliding Right */}
             <div className="tech-marquee-row">
               <div className="tech-marquee-track track-right">
-                {row2Skills.concat(row2Skills, row2Skills).map((name, idx) => (
-                  <span key={`r2-${idx}`} className="tech-marquee-pill">
-                    {name}
-                  </span>
-                ))}
+                {row2Skills.concat(row2Skills, row2Skills).map((name, idx) => {
+                  const brand = getBrandIcon(name);
+                  const color = brand?.hex || '#FFA820';
+                  return (
+                    <span
+                      key={`r2-${idx}`}
+                      className="tech-marquee-pill"
+                      style={{ '--pill-color': color }}
+                    >
+                      <span className="tech-marquee-pill-icon" aria-hidden="true">
+                        {brand?.path ? (
+                          <svg viewBox="0 0 24 24" role="presentation">
+                            <path d={brand.path} fill="currentColor" />
+                          </svg>
+                        ) : (
+                          <span style={{ width: 8, height: 8, borderRadius: '50%', background: color }} />
+                        )}
+                      </span>
+                      <span className="tech-marquee-pill-name">{name}</span>
+                    </span>
+                  );
+                })}
               </div>
             </div>
           </div>
