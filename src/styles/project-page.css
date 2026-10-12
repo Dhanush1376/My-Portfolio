@@ -1250,6 +1250,7 @@
   --edge: max(var(--gutter), calc((100vw - var(--maxw)) / 2 + var(--gutter)));
   /* Every phone is this tall on every screen; its width follows its own screenshot */
   --sg-phone-h: clamp(500px, min(150vw, 74vh), 630px);
+  --sg-phone-h: round(down, clamp(500px, min(150vw, 74vh), 630px), 1px);
   display: flex;
   gap: clamp(1rem, 2vw, 1.5rem);
   overflow-x: auto;
@@ -1275,6 +1276,11 @@
 
 .sg-track.is-dragging .sg-item {
   pointer-events: none;
+}
+
+/* Snapping is off while the scrollbar is dragged, so the row follows the thumb exactly */
+.sg-track.is-scrubbing {
+  scroll-snap-type: none;
 }
 
 .sg-item {
@@ -1402,8 +1408,10 @@
 /* Phone Top Bar (iOS Status Bar + Dynamic Island) */
 .sg-phone-topbar {
   position: relative;
+  z-index: 1;
   flex: none;
   height: 34px;
+  margin-bottom: -1px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1414,28 +1422,20 @@
   pointer-events: none;
 }
 
-/* Glass status bar and home strip, as on iOS. Behind each is the screenshot's own edge, mirrored at
-   the seam and blurred (--glass-top / --glass-bottom, made in ScreenGallery.jsx when the image
-   loads), so its colours flow straight on into the screenshot. The frosting fades out towards the
-   seam for the same reason. The screenshot itself is never covered. data-top / data-bottom say
-   whether those colours are light or dark. */
-.sg-phone-topbar::before,
-.sg-phone-home::before {
+/* The status bar carries straight on from the screenshot: it is filled with the screenshot's own
+   top row of pixels (--glass-top, made in ScreenGallery.jsx when the image loads), melting into that
+   row's average colour towards the top, so bar and screenshot read as one screen. It overlaps the
+   screenshot by 1px so no hairline can open at the seam, and its tint fades to nothing there too.
+   data-top says whether the top of the screenshot is light or dark. */
+.sg-phone-topbar::before {
   content: '';
   position: absolute;
-  /* reaches past the bar so the blur never thins out at its edges */
-  inset: -10px;
+  inset: 0;
   z-index: -2;
-  background: var(--glass-top, none) center / 100% 100% no-repeat;
-  filter: blur(5px) saturate(1.35);
+  background: var(--glass-top, none) 0 0 / 100% 100% no-repeat;
 }
 
-.sg-phone-home::before {
-  background-image: var(--glass-bottom, none);
-}
-
-.sg-phone-topbar::after,
-.sg-phone-home::after {
+.sg-phone-topbar::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -1443,25 +1443,13 @@
   background: linear-gradient(to bottom, rgba(14, 15, 18, 0.3), rgba(14, 15, 18, 0));
 }
 
-.sg-phone-home::after {
-  background: linear-gradient(to top, rgba(14, 15, 18, 0.3), rgba(14, 15, 18, 0));
-}
-
 .sg-phone[data-top='light'] .sg-phone-topbar::after {
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0));
-}
-
-.sg-phone[data-bottom='light'] .sg-phone-home::after {
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0));
 }
 
 .sg-phone[data-top='light'] .sg-phone-time,
 .sg-phone[data-top='light'] .sg-phone-icons {
   color: #0E0F12;
-}
-
-.sg-phone[data-bottom='light'] .sg-phone-home i {
-  background: rgba(14, 15, 18, 0.6);
 }
 
 .sg-phone-time {
@@ -1651,15 +1639,17 @@
   opacity: 0.75;
 }
 
-/* Height is what's left between the bars; the width comes from the screenshot's own shape */
+/* The screenshot runs from the status bar right down to the phone's rounded bottom edge, as on a
+   real phone, with nothing drawn over it. Its width comes from its own shape. */
 .sg-phone-screen {
   position: relative;
   flex: none;
   align-self: center;
-  /* phone padding 12 + status bar 34 + home strip 22 */
-  height: calc(var(--sg-phone-h) - 68px);
+  /* phone padding 12 + status bar 34, less the 1px the status bar overlaps it by */
+  height: calc(var(--sg-phone-h) - 45px);
   aspect-ratio: var(--ar, 0.485);
   overflow: hidden;
+  border-radius: 0 0 34px 34px;
   background: #1C1D26;
 }
 
@@ -1667,32 +1657,10 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   user-select: none;
   -webkit-user-drag: none;
   transition: opacity 0.45s ease;
-}
-
-/* Home indicator strip under the screenshot */
-.sg-phone-home {
-  position: relative;
-  flex: none;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  isolation: isolate;
-  border-radius: 0 0 34px 34px;
-  pointer-events: none;
-}
-
-.sg-phone-home i {
-  width: 36%;
-  max-width: 96px;
-  height: 4px;
-  border-radius: 99px;
-  background: rgba(255, 255, 255, 0.55);
 }
 
 /* Screenshots fade in as they load instead of popping in */
@@ -1810,21 +1778,220 @@
   margin-top: 0.75rem;
 }
 
-.sg-progress {
+/* Scrollbar: a thin rail with a draggable thumb (a taller invisible hit area around it) */
+.sg-scrollbar {
+  position: relative;
   flex: 1;
-  height: 3px;
-  border-radius: 99px;
-  background: var(--border-strong);
-  overflow: hidden;
+  height: 28px;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.sg-progress-fill {
-  display: block;
-  height: 100%;
+.sg-scrollbar::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 99px;
+  background: var(--border-strong);
+  transition: height 0.25s ease, margin 0.25s ease;
+}
+
+.sg-scrollbar-thumb {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 44px;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 99px;
   background: var(--text);
-  transform-origin: left center;
-  transform: scaleX(0.06);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: grab;
+  will-change: transform;
+  transition: height 0.25s ease, margin 0.25s ease, background 0.25s ease;
+}
+
+.sg-scrollbar:focus-visible {
+  outline: none;
+}
+
+.sg-scrollbar:focus-visible .sg-scrollbar-thumb {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pa) 55%, transparent);
+}
+
+/* Thicker while hovered or held */
+.sg-scrollbar.is-active::before,
+.sg-scrollbar.is-active .sg-scrollbar-thumb {
+  height: 8px;
+  margin-top: -4px;
+}
+
+.sg-scrollbar.is-active .sg-scrollbar-thumb {
+  cursor: grabbing;
+  background: var(--pa);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sg-scrollbar:hover::before,
+  .sg-scrollbar:hover .sg-scrollbar-thumb {
+    height: 8px;
+    margin-top: -4px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   The last card: open the live website
+   -------------------------------------------------------------------------- */
+.sg-item--live {
+  display: flex;
+  flex-direction: column;
+  width: calc(var(--sg-phone-h) * 0.48);
+}
+
+.sg-track--desktop .sg-item--live {
+  width: clamp(280px, 30vw, 420px);
+}
+
+.sg-live {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: clamp(1.35rem, 2.2vw, 1.9rem);
+  border-radius: 40px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--pa);
+  color: #0E0F12;
+  text-decoration: none;
+  box-shadow: 0 24px 48px -18px rgba(0, 0, 0, 0.35);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+}
+
+.sg-track--desktop .sg-live {
+  border-radius: 18px;
+}
+
+/* Grid paper, and a soft light that swells on hover */
+.sg-live::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(to right, rgba(14, 15, 18, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(14, 15, 18, 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 10%, transparent 85%);
+  mask-image: linear-gradient(to bottom, #000 10%, transparent 85%);
+}
+
+.sg-live::after {
+  content: '';
+  position: absolute;
+  right: -30%;
+  bottom: -30%;
+  z-index: -1;
+  width: 90%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.45), transparent);
+  transform: scale(0.7);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sg-live-top {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.sg-live-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #FFFFFF;
+  box-shadow: 0 6px 16px rgba(14, 15, 18, 0.16);
+}
+
+.sg-live-kicker {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(14, 15, 18, 0.7);
+}
+
+.sg-live-title {
+  font-family: 'Schibsted Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(1.9rem, 2.6vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.sg-live-dot {
+  color: #FFFFFF;
+}
+
+.sg-live-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.sg-live-url {
+  min-width: 0;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.45);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sg-live-arrow {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0E0F12;
+  color: #FFFFFF;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sg-live:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 40px 70px -22px rgba(0, 0, 0, 0.45);
+  }
+
+  .sg-live:hover::after {
+    transform: scale(1.25);
+  }
+
+  .sg-live:hover .sg-live-arrow {
+    transform: rotate(45deg) scale(1.06);
+  }
+}
+
+.sg-live:active {
+  transform: scale(0.98);
 }
 
 .sg-counter {

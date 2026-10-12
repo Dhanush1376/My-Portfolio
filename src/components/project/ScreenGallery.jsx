@@ -1,47 +1,59 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import gsap from 'gsap';
-import { ArrowLeft, ArrowRight, X, Smartphone, Monitor } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, X, Smartphone, Monitor } from 'lucide-react';
 
 const PLACEHOLDER_COUNT = { mobile: 7, desktop: 4 };
 const reduceMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// The glass behind a phone's status bar (or home strip): the screenshot's top (or bottom) rows,
-// mirrored so the row at the seam stays at the seam, and shrunk to a few pixels. Stretched back out
-// it reads as a soft blur whose colours run straight on into the screenshot, with no line between.
-// Also says whether those colours are light or dark, so the time and icons on top stay readable.
-const edgeGlass = (img, bottom) => {
+// The phone's status bar carries straight on from the screenshot. At the seam it is the screenshot's
+// own top row of pixels, so every column continues in exactly its own colour and there is no line at
+// all; towards the top it melts into that row's average colour, so busy edges (photos) never smear
+// into streaks. The row is taken a couple of pixels in, past any capture border. Also says whether
+// the colours are light or dark, so the time and icons stay readable.
+const edgeGlass = (img) => {
+  const W = 24;
+  const H = 12;
   const canvas = document.createElement('canvas');
-  canvas.width = 24;
-  canvas.height = 6;
+  canvas.width = W;
+  canvas.height = H;
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
-  const slice = Math.max(1, Math.round(img.naturalHeight * 0.035));
-  ctx.translate(0, canvas.height);
-  ctx.scale(1, -1);
-  ctx.drawImage(img, 0, bottom ? img.naturalHeight - slice : 0, img.naturalWidth, slice, 0, 0, canvas.width, canvas.height);
-  const px = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-  let sum = 0;
-  for (let i = 0; i < px.length; i += 4) sum += 0.2126 * px[i] + 0.7152 * px[i + 1] + 0.0722 * px[i + 2];
-  return { url: `url(${canvas.toDataURL()})`, tone: sum / (px.length / 4) > 150 ? 'light' : 'dark' };
+  ctx.drawImage(img, 0, Math.min(2, img.naturalHeight - 1), img.naturalWidth, 1, 0, 0, W, 1);
+  const edge = ctx.getImageData(0, 0, W, 1).data;
+
+  const avg = [0, 0, 0];
+  for (let i = 0; i < edge.length; i += 4) for (let c = 0; c < 3; c++) avg[c] += edge[i + c] / W;
+
+  const out = ctx.createImageData(W, H);
+  for (let y = 0; y < H; y++) {
+    // 0 at the seam (the bar's bottom row)
+    const t = (H - 1 - y) / (H - 1);
+    const mix = 1 - (1 - t) ** 3;
+    for (let x = 0; x < W; x++) {
+      const i = (y * W + x) * 4;
+      for (let c = 0; c < 3; c++) out.data[i + c] = edge[x * 4 + c] * (1 - mix) + avg[c] * mix;
+      out.data[i + 3] = 255;
+    }
+  }
+  ctx.putImageData(out, 0, 0);
+
+  const luma = 0.2126 * avg[0] + 0.7152 * avg[1] + 0.0722 * avg[2];
+  return { url: `url(${canvas.toDataURL()})`, tone: luma > 150 ? 'light' : 'dark' };
 };
 
 // Fades a screenshot in once it has loaded (its frame already has its exact shape, from --ar). On a
-// phone it also dresses the glass status bar and home strip from the screenshot's own edges.
+// phone it also fills the status bar from the screenshot's top edge.
 const showShot = (img) => {
   if (!img?.naturalWidth) return;
   img.classList.add('is-loaded');
   const phone = img.closest('.sg-phone');
   if (!phone || phone.dataset.top) return;
   try {
-    const top = edgeGlass(img, false);
-    const bottom = edgeGlass(img, true);
+    const top = edgeGlass(img);
     phone.style.setProperty('--glass-top', top.url);
-    phone.style.setProperty('--glass-bottom', bottom.url);
     phone.dataset.top = top.tone;
-    phone.dataset.bottom = bottom.tone;
   } catch (_) {
     phone.dataset.top = 'dark';
-    phone.dataset.bottom = 'dark';
   }
 };
 
@@ -63,6 +75,9 @@ const shotsReady = (els, cap) => {
  * Mobile: store artwork as-is + raw screens in a phone frame. Desktop: screens in a browser window.
  * Empty tabs show animated wireframe placeholders (with the file name to use, on localhost only).
  *
+ * The row ends on a card that opens the live website, and a draggable scrollbar underneath moves
+ * through every frame.
+ *
  * Motion: once the row is well in view and its screenshots are decoded, the frames rise and tilt up
  * into place one after another. On tab change the current row races off and the new one sweeps in
  * from the other side. Frames also swing in 3D with scroll velocity, tilt toward the cursor, and
@@ -80,7 +95,8 @@ export default function ScreenGallery({ project, screens, label, title }) {
   const [lightbox, setLightbox] = useState(null);
   const rootRef = useRef(null);
   const trackRef = useRef(null);
-  const progressRef = useRef(null);
+  const railRef = useRef(null);
+  const thumbRef = useRef(null);
   const counterRef = useRef(null);
   const entered = useRef(false);
   const landOnRender = useRef(0);
@@ -321,11 +337,20 @@ export default function ScreenGallery({ project, screens, label, title }) {
     const paint = () => {
       const max = Math.max(1, track.scrollWidth - track.clientWidth);
       const p = Math.min(1, Math.max(0, track.scrollLeft / max));
-      if (progressRef.current) progressRef.current.style.transform = `scaleX(${Math.max(0.06, p)})`;
+      // Scrollbar: the thumb is as wide as the share of the row in view, and travels with it
+      const rail = railRef.current;
+      const thumb = thumbRef.current;
+      if (rail && thumb) {
+        const railW = rail.clientWidth;
+        const thumbW = Math.max(44, Math.min(railW, (railW * track.clientWidth) / track.scrollWidth));
+        thumb.style.width = `${thumbW}px`;
+        thumb.style.transform = `translateX(${(p * (railW - thumbW)).toFixed(1)}px)`;
+        rail.setAttribute('aria-valuenow', String(Math.round(p * 100)));
+      }
       const first = track.querySelector('.sg-item');
       if (first && counterRef.current) {
         const gap = parseFloat(getComputedStyle(track).columnGap) || 20;
-        const count = track.querySelectorAll('.sg-item').length;
+        const count = track.querySelectorAll('.sg-item:not(.sg-item--live)').length;
         const idx = Math.min(count, Math.round(track.scrollLeft / (first.offsetWidth + gap)) + 1);
         counterRef.current.textContent = String(idx).padStart(2, '0');
       }
@@ -374,6 +399,80 @@ export default function ScreenGallery({ project, screens, label, title }) {
     if (!el || !first) return;
     const gap = parseFloat(getComputedStyle(el).columnGap) || 20;
     el.scrollBy({ left: dir * (first.getBoundingClientRect().width + gap), behavior: 'smooth' });
+  };
+
+  /* ------------------------------------------------------------------ */
+  /* Scrollbar: drag the thumb, or press anywhere on the rail to glide there */
+  /* ------------------------------------------------------------------ */
+  const scrub = useRef(null);
+  const scrubEnd = useRef(0);
+
+  // The frame's snap position nearest to scroll position `to` (snapping is off while scrubbing)
+  const nearestSnap = (track, to) => {
+    const max = track.scrollWidth - track.clientWidth;
+    const pad = parseFloat(getComputedStyle(track).paddingLeft) || 0;
+    const base = track.getBoundingClientRect().left;
+    let best = to;
+    let bestD = Infinity;
+    track.querySelectorAll('.sg-item').forEach((el) => {
+      const x = Math.min(max, Math.max(0, track.scrollLeft + el.getBoundingClientRect().left - base - pad));
+      const d = Math.abs(x - to);
+      if (d < bestD) { bestD = d; best = x; }
+    });
+    return best;
+  };
+
+  const onRailDown = (e) => {
+    if (e.button !== undefined && e.button !== 0) return;
+    const rail = railRef.current;
+    const thumb = thumbRef.current;
+    const track = trackRef.current;
+    if (!rail || !thumb || !track) return;
+    e.preventDefault();
+    const r = rail.getBoundingClientRect();
+    const t = thumb.getBoundingClientRect();
+    const onThumb = e.clientX >= t.left && e.clientX <= t.right;
+    // Keep the point where the thumb was grabbed under the pointer (its middle for a press on the rail)
+    const grab = onThumb ? e.clientX - t.left : t.width / 2;
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    const toScroll = (x) => Math.min(1, Math.max(0, (x - r.left - grab) / Math.max(1, r.width - t.width))) * maxScroll;
+    rail.setPointerCapture?.(e.pointerId);
+    rail.classList.add('is-active');
+    clearTimeout(scrubEnd.current);
+    track.classList.add('is-scrubbing');
+    // `to`: where the row is headed (a press on the rail glides there; a drag follows the thumb)
+    const to = onThumb ? track.scrollLeft : toScroll(e.clientX);
+    if (!onThumb) track.scrollTo({ left: to, behavior: reduceMotion() ? 'auto' : 'smooth' });
+    scrub.current = { toScroll, to };
+  };
+
+  const onRailMove = (e) => {
+    const s = scrub.current;
+    if (!s) return;
+    s.to = s.toScroll(e.clientX);
+    trackRef.current.scrollLeft = s.to;
+  };
+
+  const onRailUp = () => {
+    const s = scrub.current;
+    if (!s) return;
+    scrub.current = null;
+    const track = trackRef.current;
+    railRef.current?.classList.remove('is-active');
+    // Glide onto the frame nearest to where the row was headed, then hand back to snapping
+    track.scrollTo({ left: nearestSnap(track, s.to), behavior: reduceMotion() ? 'auto' : 'smooth' });
+    scrubEnd.current = setTimeout(() => track.classList.remove('is-scrubbing'), 650);
+  };
+
+  const onRailKey = (e) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const behavior = reduceMotion() ? 'auto' : 'smooth';
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') step(e.key === 'ArrowRight' ? 1 : -1);
+    else if (e.key === 'Home') track.scrollTo({ left: 0, behavior });
+    else if (e.key === 'End') track.scrollTo({ left: track.scrollWidth, behavior });
+    else return;
+    e.preventDefault();
   };
 
   /* ------------------------------------------------------------------ */
@@ -429,6 +528,14 @@ export default function ScreenGallery({ project, screens, label, title }) {
 
   const hostname = (() => {
     try { return new URL(project.liveUrl).hostname.replace(/^www\./, ''); } catch (_) { return `${project.slug}.app`; }
+  })();
+  // The last card: the live website (or the code, when the link is a GitHub page)
+  const isRepo = /github\.com/i.test(project.liveUrl || '');
+  const liveLabel = (() => {
+    try {
+      const u = new URL(project.liveUrl);
+      return `${u.hostname.replace(/^www\./, '')}${u.pathname}`.replace(/\/$/, '');
+    } catch (_) { return hostname; }
   })();
 
   return (
@@ -547,7 +654,6 @@ export default function ScreenGallery({ project, screens, label, title }) {
                         </div>
                       </div>
                       <div className="sg-phone-screen">{media}</div>
-                      <span className="sg-phone-home" aria-hidden="true"><i /></span>
                       <span className="sg-glare" aria-hidden="true" />
                     </div>
                   )}
@@ -560,11 +666,51 @@ export default function ScreenGallery({ project, screens, label, title }) {
             </figure>
           );
         })}
+
+        {project.liveUrl && (
+          <figure className="sg-item sg-item--live">
+            <a className="sg-live" href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+              <span className="sg-live-top">
+                {project.logo && <img src={project.logo} alt="" className="sg-live-logo" draggable="false" />}
+                <span className="sg-live-kicker">{isRepo ? 'Source code' : 'Live website'}</span>
+              </span>
+              <span className="sg-live-title">
+                {isRepo ? 'Browse the full code' : 'See the whole site, live'}
+                <span className="sg-live-dot">.</span>
+              </span>
+              <span className="sg-live-foot">
+                <span className="sg-live-url">{liveLabel}</span>
+                <span className="sg-live-arrow" aria-hidden="true"><ArrowUpRight size={22} strokeWidth={2.2} /></span>
+              </span>
+            </a>
+            <figcaption className="sg-caption">
+              <span className="sg-caption-num">↗</span>
+              {isRepo ? 'View on GitHub' : 'Visit live'}
+            </figcaption>
+          </figure>
+        )}
       </div>
 
-      <div className="sg-foot pcs-wrap" aria-hidden="true">
-        <span className="sg-progress"><span ref={progressRef} className="sg-progress-fill" /></span>
-        <span className="sg-counter">
+      <div className="sg-foot pcs-wrap">
+        <div
+          ref={railRef}
+          className="sg-scrollbar"
+          role="scrollbar"
+          aria-label="Scroll through the screenshots"
+          aria-orientation="horizontal"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={0}
+          tabIndex={0}
+          onPointerDown={onRailDown}
+          onPointerMove={onRailMove}
+          onPointerUp={onRailUp}
+          onPointerCancel={onRailUp}
+          onKeyDown={onRailKey}
+        >
+          <span ref={thumbRef} className="sg-scrollbar-thumb" />
+        </div>
+        <span className="sg-counter" aria-hidden="true">
           <span ref={counterRef}>01</span> / {String(items.length).padStart(2, '0')}
         </span>
       </div>
