@@ -84,14 +84,26 @@ const shotsReady = (els, cap) => {
  * placeholders run "live" UI loops.
  */
 export default function ScreenGallery({ project, screens, label, title }) {
-  const tabs = useMemo(
-    () => [
-      { id: 'mobile', label: 'Mobile', icon: Smartphone, items: screens.mobile },
-      { id: 'desktop', label: 'Desktop', icon: Monitor, items: screens.desktop },
-    ],
-    [screens]
-  );
-  const [active, setActive] = useState(() => (screens.mobile.length || !screens.desktop.length ? 'mobile' : 'desktop'));
+  const isTutorboard = project?.slug === 'tutorboard' || project?.id === 'ragchatbot';
+
+  const tabs = useMemo(() => {
+    const mobileTab = { id: 'mobile', label: 'Mobile', icon: Smartphone, items: screens.mobile };
+    const desktopTab = { id: 'desktop', label: 'Desktop', icon: Monitor, items: screens.desktop };
+    return isTutorboard ? [desktopTab, mobileTab] : [mobileTab, desktopTab];
+  }, [screens, isTutorboard]);
+
+  const [active, setActive] = useState(() => {
+    if (isTutorboard) return 'desktop';
+    return screens.mobile.length || !screens.desktop.length ? 'mobile' : 'desktop';
+  });
+
+  useEffect(() => {
+    if (isTutorboard) {
+      setActive('desktop');
+    } else {
+      setActive(screens.mobile.length || !screens.desktop.length ? 'mobile' : 'desktop');
+    }
+  }, [project?.slug, isTutorboard, screens]);
   const [lightbox, setLightbox] = useState(null);
   const rootRef = useRef(null);
   const trackRef = useRef(null);

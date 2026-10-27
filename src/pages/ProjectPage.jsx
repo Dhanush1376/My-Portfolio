@@ -67,6 +67,16 @@ function CaseStudy({ project }) {
   const heroMobileShot = screens.mobile.find((sc) => sc.kind === 'mobile') || screens.mobile[0];
   const heroMobile = heroMobileShot?.src;
 
+  const phoneTone = useMemo(() => {
+    if (!project.accent) return 'dark';
+    const hex = project.accent.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16) || 0;
+    const g = parseInt(hex.substring(2, 4), 16) || 0;
+    const b = parseInt(hex.substring(4, 6), 16) || 0;
+    const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return luma > 140 ? 'dark' : 'light';
+  }, [project.accent]);
+
   const [roleTitle, roleText] = project.role.includes(' — ') ? project.role.split(' — ') : ['Developer', project.role];
   const isGithub = project.liveUrl?.includes('github.com');
   const phrases = (project.stage?.phrases || []).map((p) => p.words.join(' '));
@@ -189,10 +199,32 @@ function CaseStudy({ project }) {
               </div>
               <div className="pcs-laptop-base"><span /></div>
             </div>
-            <div className="pcs-phone">
+            <div className="pcs-phone" data-tone={phoneTone}>
               <div className="pcs-phone-body">
-                <span className="pcs-phone-island" />
+                <div className="pcs-phone-speaker" aria-hidden="true" />
                 <div className="pcs-phone-screen">
+                  {/* Authentic Apple iOS Status Bar */}
+                  <div className="pcs-phone-topbar" aria-hidden="true">
+                    <span className="pcs-phone-time">9:41</span>
+                    <span className="pcs-phone-island">
+                      <i className="pcs-phone-camera" />
+                    </span>
+                    <div className="pcs-phone-icons">
+                      <svg className="pcs-phone-signal" viewBox="0 0 16 12" fill="currentColor">
+                        <rect x="0" y="8" width="2.5" height="4" rx="0.5" />
+                        <rect x="4" y="5" width="2.5" height="7" rx="0.5" />
+                        <rect x="8" y="2.5" width="2.5" height="9.5" rx="0.5" />
+                        <rect x="12" y="0" width="2.5" height="12" rx="0.5" />
+                      </svg>
+                      <svg className="pcs-phone-wifi" viewBox="0 0 16 12" fill="currentColor">
+                        <path fillRule="evenodd" clipRule="evenodd" d="M8 11.2a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4zm-3.6-3.8a5.1 5.1 0 017.2 0 .8.8 0 101.14-1.12 6.7 6.7 0 00-9.48 0 .8.8 0 101.14 1.12zm-2.6-2.6a8.8 8.8 0 0112.4 0 .8.8 0 101.14-1.12 10.4 10.4 0 00-14.68 0 .8.8 0 101.14 1.12z" />
+                      </svg>
+                      <div className="pcs-phone-battery">
+                        <span className="pcs-phone-battery-fill" />
+                      </div>
+                    </div>
+                  </div>
+
                   {heroMobile ? (
                     <img
                       src={heroMobile}
@@ -201,11 +233,29 @@ function CaseStudy({ project }) {
                       style={heroMobileShot.w ? { aspectRatio: `${heroMobileShot.w} / ${heroMobileShot.h}` } : undefined}
                     />
                   ) : (
-                    <span className="pcs-phone-splash">
-                      {project.logo && <img src={project.logo} alt="" />}
-                      <b>{project.title}</b>
-                    </span>
+                    <div className="pcs-phone-splash">
+                      <span className="pcs-ph-bar" />
+                      <div className="pcs-ph-media">
+                        {project.logo ? (
+                          <img src={project.logo} alt="" className="pcs-ph-logo" />
+                        ) : (
+                          <i className="pcs-ph-logo" />
+                        )}
+                      </div>
+                      <span className="pcs-ph-row" />
+                      <span className="pcs-ph-row pcs-ph-row--short" />
+                      <div className="pcs-ph-chips">
+                        <i />
+                        <i />
+                        <i />
+                      </div>
+                    </div>
                   )}
+
+                  {/* Apple iOS Home Indicator */}
+                  <span className="pcs-phone-home-indicator" aria-hidden="true" />
+                  {/* Ambient Glass Glare */}
+                  <span className="pcs-phone-glare" aria-hidden="true" />
                 </div>
               </div>
             </div>

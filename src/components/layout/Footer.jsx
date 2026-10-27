@@ -327,10 +327,8 @@ export default function Footer() {
           </a>
         </aside>
 
-        {/* Mobile top-right inverted corner notch SVG */}
-        <svg className="footer-mobile-inverted-corner" width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path className="notch-fill" d="M26 0 V26 H0 A26 26 0 0 1 26 0 Z" />
-        </svg>
+        {/* Phones: rounded fillets where the panel meets this tab (beside it at the top, and below it) */}
+        <span className="footer-mobile-inverted-corner" aria-hidden="true" />
 
         {/* Lower left extension block that creates the notch effect */}
         <div className="footer-left-extension">
@@ -348,17 +346,6 @@ export default function Footer() {
           <div className="footer-brand-callout">
             <TypewriterText />
             <div className="footer-action-row">
-              <Link 
-                to="/contact" 
-                className="footer-start-btn"
-                onClick={() => {
-                  if (window.location.pathname === '/contact') {
-                    scrollToTop();
-                  }
-                }}
-              >
-                Start a project <span className="arrow-icon">↗</span>
-              </Link>
               <p className="footer-tiny-desc">
                 <strong>End-to-end development</strong>
                 Tailored to your vision
@@ -424,6 +411,8 @@ export default function Footer() {
       {/* Bottom Right Cutout for Scroll Back Up */}
       <div className="footer-bottom-scroll-cutout" onClick={scrollToTop}>
         Scroll to top <ArrowUp size={16} style={{ marginLeft: '8px' }} />
+        {/* Rounded fillet where the panel's bottom edge meets this tab */}
+        <span className="footer-cutout-fillet" aria-hidden="true" />
       </div>
     </footer>
   );

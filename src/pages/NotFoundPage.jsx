@@ -67,7 +67,7 @@ export default function NotFoundPage() {
             color: 'var(--text-primary, #111)',
           }}
         >
-          Page Not Found<span style={{ color: '#FF5520' }}>.</span>
+          Page Not Found<span className="title-accent">.</span>
         </h1>
 
         <p

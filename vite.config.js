@@ -50,7 +50,7 @@ function imageSizes() {
 export default defineConfig({
   plugins: [imageSizes(), react()],
   server: {
-    port: 5173,
+    port: 5174,
     open: false
   },
   build: {

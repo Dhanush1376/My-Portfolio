@@ -65,39 +65,39 @@ const aboutSchema = {
 const FAQ_ITEMS = [
   {
     num: '01',
-    category: 'SERVICES',
-    question: 'What kind of projects do you work on?',
-    answer: 'I build custom full-stack web applications, modern responsive storefronts, and AI-powered systems. From bespoke UI design to backend APIs and cloud deployment, I handle the complete lifecycle.'
+    category: 'FOCUS & ROLES',
+    question: 'What kind of roles and engineering challenges do you focus on?',
+    answer: 'I specialize in Full-Stack Software Engineering and AI Systems—architecting scalable React/Next.js interfaces, high-throughput Node.js/Python APIs, and vector RAG pipelines. I am actively open to full-time engineering roles in ambitious teams as well as select high-impact contract builds.'
   },
   {
     num: '02',
-    category: 'PRICING',
-    question: 'How much do you charge for a project?',
-    answer: 'Pricing is tailored to scope with transparent, fixed quotes and milestone-based payments. You get full clarity on deliverable timelines and investment upfront with zero surprise costs.'
+    category: 'OPPORTUNITIES',
+    question: 'Are you available for full-time engineering roles as well as contracts?',
+    answer: 'Yes, absolutely. I am actively interviewing for full-time Software Engineer, Frontend Engineer, and AI/Full-Stack positions. I can integrate immediately into distributed or on-site engineering teams. For contract projects, I provide clear scoping, rapid sprints, and full production delivery.'
   },
   {
     num: '03',
-    category: 'TIMELINE',
-    question: 'How long does a typical project take?',
-    answer: 'Standard projects ship within 1 to 3 weeks. Urgent MVPs, prototypes, and landing pages can be turned around in days with clear delivery checkpoints established on day one.'
+    category: 'TECH STACK',
+    question: 'What is your core tech stack and development philosophy?',
+    answer: 'My primary stack spans TypeScript, React 19, Next.js, Node.js, Python, FastAPI, and databases like PostgreSQL, MongoDB, and ChromaDB. My philosophy emphasizes clean architecture, strict typing, responsive sub-second performance, and production CI/CD automation without unnecessary bloat.'
   },
   {
     num: '04',
-    category: 'COMMUNICATION',
-    question: 'How will we communicate and track progress?',
-    answer: 'Direct 1-on-1 collaboration via WhatsApp, Slack, or email with zero middlemen. You receive real-time preview links with each milestone so you can test features on your devices.'
+    category: 'COLLABORATION',
+    question: 'How do you collaborate within engineering teams and track progress?',
+    answer: 'I thrive in modern Agile engineering environments with structured GitHub PRs, automated test checks, proactive code reviews, and asynchronous documentation on Slack or Notion. Whether contributing to an existing codebase or leading a new initiative, I prioritize clear communication and zero friction.'
   },
   {
     num: '05',
-    category: 'AI & TECH',
-    question: 'Can you integrate AI or work with my existing code?',
-    answer: 'Yes. I connect custom AI assistants, vector search pipelines, and third-party APIs into existing architectures smoothly with zero downtime or disruption.'
+    category: 'AI & ARCHITECTURE',
+    question: 'How do you approach AI integration and existing codebases?',
+    answer: 'I design grounded, hallucination-resistant AI systems using semantic vector search, chunking heuristics, and tool-calling agents. When onboarding onto an existing codebase, I quickly map dependencies, profile performance bottlenecks, and introduce scalable features cleanly without technical debt.'
   },
   {
     num: '06',
-    category: 'SUPPORT',
-    question: 'Do you offer support after the project is delivered?',
-    answer: 'Every project includes dedicated post-launch support and bug fixes to guarantee peak performance. Retainers are also available for continuous feature updates.'
+    category: 'OWNERSHIP',
+    question: 'What can hiring teams and project partners expect regarding delivery?',
+    answer: 'High agency and end-to-end ownership. From initial problem discovery and system design to automated deployment and observability, I build durable software that is easily maintainable by any engineering team and ready for production scale.'
   }
 ];
 

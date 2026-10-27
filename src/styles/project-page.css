@@ -36,8 +36,33 @@
   padding-top: clamp(6rem, 11vw, 8.5rem);
 }
 
-.pcs-dot {
-  color: var(--accent);
+.pcs-dot,
+.pcs-next-dot,
+.sg-live-dot {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: 0.04em !important;
+  position: relative !important;
+  width: 0.18em !important;
+  height: 0.18em !important;
+  min-width: 5px !important;
+  min-height: 5px !important;
+  margin-left: 0.08em !important;
+  margin-right: 0.04em !important;
+  color: transparent !important;
+  font-size: inherit !important;
+  line-height: 0 !important;
+  user-select: none !important;
+  box-sizing: border-box !important;
+}
+
+.pcs-dot::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: 50% !important;
+  background-color: var(--accent, #FF5520) !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -4823,9 +4848,9 @@
   right: 0;
   bottom: -3%;
   z-index: 2;
-  width: 21%;
-  min-width: 96px;
-  max-width: 168px;
+  width: 22%;
+  min-width: 104px;
+  max-width: 178px;
   animation: pcs-phone-in 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.85s both;
 }
 
@@ -4841,15 +4866,16 @@
   }
 }
 
+/* Authentic Apple iPhone Frame matching ScreenGallery */
 .pcs-phone-body {
   position: relative;
-  padding: 3px;
-  border-radius: 14px;
+  padding: 4px;
+  border-radius: 30px;
   background: #0B0C0E;
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.15),
-    0 2px 4px rgba(0, 0, 0, 0.12),
-    0 28px 50px -22px rgba(0, 0, 0, 0.6);
+    0 4px 10px rgba(0, 0, 0, 0.2),
+    0 28px 56px -14px rgba(0, 0, 0, 0.65);
   animation: pcs-phone-float 6s ease-in-out 2s infinite;
 }
 
@@ -4859,27 +4885,15 @@
   }
 }
 
-.pcs-phone-island {
-  position: absolute;
-  top: 4px;
-  left: 50%;
-  z-index: 3;
-  width: 27%;
-  aspect-ratio: 3.4;
-  border-radius: 99px;
-  background: #000000;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-
-/* Edge-to-edge bezel-less display: screen fills completely with sleek minimal radius */
+/* Edge-to-edge bezel-less display with authentic Apple squircle radius */
 .pcs-phone-screen {
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  border-radius: 11px;
+  border-radius: 26px;
   background: #000000;
+  aspect-ratio: 1 / 2.08;
 }
 
 .pcs-phone-screen>img {
@@ -4888,37 +4902,248 @@
   height: 100%;
   object-fit: cover;
   object-position: top center;
-  border-radius: 11px;
+  border-radius: 26px;
 }
 
-/* No phone screenshot yet: an app-style splash of the project */
+/* Authentic Apple iOS Status Bar */
+.pcs-phone-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px 0 16px;
+  pointer-events: none;
+  color: #FFFFFF;
+}
+
+.pcs-phone[data-tone='dark'] .pcs-phone-topbar {
+  color: #0E0F12;
+}
+
+.pcs-phone-time {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* Apple Floating Dynamic Island */
+.pcs-phone-island {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32%;
+  height: 12px;
+  border-radius: 99px;
+  background: #000000;
+  border: 0.5px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 5px;
+  z-index: 5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.pcs-phone-camera {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #08111E;
+  box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.pcs-phone-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
+}
+
+.pcs-phone-signal,
+.pcs-phone-wifi {
+  width: 10.5px;
+  height: 8.5px;
+}
+
+.pcs-phone-battery {
+  width: 15px;
+  height: 8px;
+  border: 1.1px solid currentColor;
+  border-radius: 2.8px;
+  padding: 0.8px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.pcs-phone-battery::after {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 3.5px;
+  background: currentColor;
+  border-radius: 0 1px 1px 0;
+  opacity: 0.8;
+}
+
+.pcs-phone-battery-fill {
+  width: 82%;
+  height: 100%;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+/* Apple Home Indicator */
+.pcs-phone-home-indicator {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36%;
+  height: 3.5px;
+  border-radius: 99px;
+  background: #FFFFFF;
+  opacity: 0.8;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.pcs-phone[data-tone='dark'] .pcs-phone-home-indicator {
+  background: #0E0F12;
+  opacity: 0.75;
+}
+
+/* Screen Glass Glare */
+.pcs-phone-glare {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.03) 40%, transparent 60%);
+  border-radius: 26px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Screen 01 Wireframe Splash Layout */
 .pcs-phone-splash {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: var(--pa);
+  background-image:
+    linear-gradient(to right, rgba(14, 15, 18, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(14, 15, 18, 0.08) 1px, transparent 1px);
+  background-size: 18px 18px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10%;
-  aspect-ratio: 1 / 2.06;
-  padding: 12%;
-  background: var(--pa);
-  color: #0E0F12;
-  text-align: center;
+  padding: 38px 10% 16px;
+  gap: 5%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-.pcs-phone-splash img {
-  width: 46%;
+/* Light shimmer sweep */
+.pcs-phone-splash::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.38) 50%, transparent 65%);
+  transform: translateX(-130%);
+  animation: pcs-shimmer 4.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes pcs-shimmer {
+  0% {
+    transform: translateX(-130%);
+  }
+
+  42%,
+  100% {
+    transform: translateX(130%);
+  }
+}
+
+.pcs-ph-bar {
+  height: 4.5%;
+  min-height: 8px;
+  width: 52%;
+  border-radius: 99px;
+  background: rgba(14, 15, 18, 0.22);
+  flex-shrink: 0;
+}
+
+.pcs-ph-media {
+  flex: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  min-height: 0;
+}
+
+.pcs-ph-logo {
+  width: 48%;
+  max-width: 64px;
   aspect-ratio: 1;
   border-radius: 50%;
   object-fit: cover;
   background: #FFFFFF;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  display: block;
 }
 
-.pcs-phone-splash b {
-  font-family: 'Schibsted Grotesk', 'Plus Jakarta Sans', sans-serif;
-  font-size: clamp(0.6rem, 1vw, 0.85rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+.pcs-ph-row {
+  height: 3.5%;
+  min-height: 7px;
+  width: 100%;
+  border-radius: 99px;
+  background: rgba(14, 15, 18, 0.2);
+  flex-shrink: 0;
+}
+
+.pcs-ph-row--short {
+  width: 64%;
+  background: rgba(14, 15, 18, 0.14);
+}
+
+.pcs-ph-chips {
+  display: flex;
+  gap: 7%;
+  height: 20%;
+  min-height: 32px;
+  flex-shrink: 0;
+}
+
+.pcs-ph-chips i {
+  flex: 1;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.4);
+  display: block;
+}
+
+.pcs-ph-chips i:nth-child(2) {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.pcs-ph-chips i:nth-child(3) {
+  background: rgba(14, 15, 18, 0.18);
 }
 
 /* ---- Smaller screens: text first, devices below ---- */

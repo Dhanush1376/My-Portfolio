@@ -632,7 +632,7 @@ export default function ContactForm() {
             <h2 className="studio-info-headline">
               LET’S BUILD<br />
               SOMETHING<br />
-              <span className="accent-word">ICONIC.</span>
+              <span className="accent-word">ICONIC<span className="title-accent">.</span></span>
             </h2>
 
 

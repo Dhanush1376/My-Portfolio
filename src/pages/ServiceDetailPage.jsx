@@ -320,17 +320,23 @@ function ServiceView({ service, isDark }) {
           }
           data-reveal
         >
-          <span className="pcs-next-label">Next service — {next.num}</span>
-          <span className="pcs-next-title">
-            {next.title}
-            <span className="pcs-next-dot">.</span>
-          </span>
-          <span className="pcs-next-foot">
-            <span className="pcs-next-cat">{next.subtitle}</span>
+          <div className="pcs-next-head">
+            <span className="pcs-next-label">Next service — {next.num}</span>
+          </div>
+
+          <div className="pcs-next-body">
+            <h2 className="pcs-next-title">
+              {next.title}
+              <span className="pcs-next-dot">.</span>
+            </h2>
+          </div>
+
+          <div className="pcs-next-foot">
+            <p className="pcs-next-cat">{next.subtitle}</p>
             <span className="pcs-next-badge" aria-hidden="true">
-              <ArrowUpRight size={26} strokeWidth={2.2} />
+              <ArrowUpRight size={24} strokeWidth={2.4} />
             </span>
-          </span>
+          </div>
         </Link>
       </section>
     </main>

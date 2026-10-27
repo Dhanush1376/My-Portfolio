@@ -229,12 +229,12 @@
   width: 0;
   height: clamp(84px, 8vw, 116px);
   border-radius: clamp(18px, 1.8vw, 26px);
-  background: rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
   border: 0 solid rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
+  color: #0E0F12;
   flex-shrink: 0;
   opacity: 0;
   margin-right: 0;
@@ -262,8 +262,8 @@
   max-height: 88% !important;
   aspect-ratio: 1 / 1;
   stroke-width: 2.2px;
-  color: #FFFFFF;
-  stroke: #FFFFFF;
+  color: #0E0F12;
+  stroke: #0E0F12;
   flex-shrink: 0;
 }
 
@@ -409,23 +409,23 @@ body[data-theme="light"] .expertise-row:hover {
 
 [data-theme="light"] .expertise-icon-box,
 body[data-theme="light"] .expertise-icon-box {
-  background: #FFFFFF;
-  border-color: rgba(0, 0, 0, 0.08);
-  color: #121217;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background: #121217;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
 }
 
 [data-theme="light"] .expertise-icon-box svg,
 body[data-theme="light"] .expertise-icon-box svg {
-  color: #121217;
-  stroke: #121217;
+  color: #FFFFFF;
+  stroke: #FFFFFF;
 }
 
 [data-theme="light"] .expertise-row:hover .expertise-icon-box,
 body[data-theme="light"] .expertise-row:hover .expertise-icon-box {
-  background: #FFFFFF;
-  border-color: rgba(0, 0, 0, 0.18);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  background: #181920;
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
   transform: translateY(-2px);
 }
 
@@ -594,9 +594,9 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
     will-change: transform, opacity;
     margin-right: 0 !important;
     border-radius: clamp(16px, 3.8vw, 20px) !important;
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.16) !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+    background: #FFFFFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -610,8 +610,8 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
     max-width: 54% !important;
     max-height: 54% !important;
     aspect-ratio: 1 / 1;
-    color: #FFFFFF !important;
-    stroke: #FFFFFF !important;
+    color: #0E0F12 !important;
+    stroke: #0E0F12 !important;
     stroke-width: 2.2px !important;
   }
 
@@ -666,15 +666,15 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
 
   [data-theme="light"] .expertise-icon-box,
   body[data-theme="light"] .expertise-icon-box {
-    background: #FFFFFF !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06) !important;
+    background: #121217 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16) !important;
   }
 
   [data-theme="light"] .expertise-icon-box svg,
   body[data-theme="light"] .expertise-icon-box svg {
-    color: #0E0F12 !important;
-    stroke: #0E0F12 !important;
+    color: #FFFFFF !important;
+    stroke: #FFFFFF !important;
   }
 
   [data-theme="light"] .expertise-row-name,

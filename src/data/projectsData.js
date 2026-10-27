@@ -190,7 +190,7 @@ export const PROJECTS_DATA = {
     subtitle: "AI-powered learning platform transforming questions into interactive visual explanations and animated concept breakdowns.",
     img: "/assets/tutorboard_demo.webp",
     video: "/assets/tutorboard_video.mp4",
-    liveUrl: "https://github.com/Dhanush1376",
+    liveUrl: "https://tutorboard-ai.vercel.app/",
     stage: {
       tone: "dark",
       phrases: [
@@ -227,7 +227,7 @@ export const PROJECTS_DATA = {
       { label: "Retrieval Precision", val: "94.8%" },
       { label: "Hallucination Rate", val: "< 2%" }
     ],
-    demoLink: "#contact",
+    demoLink: "https://tutorboard-ai.vercel.app/",
     repoLink: "https://github.com/Dhanush1376"
   }
 };

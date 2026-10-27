@@ -589,3 +589,67 @@
     display: block !important;
   }
 }
+
+/* ==========================================================================
+   Universal Circular Accent Dots (Brand, Section Titles, Punctuation Stops)
+   Transforms square font period glyphs across the entire website into crisp circles
+   ========================================================================== */
+.brand-dot,
+.pcs-dot,
+.pcs-next-dot,
+.title-accent,
+.sg-live-dot,
+.page-transition-dot,
+.statement-label-dot,
+.project-meta-dot,
+.pcs-intro-dot {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: 0.04em !important;
+  position: relative !important;
+  width: 0.18em !important;
+  height: 0.18em !important;
+  min-width: 5px !important;
+  min-height: 5px !important;
+  margin-left: 0.08em !important;
+  margin-right: 0.04em !important;
+  color: transparent !important;
+  font-size: inherit !important;
+  line-height: 0 !important;
+  user-select: none !important;
+  box-sizing: border-box !important;
+}
+
+.brand-dot::after,
+.pcs-dot::after,
+.pcs-next-dot::after,
+.title-accent::after,
+.sg-live-dot::after,
+.page-transition-dot::after,
+.statement-label-dot::after,
+.project-meta-dot::after,
+.pcs-intro-dot::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: 50% !important;
+  background-color: var(--accent, #FF5520) !important;
+}
+
+.pcs-next-dot::after {
+  background-color: rgba(14, 15, 18, 0.4) !important;
+}
+
+.sg-live-dot::after {
+  background-color: #FFFFFF !important;
+}
+
+.svc-hero-title .pcs-dot::after {
+  background-color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .pcs-next-dot::after,
+.theme-dark .pcs-next-dot::after {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+}

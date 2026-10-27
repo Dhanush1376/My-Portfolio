@@ -852,3 +852,95 @@
   color: var(--footer-text-main);
   letter-spacing: -0.02em;
 }
+
+/* --------------------------------------------------------------------------
+   Rounded fillets wherever the panel meets a cut-out tab, so the panel flows round each tab in
+   smooth curves instead of meeting it at a square corner. Each is a small square in the page colour
+   with a quarter circle taken out of it.
+   -------------------------------------------------------------------------- */
+.footer-redesign-wrapper {
+  /* Half the tab's height, so its rounded top corner and the fillet under it form one clean S */
+  --fillet: 24px;
+}
+
+/* The tab's own rounded top-left corner, at the same radius */
+.footer-bottom-scroll-cutout::before {
+  width: var(--fillet);
+  height: var(--fillet);
+  background: radial-gradient(circle at bottom right, transparent calc(var(--fillet) - 0.5px), var(--footer-panel-bg) var(--fillet));
+}
+
+/* "Scroll to top": above it on the right (::after) and beside it at the bottom (the span) */
+.footer-bottom-scroll-cutout::after,
+.footer-cutout-fillet {
+  content: '';
+  position: absolute;
+  width: var(--fillet);
+  height: var(--fillet);
+  pointer-events: none;
+  background: radial-gradient(circle at 0 0, transparent calc(var(--fillet) - 0.5px), var(--bg) var(--fillet));
+}
+
+.footer-bottom-scroll-cutout::after {
+  right: 0;
+  bottom: 100%;
+}
+
+.footer-cutout-fillet {
+  right: 100%;
+  bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .footer-redesign-wrapper {
+    --fillet: 22px;
+    /* The social tab is taller, so its curves can be rounder */
+    --fillet-dock: 30px;
+  }
+
+  .footer-bottom-scroll-cutout {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+  }
+
+  .footer-left-column {
+    border-bottom-right-radius: var(--fillet-dock);
+  }
+
+  .footer-bottom-scroll-cutout::before {
+    width: var(--fillet);
+    height: var(--fillet);
+    background: radial-gradient(circle at bottom right, transparent calc(var(--fillet) - 0.5px), var(--footer-panel-bg) var(--fillet));
+  }
+
+  /* Flush with the panel's right edge */
+  .footer-bottom-scroll-cutout {
+    right: 0.5rem;
+  }
+
+  /* Social tab: square where it sits on the panel's left edge; fillets beside it and below it */
+  .footer-left-column {
+    border-bottom-left-radius: 0;
+  }
+
+  .footer-mobile-inverted-corner,
+  .footer-left-column::after {
+    content: '';
+    position: absolute;
+    width: var(--fillet-dock);
+    height: var(--fillet-dock);
+    pointer-events: none;
+    background: radial-gradient(circle at 100% 100%, transparent calc(var(--fillet-dock) - 0.5px), var(--bg) var(--fillet-dock));
+  }
+
+  .footer-mobile-inverted-corner {
+    top: 0;
+    left: 100%;
+    right: auto;
+  }
+
+  .footer-left-column::after {
+    left: 0;
+    top: 100%;
+  }
+}
