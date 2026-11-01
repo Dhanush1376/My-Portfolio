@@ -149,7 +149,7 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
           {/* Left: Brand */}
           <a href="#hero" className="nav-brand" aria-label="Dhanush - Home" onClick={(e) => handleNavClick(e, '#hero')}>
             <span className="brand-slash">//</span>
-            <span className="brand-name">DHANUSH<span className="brand-dot">.</span></span>
+            <span className="brand-name">DHANUSH</span>
           </a>
 
           {/* Center: Desktop Nav Links */}
@@ -217,7 +217,7 @@ export default function Navbar({ theme, toggleTheme, transparent = false }) {
           <div className="drawer-header">
             <a href="#hero" className="drawer-brand" aria-label="Dhanush - Home" onClick={(e) => handleNavClick(e, '#hero')}>
               <span className="brand-slash">//</span>
-              <span className="brand-name">DHANUSH<span className="brand-dot">.</span></span>
+              <span className="brand-name">DHANUSH</span>
             </a>
             <div className="drawer-header-actions">
               <button

@@ -201,29 +201,8 @@ function CaseStudy({ project }) {
             </div>
             <div className="pcs-phone" data-tone={phoneTone}>
               <div className="pcs-phone-body">
-                <div className="pcs-phone-speaker" aria-hidden="true" />
+                <span className="pcs-phone-island" aria-hidden="true" />
                 <div className="pcs-phone-screen">
-                  {/* Authentic Apple iOS Status Bar */}
-                  <div className="pcs-phone-topbar" aria-hidden="true">
-                    <span className="pcs-phone-time">9:41</span>
-                    <span className="pcs-phone-island">
-                      <i className="pcs-phone-camera" />
-                    </span>
-                    <div className="pcs-phone-icons">
-                      <svg className="pcs-phone-signal" viewBox="0 0 16 12" fill="currentColor">
-                        <rect x="0" y="8" width="2.5" height="4" rx="0.5" />
-                        <rect x="4" y="5" width="2.5" height="7" rx="0.5" />
-                        <rect x="8" y="2.5" width="2.5" height="9.5" rx="0.5" />
-                        <rect x="12" y="0" width="2.5" height="12" rx="0.5" />
-                      </svg>
-                      <svg className="pcs-phone-wifi" viewBox="0 0 16 12" fill="currentColor">
-                        <path fillRule="evenodd" clipRule="evenodd" d="M8 11.2a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4zm-3.6-3.8a5.1 5.1 0 017.2 0 .8.8 0 101.14-1.12 6.7 6.7 0 00-9.48 0 .8.8 0 101.14 1.12zm-2.6-2.6a8.8 8.8 0 0112.4 0 .8.8 0 101.14-1.12 10.4 10.4 0 00-14.68 0 .8.8 0 101.14 1.12z" />
-                      </svg>
-                      <div className="pcs-phone-battery">
-                        <span className="pcs-phone-battery-fill" />
-                      </div>
-                    </div>
-                  </div>
 
                   {heroMobile ? (
                     <img

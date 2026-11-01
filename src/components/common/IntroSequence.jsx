@@ -205,7 +205,7 @@ export default function IntroSequence() {
       </div>
 
       <div className="intro-hud">
-        <span className="intro-hud-tl">// DHANUSH.</span>
+        <span className="intro-hud-tl">// DHANUSH</span>
         <span className="intro-hud-tr">Portfolio — ©2026</span>
         <span className="intro-hud-bl">Every product starts with a point</span>
         <span className="intro-hud-br">

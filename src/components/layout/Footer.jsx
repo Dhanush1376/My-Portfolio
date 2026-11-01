@@ -398,7 +398,7 @@ export default function Footer() {
 
         <div className="footer-main-bottom">
           <div className="footer-bottom-left">
-            <span className="footer-bottom-logo">DHANUSH<span className="brand-dot">.</span></span>
+            <span className="footer-bottom-logo">DHANUSH</span>
             <span className="footer-copyright">© Dhanush 2026 | Punjab, India</span>
           </div>
           <div className="footer-bottom-right">

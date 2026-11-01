@@ -97,6 +97,7 @@ export function ClampText({ as: Tag = 'p', className = '', lines = 5, style, chi
 export function KineticTitle({ text }) {
   let n = 0;
   const words = text.split(' ');
+  const hasTerminalPunctuation = /[.!?]$/.test(text.trim());
   return (
     <span className="pcs-title-text" aria-hidden="true">
       {words.map((word, wi) => (
@@ -109,8 +110,8 @@ export function KineticTitle({ text }) {
               </span>
             );
           })}
-          {/* The brand full stop rides on the last word so it never wraps alone */}
-          {wi === words.length - 1 && (
+          {/* The brand full stop rides on the last word so it never wraps alone, only when no existing dot */}
+          {wi === words.length - 1 && !hasTerminalPunctuation && (
             <span className="pcs-char-mask">
               <span className="pcs-char pcs-dot" style={{ '--i': n + 2 }}>.</span>
             </span>

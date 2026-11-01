@@ -36,33 +36,63 @@
   padding-top: clamp(6rem, 11vw, 8.5rem);
 }
 
-.pcs-dot,
-.pcs-next-dot,
-.sg-live-dot {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  vertical-align: 0.04em !important;
-  position: relative !important;
-  width: 0.18em !important;
-  height: 0.18em !important;
-  min-width: 5px !important;
-  min-height: 5px !important;
-  margin-left: 0.08em !important;
-  margin-right: 0.04em !important;
-  color: transparent !important;
+/* Natural Font Punctuation Accent Stops (Matching Image 2 Reference: Square in Plus Jakarta Sans, Baseline-Aligned) */
+.pcs-dot {
+  color: var(--accent, #FF5520) !important;
+  display: inline-block !important;
+  margin-left: 0.04em !important;
+  vertical-align: baseline !important;
+  background: none !important;
+  border-radius: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  line-height: inherit !important;
   font-size: inherit !important;
-  line-height: 0 !important;
-  user-select: none !important;
-  box-sizing: border-box !important;
 }
 
 .pcs-dot::after {
-  content: '' !important;
-  position: absolute !important;
-  inset: 0 !important;
+  content: none !important;
+  display: none !important;
+}
+
+.pcs-next-dot {
+  color: rgba(14, 15, 18, 0.4) !important;
+  display: inline-block !important;
+  margin-left: 0.04em !important;
+  vertical-align: baseline !important;
+  background: none !important;
+  border-radius: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  line-height: inherit !important;
+  font-size: inherit !important;
+}
+
+.pcs-next-dot::after {
+  content: none !important;
+  display: none !important;
+}
+
+[data-theme="dark"] .pcs-next-dot,
+.theme-dark .pcs-next-dot {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.sg-live-dot {
+  display: inline-block !important;
+  width: 5px !important;
+  height: 5px !important;
   border-radius: 50% !important;
-  background-color: var(--accent, #FF5520) !important;
+  background-color: #FFFFFF !important;
+  color: transparent !important;
+  line-height: 0 !important;
+  vertical-align: 0.1em !important;
+  margin-right: 0.35em !important;
+}
+
+.sg-live-dot::after {
+  content: none !important;
+  display: none !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -153,7 +183,7 @@
 .pcs-title {
   display: block;
   margin: clamp(1.75rem, 4vw, 3rem) 0 clamp(1.5rem, 3.5vw, 2.75rem);
-  font-family: 'Schibsted Grotesk', 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--font-display, 'Plus Jakarta Sans', sans-serif);
   font-size: clamp(2.9rem, 8.6vw, 8.25rem);
   font-weight: 500;
   line-height: 0.98;
@@ -4866,16 +4896,16 @@
   }
 }
 
-/* Authentic Apple iPhone Frame matching ScreenGallery */
+/* Authentic Apple iPhone Frame - Sleek Modern Bezel & Curvature */
 .pcs-phone-body {
   position: relative;
-  padding: 4px;
-  border-radius: 30px;
+  padding: 2.5px;
+  border-radius: 18px;
   background: #0B0C0E;
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.15),
-    0 4px 10px rgba(0, 0, 0, 0.2),
-    0 28px 56px -14px rgba(0, 0, 0, 0.65);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 4px 10px rgba(0, 0, 0, 0.22),
+    0 24px 50px -12px rgba(0, 0, 0, 0.65);
   animation: pcs-phone-float 6s ease-in-out 2s infinite;
 }
 
@@ -4885,13 +4915,13 @@
   }
 }
 
-/* Edge-to-edge bezel-less display with authentic Apple squircle radius */
+/* Edge-to-edge bezel-less display with realistic squircle radius */
 .pcs-phone-screen {
   position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 26px;
+  border-radius: 15.5px;
   background: #000000;
   aspect-ratio: 1 / 2.08;
 }
@@ -4902,128 +4932,42 @@
   height: 100%;
   object-fit: cover;
   object-position: top center;
-  border-radius: 26px;
+  border-radius: 15.5px;
 }
 
-/* Authentic Apple iOS Status Bar */
-.pcs-phone-topbar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 4;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 14px 0 16px;
-  pointer-events: none;
-  color: #FFFFFF;
-}
-
-.pcs-phone[data-tone='dark'] .pcs-phone-topbar {
-  color: #0E0F12;
-}
-
-.pcs-phone-time {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', sans-serif;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-
-/* Apple Floating Dynamic Island */
+/* Sleek Apple Dynamic Island Hardware Micro-Pill */
 .pcs-phone-island {
   position: absolute;
-  top: 6px;
+  top: 3.5px;
   left: 50%;
   transform: translateX(-50%);
-  width: 32%;
-  height: 12px;
+  width: 22%;
+  height: 4.5px;
   border-radius: 99px;
   background: #000000;
-  border: 0.5px solid rgba(255, 255, 255, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 5px;
   z-index: 5;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0.5px 2px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
 }
 
-.pcs-phone-camera {
-  display: block;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #08111E;
-  box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.4);
-}
-
-.pcs-phone-icons {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  line-height: 1;
-}
-
-.pcs-phone-signal,
-.pcs-phone-wifi {
-  width: 10.5px;
-  height: 8.5px;
-}
-
-.pcs-phone-battery {
-  width: 15px;
-  height: 8px;
-  border: 1.1px solid currentColor;
-  border-radius: 2.8px;
-  padding: 0.8px;
-  display: flex;
-  align-items: center;
-  position: relative;
-  box-sizing: border-box;
-}
-
-.pcs-phone-battery::after {
-  content: '';
-  position: absolute;
-  right: -2px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1px;
-  height: 3.5px;
-  background: currentColor;
-  border-radius: 0 1px 1px 0;
-  opacity: 0.8;
-}
-
-.pcs-phone-battery-fill {
-  width: 82%;
-  height: 100%;
-  background: currentColor;
-  border-radius: 1px;
-}
-
-/* Apple Home Indicator */
+/* Minimal Apple Home Indicator */
 .pcs-phone-home-indicator {
   position: absolute;
-  bottom: 6px;
+  bottom: 3.5px;
   left: 50%;
   transform: translateX(-50%);
-  width: 36%;
-  height: 3.5px;
+  width: 30%;
+  height: 2px;
   border-radius: 99px;
   background: #FFFFFF;
-  opacity: 0.8;
+  opacity: 0.65;
   z-index: 4;
   pointer-events: none;
 }
 
 .pcs-phone[data-tone='dark'] .pcs-phone-home-indicator {
   background: #0E0F12;
-  opacity: 0.75;
+  opacity: 0.6;
 }
 
 /* Screen Glass Glare */
@@ -5301,12 +5245,23 @@
   }
 
   .pcs-phone-body {
-    padding: 3%;
-    border-radius: 14px;
+    padding: 2px;
+    border-radius: 13px;
   }
 
   .pcs-phone-screen {
-    border-radius: 10px;
+    border-radius: 11px;
+  }
+
+  .pcs-phone-island {
+    top: 2.5px;
+    width: 22%;
+    height: 3.5px;
+  }
+
+  .pcs-phone-home-indicator {
+    bottom: 2.5px;
+    height: 1.5px;
   }
 
   /* ScreenGallery switcher: hide text in mobile layout, show only icons */
