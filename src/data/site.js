@@ -13,7 +13,7 @@ export const PERSON = {
   '@id': `${SITE_URL}/#person`,
   name: 'Dhanush',
   url: `${SITE_URL}/`,
-  image: `${SITE_URL}/assets/logo.png`,
+  image: `${SITE_URL}/assets/brand/logo.png`,
   jobTitle: 'Software Engineer & AI Systems Builder',
   description:
     'Full-stack software engineer and AI systems builder creating production websites, e-commerce storefronts, RAG applications and automation for businesses.',

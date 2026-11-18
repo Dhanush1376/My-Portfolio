@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, X } from 'lucide-react';
 import { useLoopingVideo } from '../../hooks/useLoopingVideo';
+import { videoFor } from '../../utils/mediaTier';
 import { PROJECTS_DATA, getProjectBySlug } from '../../data/projectsData';
 
 export default function CaseStudyModal({ isOpen, projectId, onClose }) {
@@ -12,7 +13,8 @@ export default function CaseStudyModal({ isOpen, projectId, onClose }) {
   const [isVisible, setIsVisible] = useState(false);
 
   const videoRef = useRef(null);
-  useLoopingVideo(videoRef, { src: isVisible ? activeProject?.video : null });
+  const modalVideo = videoFor(activeProject?.video);
+  useLoopingVideo(videoRef, { src: isVisible ? modalVideo : null });
 
   // Touch gesture state for mobile bottom-sheet dismiss
   const sheetRef = useRef(null);
@@ -196,15 +198,15 @@ export default function CaseStudyModal({ isOpen, projectId, onClose }) {
 
           {/* Hero Video / Interface Walkthrough */}
           <div className="cs-hero-img-box">
-            {activeProject.video ? (
+            {modalVideo ? (
               <video
                 ref={videoRef}
-                src={activeProject.video}
+                src={modalVideo}
                 poster={activeProject.img}
                 loop
                 muted
                 playsInline
-                preload="auto"
+                preload="metadata"
                 disablePictureInPicture
                 disableRemotePlayback
                 className="cs-hero-video"

@@ -1271,14 +1271,13 @@ html[data-theme="light"] .featured-project-title-link:hover .project-title-logo-
 /* Freeform icon logos (Washing Basket laundry basket icon) center cleanly inside the white round badge */
 .logo-wrap-washingbasket {
   border-radius: 50% !important;
-  padding: clamp(5px, 0.45vw, 8px) !important;
 }
 
 .logo-img-washingbasket {
   border-radius: 50% !important;
   width: 100% !important;
   height: 100% !important;
-  object-fit: contain !important;
+  object-fit: cover !important;
 }
 
 .featured-project-interactive-group:hover+.project-under-content .featured-project-headline,

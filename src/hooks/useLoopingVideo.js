@@ -1,4 +1,9 @@
 import { useEffect, useState } from 'react';
+import { MEDIA_TIER } from '../utils/mediaTier';
+
+// Fast connections buffer a video a little before it scrolls in; slow ones wait until it is on
+// screen, so it never steals bandwidth from what the visitor is looking at
+const PREFETCH_MARGIN = MEDIA_TIER === 'full' ? '600px 0px' : '0px 0px';
 
 // Real user-activation events: a tap/click unlocks playback when the browser refused autoplay
 // (iOS Low Power Mode, Android data saver). Scroll and touchstart do not count as activation.
@@ -101,7 +106,7 @@ export function useLoopingVideo(videoRef, { src, enabled = true, inViewOnly = fa
             prefetch.disconnect();
           }
         },
-        { rootMargin: '600px 0px' }
+        { rootMargin: PREFETCH_MARGIN }
       );
       prefetch.observe(video);
       observers.push(prefetch);

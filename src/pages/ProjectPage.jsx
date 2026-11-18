@@ -4,6 +4,7 @@ import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { ArrowUpRight, ArrowLeft, ArrowRight, Github, Check, X, ChevronDown } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import { useLoopingVideo } from '../hooks/useLoopingVideo';
+import { videoFor } from '../utils/mediaTier';
 import { PROJECTS_DATA, getProjectBySlug } from '../data/projectsData';
 import { getProjectScreens } from '../data/projectScreens';
 import { projectMeta, projectSchema, projectPath, absoluteUrl } from '../data/site';
@@ -125,8 +126,9 @@ function CaseStudy({ project }) {
   const screens = useMemo(() => getProjectScreens(project.slug), [project.slug]);
   // Hero devices: the walkthrough plays in the laptop; the phone shows the first raw phone screen
   const heroVideoRef = useRef(null);
+  const heroVideo = videoFor(project.video); // light encode or none on slow networks / weak devices
   const isHeroVideoPlaying = useLoopingVideo(heroVideoRef, {
-    src: project.video,
+    src: heroVideo,
     inViewOnly: true,
     threshold: 0.01,
   });
@@ -293,7 +295,7 @@ function CaseStudy({ project }) {
                 <div className="pcs-laptop-lid">
                   <span className="pcs-laptop-cam" />
                   <div className="pcs-laptop-screen">
-                    {project.video ? (
+                    {heroVideo ? (
                       <>
                         <img
                           src={heroDesktop || project.img}
@@ -302,12 +304,12 @@ function CaseStudy({ project }) {
                         />
                         <video
                           ref={heroVideoRef}
-                          src={project.video}
+                          src={heroVideo}
                           poster={heroDesktop || project.img}
                           loop
                           muted
                           playsInline
-                          preload="auto"
+                          preload="metadata"
                           disablePictureInPicture
                           disableRemotePlayback
                           className={`pcs-laptop-video ${isHeroVideoPlaying ? 'video-playing' : ''}`}

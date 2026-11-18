@@ -80,11 +80,24 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
   <!-- Fonts -->
+  <!-- Home only: fetch the hero poster first, it is what people see while everything else (and the video) loads -->
+  <script>
+    (function () {
+      if (location.pathname !== '/') return;
+      var src = matchMedia('(max-width: 699px)').matches ? '/assets/hero/hero-mobile-poster.webp'
+        : matchMedia('(min-width: 1200px) and (min-aspect-ratio: 16/10)').matches ? '/assets/hero/hero-desktop-poster.webp' : '';
+      if (!src) return;
+      var l = document.createElement('link');
+      l.rel = 'preload'; l.as = 'image'; l.href = src; l.setAttribute('fetchpriority', 'high');
+      document.head.appendChild(l);
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet" />
+  <!-- Non-blocking: on slow networks the page paints with fallback fonts instead of waiting -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" /></noscript>
 
   <!-- Baseline Structured Data -->
   <script type="application/ld+json" id="seo-structured-data">

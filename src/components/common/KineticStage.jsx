@@ -84,6 +84,8 @@ export default function KineticStage({
           {activePreviewImg && (
             <img
               src={activePreviewImg}
+              loading="lazy"
+              decoding="async"
               alt={projectId ? `${projectId} project interface demonstration` : 'Portfolio project interface demonstration'}
               className={`kinetic-preview-img kinetic-img-${projectId || 'default'} ${isVideoPlaying ? 'poster-faded' : ''}`}
               aria-hidden="true"

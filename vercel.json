@@ -2,6 +2,15 @@
   "cleanUrls": true,
   "headers": [
     {
+      "source": "/assets/(.*)\.(js|css|woff2)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
       "source": "/assets/(.*)\\.(mp4|webm|webp|jpg|jpeg|png|svg|avif)",
       "headers": [
         {

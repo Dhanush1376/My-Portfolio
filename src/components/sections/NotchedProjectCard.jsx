@@ -8,6 +8,7 @@ import { getProjectScreens } from '../../data/projectScreens';
 import { ArrowUpRight, Smartphone } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { navigateWithColor } from '../../utils/pageTransition';
+import { videoFor } from '../../utils/mediaTier';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -232,7 +233,7 @@ export default function NotchedProjectCard({
             tone={tone}
             seed={index}
             activePreviewImg={project.img}
-            activeVideo={project.video}
+            activeVideo={videoFor(project.video)}
             showImagePreview={true}
           />
           )}

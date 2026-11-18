@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { ArrowUpRight } from 'lucide-react';
 import { useLoopingVideo } from '../../hooks/useLoopingVideo';
 import { pathMaskStyle } from '../../utils/pathMask';
+import { videoFor } from '../../utils/mediaTier';
 
 const De = (e) => Math.round(e * 100) / 100;
 const St = (e, t, n, r) => `A ${De(e)} ${De(e)} 0 0 ${t} ${De(n)} ${De(r)}`;
@@ -142,7 +143,7 @@ export default function Hero() {
       : cardAspect < 1.62 || (layout.w < 1200 && cardAspect < 1.72)
         ? HERO_MEDIA.tablet // squarer cards (tablets, tall monitors) would crop the wide cut's word
         : HERO_MEDIA.landscape;
-  const currentVideoSrc = heroMedia.video;
+  const currentVideoSrc = videoFor(heroMedia.video); // light encode, or poster only, on slow networks / weak devices
   const currentPosterSrc = heroMedia.poster;
 
   const liquidFillRef = useRef(null);
@@ -153,8 +154,17 @@ export default function Hero() {
 
   // Seamless loop with no tap needed; pauses while the hero is scrolled away to free the decoder
   // for the project videos. A new source (portrait <-> landscape) shows its poster until it plays.
+  // The poster is the first thing people see, so the video only starts downloading once the poster
+  // is in (or after 2.5s), instead of fighting it for bandwidth on slow connections
+  const [posterReady, setPosterReady] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setPosterReady(true), 2500);
+    return () => clearTimeout(t);
+  }, []);
+  const videoSrc = posterReady ? currentVideoSrc : null;
+
   const isVideoPlaying = useLoopingVideo(videoRef, {
-    src: currentVideoSrc,
+    src: videoSrc,
     enabled: !prefersReducedMotion,
     inViewOnly: true,
     threshold: 0.01,
@@ -463,14 +473,18 @@ export default function Hero() {
             <img
               src={currentPosterSrc}
               alt="Hero interactive background preview"
+              fetchpriority="high"
+              decoding="async"
+              onLoad={() => setPosterReady(true)}
+              onError={() => setPosterReady(true)}
               className={`hero-canvas-poster ${isVideoPlaying ? 'poster-faded' : ''}`}
               style={{ objectPosition: heroMedia.position }}
               aria-hidden="true"
             />
-            {!prefersReducedMotion && (
+            {!prefersReducedMotion && currentVideoSrc && (
               <video
                 ref={videoRef}
-                src={currentVideoSrc}
+                src={videoSrc || undefined}
                 style={{ objectPosition: heroMedia.position }}
                 loop
                 muted
@@ -500,7 +514,7 @@ export default function Hero() {
         }}
       >
         <h1 className="hero-studio-title hero-title-large">
-          <span ref={row1Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">Your Vision Our Craft</span></span>
+          <span ref={row1Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">Your Vision, Our Craft</span></span>
           <span ref={row2Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">built with care</span></span>
           <span ref={row3Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">and purpose</span></span>
         </h1>

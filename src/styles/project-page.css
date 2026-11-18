@@ -4617,12 +4617,6 @@
   border-radius: 50%;
 }
 
-.pcs-intro-logo-washingbasket .pcs-intro-logo {
-  object-fit: contain;
-  padding: 2.5px;
-  box-sizing: border-box;
-}
-
 .pcs-intro-badge {
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -5563,12 +5557,6 @@
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-  }
-
-  .pcs-mobile-hero-logo-washingbasket img {
-    object-fit: contain;
-    padding: 3.5px;
-    box-sizing: border-box;
   }
 
   /* Smaller title font size */
