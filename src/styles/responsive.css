@@ -143,7 +143,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .projects-split {
     display: block !important;
     width: 100% !important;
@@ -291,7 +291,7 @@
   /* Removed redundant .section-label override */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .navbar {
     padding: 0.75rem 1rem;
   }

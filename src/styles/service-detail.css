@@ -323,7 +323,7 @@ body[data-theme="dark"] .service-detail-page,
   text-align: right;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .service-kicker-badge {
     font-size: 0.72rem;
     letter-spacing: 0.18em;

@@ -546,7 +546,7 @@
 }
 
 /* ============ TABLET BREAKPOINT ============ */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
   .contact-hero-panel {
     padding: 5.5rem 4vw 4rem;
     min-height: 60vh;
@@ -574,7 +574,7 @@
 }
 
 /* ============ MOBILE BREAKPOINT ============ */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .contact-hero-panel {
     padding: 4.75rem 1.25rem 2rem;
     min-height: clamp(390px, 58vh, 470px);
@@ -3463,7 +3463,7 @@
 }
 
 /* ============ MOBILE: Discovery grid stacks with heading on top ============ */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .discovery-notched-grid {
     grid-template-columns: 1fr;
     gap: 2rem;

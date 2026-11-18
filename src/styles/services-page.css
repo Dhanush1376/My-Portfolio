@@ -542,7 +542,7 @@
 }
 
 /* ============ TABLET BREAKPOINT ============ */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1024px) {
   .services-hero-panel {
     padding: 5.5rem 4vw 4rem;
     min-height: 60vh;
@@ -570,7 +570,7 @@
 }
 
 /* ============ MOBILE BREAKPOINT ============ */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .services-hero-panel {
     padding: 4.75rem 1.25rem 2rem;
     min-height: clamp(390px, 58vh, 470px);
@@ -1026,3 +1026,19 @@
   color: #484A54;
 }
 
+
+/* Portrait tablets (640-860px): the phone card (max 415px) left half the screen empty,
+   so the deck widens and grows taller to fill the stage */
+@media (min-width: 640px) and (max-width: 860px) {
+  .card-stage-wrapper {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .service-stack-card {
+    max-width: min(100%, 640px);
+    min-height: clamp(560px, 62svh, 680px);
+    padding: 36px 34px;
+    border-radius: 28px;
+  }
+}

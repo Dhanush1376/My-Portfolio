@@ -9,7 +9,7 @@ export const SERVICES_DATA = [
     description: "I engineer high-performance web applications and cross-platform mobile apps with fluid user journeys, secure cloud architecture, and sub-second responsiveness.",
     color: "#9B8AFF", // Vibrant Lilac / Violet
     // Case studies shown under "Selected work" (project slugs, most relevant first)
-    work: ["akulas-kitchen", "cakepoprush", "siri-arts-and-crafts", "tutorboard"],
+    work: ["washing-basket", "akulas-kitchen", "cakepoprush", "siri-arts-and-crafts", "tutorboard"],
     outcomes: [
       "Sub-second reactive web interfaces and native-speed mobile apps",
       "Unified cross-platform codebase saving months of development",
@@ -86,7 +86,7 @@ export const SERVICES_DATA = [
     subtitle: "High-speed digital storefronts with friction-free 1-click checkouts and automated stock syncing built to maximize conversion.",
     description: "I build lightning-fast storefronts with friction-free checkouts, dynamic inventory syncing, and automated funnels designed to maximize conversion.",
     color: "#FFD23F", // Sunflower Yellow (shopping)
-    work: ["akulas-kitchen", "cakepoprush", "siri-arts-and-crafts"],
+    work: ["washing-basket", "akulas-kitchen", "cakepoprush", "siri-arts-and-crafts"],
     outcomes: [
       "Sub-1.2s page visual loads with Cloudinary CDN optimization",
       "Higher checkout conversions with streamlined 1-click payment flows",

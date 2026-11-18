@@ -63,7 +63,7 @@
 /* --------------------------------------------------------------------------
    1. DESKTOP / LAPTOP (>= 769px): Sleek Right Slide-over App Drawer
    -------------------------------------------------------------------------- */
-@media (min-width: 769px) {
+@media (min-width: 768px) {
   .case-study-modal,
   .case-study-drawer-root {
     justify-content: flex-end !important;
@@ -107,7 +107,7 @@
 /* --------------------------------------------------------------------------
    2. MOBILE / TABLET (<= 768px): Native Bottom-Sheet App Drawer
    -------------------------------------------------------------------------- */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .case-study-modal,
   .case-study-drawer-root {
     justify-content: center !important;
@@ -319,7 +319,7 @@
   background: rgba(14, 15, 18, 0.08);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .case-study-sticky-header {
     padding: 0.75rem 1.15rem;
   }
@@ -357,7 +357,7 @@
   border-radius: 10px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .case-study-scroll-body {
     padding: 1.25rem 1.15rem max(2rem, env(safe-area-inset-bottom));
     gap: 1.75rem;
@@ -414,14 +414,16 @@
 .logo-wrap-ragchatbot,
 .logo-wrap-tutorboard,
 .logo-wrap-siriarts,
-.logo-wrap-akulas_kitchen {
+.logo-wrap-akulas_kitchen,
+.logo-wrap-washingbasket {
   border-radius: 50% !important;
 }
 
 .logo-img-ragchatbot,
 .logo-img-tutorboard,
 .logo-img-siriarts,
-.logo-img-akulas_kitchen {
+.logo-img-akulas_kitchen,
+.logo-img-washingbasket {
   border-radius: 50% !important;
   object-fit: contain;
 }

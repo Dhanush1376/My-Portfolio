@@ -115,7 +115,7 @@
 
 /* project-page.css keeps case-study titles on one line on phones (beside the logo); this title
    wraps word by word */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .svc-hero-title .pcs-title-text {
     display: inline !important;
     white-space: normal !important;

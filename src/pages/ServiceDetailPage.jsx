@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import WithStop from '../components/common/WithStop';
 import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { ArrowDown, ArrowLeft, ArrowUpRight, Check } from 'lucide-react';
 
@@ -237,7 +238,7 @@ function ServiceView({ service, isDark }) {
         <SectionLabel num="04" id="svc-tools">Toolkit</SectionLabel>
         <div className="svc-toolkit">
           <div data-reveal>
-            <h2 className="svc-h2">Tools chosen for the work<span className="pcs-dot">.</span></h2>
+            <h2 className="svc-h2"><WithStop text="Tools chosen for the work" /></h2>
             <p className="svc-text">
               Every project gets the stack that fits it, not the one that is fashionable. These are the tools I reach for most
               on {service.display.toLowerCase()} work.
@@ -326,8 +327,7 @@ function ServiceView({ service, isDark }) {
 
           <div className="pcs-next-body">
             <h2 className="pcs-next-title">
-              {next.title}
-              <span className="pcs-next-dot">.</span>
+              <WithStop text={next.title} className="pcs-next-dot" />
             </h2>
           </div>
 

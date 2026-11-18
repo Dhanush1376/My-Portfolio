@@ -60,7 +60,7 @@
   animation: nudge-arrow 3s ease-in-out infinite;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .swipe-container {
     width: 290px;
   }

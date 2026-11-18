@@ -55,7 +55,7 @@ export const PAGE_META = {
     path: '/',
     title: 'Dhanush — Software Engineer & AI Systems Builder | Web, E-commerce & AI Projects',
     description:
-      'Portfolio of Dhanush, a full-stack software engineer and AI systems builder. Live client projects including Siri Arts & Crafts, Akula’s Kitchen, CakePopRush and Tutorboard — websites, e-commerce and AI apps.',
+      'Portfolio of Dhanush, a full-stack software engineer and AI systems builder. Live client projects including Washing Basket, Siri Arts & Crafts, Akula’s Kitchen, CakePopRush and Tutorboard — websites, e-commerce and AI apps.',
   },
   about: {
     path: '/about',

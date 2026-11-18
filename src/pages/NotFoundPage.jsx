@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import WithStop from '../components/common/WithStop';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Home as HomeIcon } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
@@ -67,7 +68,7 @@ export default function NotFoundPage() {
             color: 'var(--text-primary, #111)',
           }}
         >
-          Page Not Found<span className="title-accent">.</span>
+          <WithStop text="Page Not Found" className="title-accent" />
         </h1>
 
         <p

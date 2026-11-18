@@ -1,4 +1,5 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
+import WithStop from '../components/common/WithStop';
 import { useParams, Link, Navigate, useNavigate } from 'react-router-dom';
 import { ArrowUpRight, ArrowLeft, ArrowRight, Github, Check, X, ChevronDown } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
@@ -48,6 +49,72 @@ export default function ProjectPage() {
   );
 }
 
+function PhoneStatusBar() {
+  return (
+    <div className="pcs-wb-topbar" aria-hidden="true">
+      <span className="pcs-wb-time">9:41</span>
+      <span className="pcs-wb-island">
+        <i className="pcs-wb-lens" />
+      </span>
+      <div className="pcs-wb-icons">
+        <svg className="pcs-wb-icon-signal" viewBox="0 0 16 12" fill="currentColor">
+          <rect x="0" y="8" width="2.5" height="4" rx="0.5" />
+          <rect x="4" y="5" width="2.5" height="7" rx="0.5" />
+          <rect x="8" y="2.5" width="2.5" height="9.5" rx="0.5" />
+          <rect x="12" y="0" width="2.5" height="12" rx="0.5" />
+        </svg>
+        <svg className="pcs-wb-icon-wifi" viewBox="0 0 16 12" fill="currentColor">
+          <path fillRule="evenodd" clipRule="evenodd" d="M8 11.2a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4zm-3.6-3.8a5.1 5.1 0 017.2 0 .8.8 0 101.14-1.12 6.7 6.7 0 00-9.48 0 .8.8 0 101.14 1.12zm-2.6-2.6a8.8 8.8 0 0112.4 0 .8.8 0 101.14-1.12 10.4 10.4 0 00-14.68 0 .8.8 0 101.14 1.12z" />
+        </svg>
+        <div className="pcs-wb-icon-battery">
+          <span className="pcs-wb-battery-fill" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Reads the colour along the top edge of a screenshot, so the status bar above it blends in. */
+function sampleTopColor(img) {
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = 24;
+    canvas.height = 1;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0, img.naturalWidth, Math.max(1, Math.round(img.naturalHeight * 0.006)), 0, 0, 24, 1);
+    const d = ctx.getImageData(0, 0, 24, 1).data;
+    let r = 0, g = 0, b = 0;
+    for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; }
+    const n = d.length / 4;
+    r = Math.round(r / n); g = Math.round(g / n); b = Math.round(b / n);
+    return { bg: `rgb(${r}, ${g}, ${b})`, tone: 0.2126 * r + 0.7152 * g + 0.0722 * b > 150 ? 'dark' : 'light' };
+  } catch {
+    return null;
+  }
+}
+
+/** iPhone status bar (time, Dynamic Island, signal / wifi / battery), sized from the phone's width. */
+function MiniStatusBar({ bg, tone }) {
+  return (
+    <div className="pcs-sb" data-tone={tone} style={bg ? { background: bg } : undefined} aria-hidden="true">
+      <span className="pcs-sb-time">9:41</span>
+      <span className="pcs-sb-island" />
+      <span className="pcs-sb-icons">
+        <svg viewBox="0 0 16 12" fill="currentColor">
+          <rect x="0" y="8" width="2.5" height="4" rx="0.5" />
+          <rect x="4" y="5" width="2.5" height="7" rx="0.5" />
+          <rect x="8" y="2.5" width="2.5" height="9.5" rx="0.5" />
+          <rect x="12" y="0" width="2.5" height="12" rx="0.5" />
+        </svg>
+        <svg viewBox="0 0 16 12" fill="currentColor">
+          <path fillRule="evenodd" clipRule="evenodd" d="M8 11.2a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4zm-3.6-3.8a5.1 5.1 0 017.2 0 .8.8 0 101.14-1.12 6.7 6.7 0 00-9.48 0 .8.8 0 101.14 1.12zm-2.6-2.6a8.8 8.8 0 0112.4 0 .8.8 0 101.14-1.12 10.4 10.4 0 00-14.68 0 .8.8 0 101.14 1.12z" />
+        </svg>
+        <span className="pcs-sb-battery"><i /></span>
+      </span>
+    </div>
+  );
+}
+
 function CaseStudy({ project }) {
   const navigate = useNavigate();
   const mainRef = useRef(null);
@@ -66,6 +133,10 @@ function CaseStudy({ project }) {
   const heroDesktop = screens.desktop[0]?.src;
   const heroMobileShot = screens.mobile.find((sc) => sc.kind === 'mobile') || screens.mobile[0];
   const heroMobile = heroMobileShot?.src;
+  const [heroBar, setHeroBar] = useState(null);
+  const centerScreen = screens.mobile.find((s) => s.order === 1) || screens.mobile[0];
+  const leftScreen = screens.mobile.find((s) => s.order === 4) || screens.mobile[3] || screens.mobile[1];
+  const rightScreen = screens.mobile.find((s) => s.order === 5) || screens.mobile[4] || screens.mobile[2];
 
   const phoneTone = useMemo(() => {
     if (!project.accent) return 'dark';
@@ -79,6 +150,7 @@ function CaseStudy({ project }) {
 
   const [roleTitle, roleText] = project.role.includes(' — ') ? project.role.split(' — ') : ['Developer', project.role];
   const isGithub = project.liveUrl?.includes('github.com');
+  const isApp = project.isApp || project.type === 'app';
   const phrases = (project.stage?.phrases || []).map((p) => p.words.join(' '));
   const bandWords = phrases.length ? phrases : project.tags;
 
@@ -116,7 +188,7 @@ function CaseStudy({ project }) {
           <div className="pcs-show-copy">
             <div className="pcs-intro-meta pcs-rise" style={{ '--d': '0.05s' }}>
               {project.logo && (
-                <div className="pcs-intro-logo-wrap">
+                <div className={`pcs-intro-logo-wrap pcs-intro-logo-${project.id}`}>
                   <img src={project.logo} alt="" className="pcs-intro-logo" width="34" height="34" />
                 </div>
               )}
@@ -129,7 +201,7 @@ function CaseStudy({ project }) {
             <div className="pcs-title-row">
               <div className="pcs-title-wrap">
                 {project.logo && (
-                  <div className="pcs-mobile-hero-logo" aria-hidden="true">
+                  <div className={`pcs-mobile-hero-logo pcs-mobile-hero-logo-${project.id}`} aria-hidden="true">
                     <img src={project.logo} alt={`${project.title} logo`} />
                   </div>
                 )}
@@ -144,9 +216,9 @@ function CaseStudy({ project }) {
                   target="_blank"
                   rel="noopener"
                   className="pcs-mobile-visit-btn"
-                  aria-label={isGithub ? 'View GitHub' : 'Visit live website'}
+                  aria-label={isGithub ? 'View GitHub' : isApp ? 'Launch Web App' : 'Visit live website'}
                 >
-                  <span>Visit</span>
+                  <span>{isApp ? 'Open App' : 'Visit'}</span>
                   {isGithub ? <Github size={13} strokeWidth={2.4} /> : <ArrowUpRight size={14} strokeWidth={2.4} />}
                 </a>
               )}
@@ -157,7 +229,7 @@ function CaseStudy({ project }) {
             {project.liveUrl && (
               <div className="pcs-show-actions pcs-rise" style={{ '--d': '0.55s' }}>
                 <a href={project.liveUrl} target="_blank" rel="noopener" className="pcs-pill">
-                  <span>{isGithub ? 'View on GitHub' : 'Visit live website'}</span>
+                  <span>{isGithub ? 'View on GitHub' : isApp ? 'Launch Live App' : 'Visit live website'}</span>
                   <span className="pcs-pill-badge">
                     {isGithub ? <Github size={16} strokeWidth={2.2} /> : <ArrowUpRight size={17} strokeWidth={2.2} />}
                   </span>
@@ -166,79 +238,132 @@ function CaseStudy({ project }) {
             )}
           </div>
 
-          <div className="pcs-show-stage" aria-hidden="true">
-            <span className="pcs-show-glow" />
-            <div className="pcs-laptop">
-              <div className="pcs-laptop-lid">
-                <span className="pcs-laptop-cam" />
-                <div className="pcs-laptop-screen">
-                  {project.video ? (
-                    <>
-                      <img
-                        src={heroDesktop || project.img}
-                        alt=""
-                        className={`pcs-laptop-poster ${isHeroVideoPlaying ? 'poster-faded' : ''}`}
-                      />
-                      <video
-                        ref={heroVideoRef}
-                        src={project.video}
-                        poster={heroDesktop || project.img}
-                        loop
-                        muted
-                        playsInline
-                        preload="auto"
-                        disablePictureInPicture
-                        disableRemotePlayback
-                        className={`pcs-laptop-video ${isHeroVideoPlaying ? 'video-playing' : ''}`}
-                      />
-                    </>
-                  ) : (
-                    <img src={heroDesktop || project.img} alt="" />
-                  )}
-                </div>
-              </div>
-              <div className="pcs-laptop-base"><span /></div>
-            </div>
-            <div className="pcs-phone" data-tone={phoneTone}>
-              <div className="pcs-phone-body">
-                <span className="pcs-phone-island" aria-hidden="true" />
-                <div className="pcs-phone-screen">
-
-                  {heroMobile ? (
-                    <img
-                      src={heroMobile}
-                      alt=""
-                      // its exact shape before it loads, so the phone never resizes
-                      style={heroMobileShot.w ? { aspectRatio: `${heroMobileShot.w} / ${heroMobileShot.h}` } : undefined}
-                    />
-                  ) : (
-                    <div className="pcs-phone-splash">
-                      <span className="pcs-ph-bar" />
-                      <div className="pcs-ph-media">
-                        {project.logo ? (
-                          <img src={project.logo} alt="" className="pcs-ph-logo" />
-                        ) : (
-                          <i className="pcs-ph-logo" />
-                        )}
+          {isApp ? (
+            <div className="pcs-show-stage pcs-show-stage--app" aria-hidden="true">
+              <span className="pcs-show-glow" />
+              <div className="pcs-wb-showcase">
+                {/* Left Phone: Drop-off QR (tilted -8.5deg) */}
+                {leftScreen && (
+                  <div className="pcs-wb-phone pcs-wb-phone--left">
+                    <span className="pcs-wb-speaker" aria-hidden="true" />
+                    <div className="pcs-wb-screen">
+                      <PhoneStatusBar />
+                      <div className="pcs-wb-content">
+                        <img src={leftScreen.src} alt="" loading="eager" />
                       </div>
-                      <span className="pcs-ph-row" />
-                      <span className="pcs-ph-row pcs-ph-row--short" />
-                      <div className="pcs-ph-chips">
-                        <i />
-                        <i />
-                        <i />
-                      </div>
+                      <span className="pcs-wb-home-indicator" aria-hidden="true" />
+                      <span className="pcs-phone-glare" aria-hidden="true" />
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {/* Apple iOS Home Indicator */}
-                  <span className="pcs-phone-home-indicator" aria-hidden="true" />
-                  {/* Ambient Glass Glare */}
-                  <span className="pcs-phone-glare" aria-hidden="true" />
+                {/* Center Phone: Home screen (upright 0deg, foreground) */}
+                <div className="pcs-wb-phone pcs-wb-phone--center">
+                  <span className="pcs-wb-speaker" aria-hidden="true" />
+                  <div className="pcs-wb-screen">
+                    <PhoneStatusBar />
+                    <div className="pcs-wb-content">
+                      <img src={centerScreen?.src || heroMobile || project.img} alt="" loading="eager" />
+                    </div>
+                    <span className="pcs-wb-home-indicator" aria-hidden="true" />
+                    <span className="pcs-phone-glare" aria-hidden="true" />
+                  </div>
+                </div>
+
+                {/* Right Phone: Live Tracking & Progress (tilted +8.5deg) */}
+                {rightScreen && (
+                  <div className="pcs-wb-phone pcs-wb-phone--right">
+                    <span className="pcs-wb-speaker" aria-hidden="true" />
+                    <div className="pcs-wb-screen">
+                      <PhoneStatusBar />
+                      <div className="pcs-wb-content">
+                        <img src={rightScreen.src} alt="" loading="eager" />
+                      </div>
+                      <span className="pcs-wb-home-indicator" aria-hidden="true" />
+                      <span className="pcs-phone-glare" aria-hidden="true" />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="pcs-show-stage" aria-hidden="true">
+              <span className="pcs-show-glow" />
+              <div className="pcs-laptop">
+                <div className="pcs-laptop-lid">
+                  <span className="pcs-laptop-cam" />
+                  <div className="pcs-laptop-screen">
+                    {project.video ? (
+                      <>
+                        <img
+                          src={heroDesktop || project.img}
+                          alt=""
+                          className={`pcs-laptop-poster ${isHeroVideoPlaying ? 'poster-faded' : ''}`}
+                        />
+                        <video
+                          ref={heroVideoRef}
+                          src={project.video}
+                          poster={heroDesktop || project.img}
+                          loop
+                          muted
+                          playsInline
+                          preload="auto"
+                          disablePictureInPicture
+                          disableRemotePlayback
+                          className={`pcs-laptop-video ${isHeroVideoPlaying ? 'video-playing' : ''}`}
+                        />
+                      </>
+                    ) : (
+                      <img src={heroDesktop || project.img} alt="" />
+                    )}
+                  </div>
+                </div>
+                <div className="pcs-laptop-base"><span /></div>
+              </div>
+              <div className="pcs-phone" data-tone={phoneTone}>
+                <div className="pcs-phone-body">
+                  <div className="pcs-phone-screen">
+                    {/* Image screens: the bar takes the screenshot's top colour; splash: it sits on the colour field */}
+                    <MiniStatusBar
+                      bg={heroMobile ? heroBar?.bg || '#000' : null}
+                      tone={heroMobile ? heroBar?.tone || 'light' : phoneTone === 'dark' ? 'dark' : 'light'}
+                    />
+
+                    {heroMobile ? (
+                      <img
+                        src={heroMobile}
+                        alt=""
+                        onLoad={(e) => setHeroBar(sampleTopColor(e.currentTarget))}
+                      />
+                    ) : (
+                      <div className="pcs-phone-splash">
+                        <span className="pcs-ph-bar" />
+                        <div className="pcs-ph-media">
+                          {project.logo ? (
+                            <img src={project.logo} alt="" className="pcs-ph-logo" />
+                          ) : (
+                            <i className="pcs-ph-logo" />
+                          )}
+                        </div>
+                        <span className="pcs-ph-row" />
+                        <span className="pcs-ph-row pcs-ph-row--short" />
+                        <div className="pcs-ph-chips">
+                          <i />
+                          <i />
+                          <i />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Apple iOS Home Indicator */}
+                    <span className="pcs-phone-home-indicator" aria-hidden="true" />
+                    {/* Ambient Glass Glare */}
+                    <span className="pcs-phone-glare" aria-hidden="true" />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </header>
 
@@ -257,7 +382,7 @@ function CaseStudy({ project }) {
           title={
             <h2 className="pcs-h2 sg-climax-title" data-reveal>
               <span className="title-line-mask">
-                <span className="title-line-inner">Interface<span className="pcs-dot">.</span></span>
+                <span className="title-line-inner"><WithStop text="Interface" /></span>
               </span>
             </h2>
           }
@@ -288,7 +413,7 @@ function CaseStudy({ project }) {
           </div>
           <h2 className="pcs-h2 pcs-climax-title">
             <span className="title-line-mask">
-              <span className="title-line-inner">From problem to solved<span className="pcs-dot">.</span></span>
+              <span className="title-line-inner"><WithStop text="From problem to solved" /></span>
             </span>
           </h2>
         </div>
@@ -387,7 +512,7 @@ function CaseStudy({ project }) {
               </div>
               <h2 className="pcs-h2 pcs-climax-title">
                 <span className="title-line-mask">
-                  <span className="title-line-inner">{roleTitle}<span className="pcs-dot">.</span></span>
+                  <span className="title-line-inner"><WithStop text={roleTitle} /></span>
                 </span>
               </h2>
             </div>
@@ -423,8 +548,7 @@ function CaseStudy({ project }) {
 
           <div className="pcs-next-body">
             <h2 className="pcs-next-title">
-              {next.title}
-              <span className="pcs-next-dot">.</span>
+              <WithStop text={next.title} className="pcs-next-dot" />
             </h2>
             <div className="pcs-next-bottom-row">
               <p className="pcs-next-desc">

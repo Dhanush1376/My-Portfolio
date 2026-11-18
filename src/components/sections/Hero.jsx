@@ -104,7 +104,11 @@ function getCardBox(w, h) {
 // focal content (bottom-right on desktop, bottom on mobile) clear of the stepped headline notch.
 const HERO_MEDIA = {
   landscape: { video: '/assets/hero/hero-desktop.mp4', poster: '/assets/hero/hero-desktop-poster.webp', position: '100% 100%' },
+  // Landscape tablets: a squarer cut anchored bottom-centre, so only empty space is ever cropped
+  tablet: { video: '/assets/hero/hero-tablet.mp4', poster: '/assets/hero/hero-tablet-poster.webp', position: '50% 100%' },
   portrait: { video: '/assets/hero/hero-mobile.mp4', poster: '/assets/hero/hero-mobile-poster.webp', position: '50% 100%' },
+  // Portrait tablets: the phone cut would be blown up and cropped, so they get their own
+  tabletPortrait: { video: '/assets/hero/hero-tablet-portrait.mp4', poster: '/assets/hero/hero-tablet-portrait-poster.webp', position: '50% 100%' },
 };
 
 export default function Hero() {
@@ -130,8 +134,14 @@ export default function Hero() {
   );
 
   const isMobile = layout.w < 768;
-  // Pick by the card's actual shape, so portrait tablets get the portrait composition too
-  const heroMedia = layout.cardWidth / layout.cardHeight < 1 ? HERO_MEDIA.portrait : HERO_MEDIA.landscape;
+  // Pick by the card's actual shape and the screen size: phone, portrait tablet, landscape tablet, desktop
+  const cardAspect = layout.cardWidth / layout.cardHeight;
+  const heroMedia =
+    cardAspect < 1
+      ? layout.w >= 700 ? HERO_MEDIA.tabletPortrait : HERO_MEDIA.portrait
+      : cardAspect < 1.62 || (layout.w < 1200 && cardAspect < 1.72)
+        ? HERO_MEDIA.tablet // squarer cards (tablets, tall monitors) would crop the wide cut's word
+        : HERO_MEDIA.landscape;
   const currentVideoSrc = heroMedia.video;
   const currentPosterSrc = heroMedia.poster;
 
@@ -490,9 +500,9 @@ export default function Hero() {
         }}
       >
         <h1 className="hero-studio-title hero-title-large">
-          <span ref={row1Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">One Stop Solution for</span></span>
-          <span ref={row2Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">all creative needs</span></span>
-          <span ref={row3Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">and goals</span></span>
+          <span ref={row1Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">Your Vision Our Craft</span></span>
+          <span ref={row2Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">built with care</span></span>
+          <span ref={row3Ref} className="title-text-line hero-anim-line"><span className="hero-line-inner">and purpose</span></span>
         </h1>
 
         <div ref={btnRowRef} className="hero-btn-row">

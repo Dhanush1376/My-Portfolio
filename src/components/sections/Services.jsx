@@ -195,7 +195,7 @@ export default function Services() {
           );
 
           // Icon box micro spring pop for mobile & touch views
-          if (iconBox && window.innerWidth <= 768) {
+          if (iconBox && window.innerWidth < 768) {
             gsap.fromTo(
               iconBox,
               { scale: 0.7, rotate: -8, opacity: 0.2 },

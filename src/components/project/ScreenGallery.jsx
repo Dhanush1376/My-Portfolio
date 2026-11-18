@@ -86,24 +86,30 @@ const shotsReady = (els, cap) => {
 export default function ScreenGallery({ project, screens, label, title }) {
   const isTutorboard = project?.slug === 'tutorboard' || project?.id === 'ragchatbot';
 
+  const isApp = project?.isApp || project?.type === 'app';
+
   const tabs = useMemo(() => {
-    const mobileTab = { id: 'mobile', label: 'Mobile', icon: Smartphone, items: screens.mobile };
+    const mobileTab = { id: 'mobile', label: isApp ? 'Mobile App' : 'Mobile', icon: Smartphone, items: screens.mobile };
     const desktopTab = { id: 'desktop', label: 'Desktop', icon: Monitor, items: screens.desktop };
+    if (isApp) return [mobileTab];
     return isTutorboard ? [desktopTab, mobileTab] : [mobileTab, desktopTab];
-  }, [screens, isTutorboard]);
+  }, [screens, isTutorboard, isApp]);
 
   const [active, setActive] = useState(() => {
+    if (isApp) return 'mobile';
     if (isTutorboard) return 'desktop';
     return screens.mobile.length || !screens.desktop.length ? 'mobile' : 'desktop';
   });
 
   useEffect(() => {
-    if (isTutorboard) {
+    if (isApp) {
+      setActive('mobile');
+    } else if (isTutorboard) {
       setActive('desktop');
     } else {
       setActive(screens.mobile.length || !screens.desktop.length ? 'mobile' : 'desktop');
     }
-  }, [project?.slug, isTutorboard, screens]);
+  }, [project?.slug, isTutorboard, isApp, screens]);
   const [lightbox, setLightbox] = useState(null);
   const rootRef = useRef(null);
   const trackRef = useRef(null);
@@ -538,30 +544,32 @@ export default function ScreenGallery({ project, screens, label, title }) {
           {title}
         </div>
         <div className="sg-controls-group">
-          <div className="sg-tabs" role="tablist" aria-label="Screenshot type">
-            <span className={`sg-tabs-thumb sg-tabs-thumb--${active}`} aria-hidden="true" />
-            {tabs.map((t) => {
-              const Icon = t.icon;
-              return (
-                <button
-                  key={t.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={active === t.id}
-                  className={`sg-tab ${active === t.id ? 'is-active' : ''}`}
-                  onClick={() => switchTab(t.id)}
-                  onPointerEnter={() => warm(t.id)}
-                  onPointerDown={() => warm(t.id)}
-                  onFocus={() => warm(t.id)}
-                  aria-label={t.label}
-                  title={t.label}
-                >
-                  <Icon size={16} strokeWidth={2.4} className="sg-tab-icon" aria-hidden="true" />
-                  <span className="sg-tab-label">{t.label}</span>
-                </button>
-              );
-            })}
-          </div>
+          {tabs.length > 1 && (
+            <div className="sg-tabs" role="tablist" aria-label="Screenshot type">
+              <span className={`sg-tabs-thumb sg-tabs-thumb--${active}`} aria-hidden="true" />
+              {tabs.map((t) => {
+                const Icon = t.icon;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={active === t.id}
+                    className={`sg-tab ${active === t.id ? 'is-active' : ''}`}
+                    onClick={() => switchTab(t.id)}
+                    onPointerEnter={() => warm(t.id)}
+                    onPointerDown={() => warm(t.id)}
+                    onFocus={() => warm(t.id)}
+                    aria-label={t.label}
+                    title={t.label}
+                  >
+                    <Icon size={16} strokeWidth={2.4} className="sg-tab-icon" aria-hidden="true" />
+                    <span className="sg-tab-label">{t.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
           <div className="sg-nav">
             <button type="button" className="sg-nav-btn" onClick={() => step(-1)} disabled={edges.start} aria-label="Previous screenshots">
               <ArrowLeft size={18} strokeWidth={2.2} />

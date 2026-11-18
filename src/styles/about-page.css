@@ -873,7 +873,7 @@
   opacity: 1;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .about-quote-header {
     margin-top: 1.25rem;
     margin-bottom: 2rem;
@@ -1122,7 +1122,7 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .about-section-divider {
     margin: 2rem auto 2.25rem auto;
   }
@@ -1426,7 +1426,7 @@
   color: #4B5563;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .faq-section-header {
     margin-bottom: 2rem;
     align-items: flex-end;
@@ -1485,7 +1485,7 @@
 }
 
 /* ============ MOBILE BREAKPOINT ============ */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .about-hero-panel {
     padding: 4.75rem 1.25rem 2rem;
     min-height: clamp(390px, 58vh, 470px);
@@ -1731,7 +1731,7 @@
   border-color: transparent transparent transparent #FFFFFF;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .about-hero-panel .hero-social-dock {
     right: 1.15rem;
     bottom: 1.25rem;

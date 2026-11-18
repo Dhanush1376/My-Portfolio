@@ -89,8 +89,12 @@ export default function NotchedCard({
     const W = { w: Math.round(tagsEl.offsetWidth), h: Math.round(tagsEl.offsetHeight) };
     const I = { w: Math.round(metaEl.offsetWidth), h: Math.round(metaEl.offsetHeight) };
 
-    // Outer corner radius (20px on mobile, 28px on desktop)
-    const P = L < 768 ? 20 : 28;
+    // Outer corner radius: taken from the surface's own CSS border-radius, which also clips it.
+    // If the two disagree the outer corner follows the CSS radius while the bezel's inner edge
+    // follows the path, and the border looks lopsided at the corners.
+    const surfaceEl = el.querySelector('.notched-clipped-surface') || el;
+    const cssRadius = parseFloat(getComputedStyle(surfaceEl).borderTopLeftRadius);
+    const P = cssRadius > 0 ? Math.round(cssRadius) : L < 768 ? 20 : 28;
 
     // Subpixel debounce: only update dimensions state if size changed by at least 2px
     setDimensions((prev) => {

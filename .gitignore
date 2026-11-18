@@ -3,30 +3,70 @@ node_modules/
 .pnp
 .pnp.js
 
-# Production build & cache
+# Production build, cache & dev outputs
 dist/
 dist-ssr/
 .vite/
 coverage/
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+.prettiercache
+.vercel/
+.netlify/
+.turbo/
 
-# Editor & System files
+# Vite temporary config dumps
+vite.config.*.timestamp*
+*.timestamp-*.mjs
+
+# AI assistants & coding agents
+.claude/
+.cursor/
+.gemini/
+*.cursorrules
+
+# Editor & IDE files
 .vscode/
 .idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.sublime-workspace
+*.sublime-project
+
+# OS system files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-*.bak
-*.tmp
+Desktop.ini
+
+# Logs & Debugging
 *.log
+logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-*.local
 
-# Scratch and diagnostic scripts
+# Backups & temporary scratch files
+*.bak
+*.tmp
+*.orig
+*.rej
+*~
+*.local
 scratch*
 extract*
 inspect*
+test_*
+crop_*
 *.cjs
 hero-video/
 

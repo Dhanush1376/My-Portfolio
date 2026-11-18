@@ -17,7 +17,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .capabilities-editorial-section {
     padding: clamp(2.75rem, 4.5vh, 3.75rem) clamp(1rem, 3vw, 1.25rem) clamp(2.5rem, 4vh, 3.5rem) clamp(1rem, 3vw, 1.25rem) !important;
   }
@@ -58,7 +58,7 @@
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.75rem;
-  background: var(--accent, #FF5520);
+  background: #E5383B; /* Services section colour: red */
   color: #FFFFFF;
   font-family: var(--font-mono, monospace);
   font-size: clamp(0.7rem, 0.9vw, 0.85rem);
@@ -67,7 +67,7 @@
   text-transform: uppercase;
   border-radius: 0;
   transform: rotate(-3.5deg);
-  box-shadow: 0 4px 14px rgba(255, 85, 32, 0.28);
+  box-shadow: 0 4px 14px rgba(229, 56, 59, 0.28);
 }
 
 .services-huge-headline {
@@ -83,7 +83,7 @@
 }
 
 .services-huge-headline .title-accent {
-  color: var(--accent, #FF5520);
+  color: #E5383B;
   display: inline-block;
   margin-left: 0.04em;
 }
@@ -477,7 +477,7 @@ body[data-theme="light"] .expertise-row:hover .expertise-row-arrow {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .services-climax-header {
     margin-top: 0.25rem;
     margin-bottom: 2rem !important;

@@ -395,7 +395,7 @@
 }
 
 /* ============ MOBILE: Discovery grid stacks with heading on top ============ */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .discovery-notched-grid {
     grid-template-columns: 1fr;
     gap: 2rem;

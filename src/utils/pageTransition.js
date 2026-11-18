@@ -63,6 +63,7 @@ export async function playColorTransition({ color, label, x, y, onCovered, settl
   overlay.className = 'page-transition-overlay';
   overlay.setAttribute('aria-hidden', 'true');
   overlay.style.background = color;
+  overlay.style.setProperty('--pt-color', color);
 
   const content = document.createElement('div');
   content.className = 'page-transition-content';

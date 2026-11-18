@@ -19,7 +19,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .section {
     padding: 4rem 1.25rem 5rem;
   }
@@ -297,7 +297,7 @@
     transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0s;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .section-header {
     padding: 3.25rem 1.5rem 4rem;
     margin-bottom: 0rem;
@@ -565,7 +565,7 @@
   border: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   /* Hero stays sticky (from the base rule) so the Philosophy section slides over it on phones too */
   .portfolio-app #hero.stack-section {
     height: auto !important;
@@ -620,51 +620,71 @@
   display: none !important;
 }
 
-/* Natural Font Punctuation Accent Stops (Matching Image 2 Reference: Square in Plus Jakarta Sans, Baseline-Aligned) */
-.pcs-dot,
-.title-accent,
-.page-transition-dot {
-  color: var(--accent, #FF5520) !important;
+/* Accent full stops: one round dot everywhere on the site.
+   The display font draws "." as a square, so the glyph is pushed out of view (text-indent + overflow)
+   and the span itself becomes a circle filled with its text colour. An overflow-hidden inline-block
+   takes its baseline from its bottom edge, so the dot sits exactly on the text baseline.
+   :not(#_) lifts specificity above page-level rules; those only set `color`, which still applies. */
+:is(.pcs-dot, .pcs-next-dot, .title-accent, .page-transition-dot, .intro-word-stop):not(#_) {
   display: inline-block !important;
-  margin-left: 0.04em !important;
+  width: 0.19em !important;
+  height: 0.19em !important;
+  margin-left: 0.07em !important;
+  padding: 0 !important;
   vertical-align: baseline !important;
-  background: none !important;
-  border-radius: 0 !important;
-  width: auto !important;
-  height: auto !important;
-  line-height: inherit !important;
+  border-radius: 50% !important;
+  background: currentColor !important;
+  overflow: hidden !important;
+  text-indent: 1em !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
   font-size: inherit !important;
   text-decoration: none !important;
   box-sizing: content-box !important;
 }
 
-.pcs-dot::after,
-.title-accent::after,
-.page-transition-dot::after {
+:is(.pcs-dot, .pcs-next-dot, .title-accent, .page-transition-dot, .intro-word-stop):not(#_)::after {
   content: none !important;
   display: none !important;
+}
+
+.stop-nowrap {
+  white-space: nowrap;
+}
+
+.pcs-dot,
+.title-accent,
+.page-transition-dot {
+  color: var(--accent, #FF5520);
 }
 
 .pcs-next-dot {
-  color: rgba(14, 15, 18, 0.4) !important;
-  display: inline-block !important;
-  margin-left: 0.04em !important;
-  vertical-align: baseline !important;
-  background: none !important;
-  border-radius: 0 !important;
-  width: auto !important;
-  height: auto !important;
-  line-height: inherit !important;
-  font-size: inherit !important;
+  color: rgba(14, 15, 18, 0.4);
 }
 
-.pcs-next-dot::after {
-  content: none !important;
-  display: none !important;
+/* The dot is far shorter than a letter, so the per-letter rise (translateY 110%) needs a fixed distance */
+.pcs-char.pcs-dot {
+  animation-name: pcs-dot-in !important;
+}
+
+@keyframes pcs-dot-in {
+  from { transform: translateY(5em); }
+  to   { transform: translateY(0); }
 }
 
 .svc-hero-title .pcs-dot {
   color: #FFFFFF !important;
+}
+
+/* Case-study and service pages: the full stop takes its section's colour instead of the site orange.
+   On the page it is the project colour, deepened a touch so pale colours (bone, champagne) still read;
+   on the next-card it is a darker shade of that card's own colour, so it blends into the card. */
+.pcs .pcs-dot {
+  color: color-mix(in srgb, var(--pa, var(--accent, #FF5520)) 80%, #000000);
+}
+
+.pcs .pcs-next .pcs-next-dot {
+  color: color-mix(in srgb, var(--na, var(--pa, #888888)) 55%, #000000) !important;
 }
 
 [data-theme="dark"] .pcs-next-dot,
@@ -688,4 +708,9 @@
 .sg-live-dot::after {
   content: none !important;
   display: none !important;
+}
+/* Page-transition stop: a deeper shade of the flood colour (green on Work, red on Services...)
+   instead of a fixed orange, so it belongs to the page it lands on */
+.page-transition-overlay .page-transition-dot:not(#_) {
+  color: color-mix(in srgb, var(--pt-color, #FF5520) 55%, #0E1A05) !important;
 }

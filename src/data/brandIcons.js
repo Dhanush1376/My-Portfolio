@@ -39,6 +39,7 @@ import {
   siPytorch,
   siOpencv,
   siGithub,
+  siExpo,
 } from 'simple-icons';
 
 /**
@@ -86,6 +87,7 @@ const BRANDS = [
   [(n) => n.includes('hugging'), siHuggingface],
   [(n) => n.includes('pytorch'), siPytorch],
   [(n) => n.includes('opencv'), siOpencv],
+  [(n) => n.includes('expo'), siExpo],
   [(n) => n.includes('github') || n === 'git', siGithub],
 ];
 

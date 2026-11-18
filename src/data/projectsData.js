@@ -1,10 +1,83 @@
 export const PROJECTS_DATA = {
+  washingbasket: {
+    id: "washingbasket",
+    isApp: true,
+    type: "app",
+    accent: "#FFA644", // soft orange
+    slug: "washing-basket", // case-study URL: /work/washing-basket
+    num: "01",
+    tag: "01 / MOBILE APPLICATION",
+    service: "Cross-Platform Mobile App & Campus Logistics Engine",
+    category: "Mobile Application & Campus Platform",
+    year: "2026",
+    client: "Washing Basket",
+    tags: ["Mobile App", "React Native", "Expo SDK"],
+    title: "Washing Basket",
+    logo: "/assets/washingbasket_logo.png",
+    description: "End-to-end mobile laundry application and campus logistics system featuring instant QR counter verification, doorstep pickup scheduling, live order tracking, and in-app wallet.",
+    subtitle: "Cross-platform mobile laundry app engineered for university ecosystems with QR counter intake verification and real-time order tracking.",
+    img: "/assets/WashingBasket.png",
+    video: null,
+    liveUrl: "https://washingbasket.vercel.app/",
+    // Feature chip shown beside each phone screen in the animated card showcase
+    showcaseLabels: {
+      "Home": "Everything at a glance",
+      "Service catalog": "Clear per-item pricing",
+      "Schedule pickup": "Two-hour pickup slots",
+      "Campus counter qr": "Instant QR counter check-in",
+      "Live order tracking": "Every step, tracked live",
+      "Orders and history": "All your orders in one place",
+      "Digital wallet": "Built-in wallet & referrals",
+      "Promotions and offers": "Offers that actually stack",
+      "Customer profile": "Your laundry, your way"
+    },
+    stage: {
+      tone: "light",
+      phrases: [
+        { words: ["Collected.", "Cleaned."], color: "#FE8701" },
+        { words: ["Campus", "counters"], color: "#013E86" },
+        { words: ["Doorstep", "pickup"], color: "#16A34A" },
+        { words: ["Real-time", "tracking"], color: "#FFA644" }
+      ]
+    },
+    overview: "Full-scale digital laundry platform designed for university campuses (LPU, NIT Jalandhar) and residential pickup, uniting a feature-rich mobile app with a live web operations portal.",
+    overviewHighlights: [
+      "Dual fulfillment channels: seamless campus counter drop-offs and doorstep 2-hour pickup windows",
+      "Single-scan QR counter intake verification ensuring piece-level accountability and zero lost garments",
+      "End-to-end order lifecycle tracking from suds to steam press with in-app wallet payments"
+    ],
+    problem: "University students and busy residents endure wasted hours on laundry day, untracked garments, disputed piece counts at manual dhobi counters, opaque pricing, and clunky cash payments with zero status visibility.",
+    solution: "Engineered an integrated laundry operations platform with a customer-facing Expo/React Native mobile app, single-scan QR piece intake verification, automated 5-stage tracking, and a React 19/Vite operations portal.",
+    // Short before -> after pairs shown on the case study (problem/solution above stay as the full story)
+    challenge: [
+      { problem: "Disputed counts & lost clothes at counters", solution: "Instant QR check-in & verified piece count" },
+      { problem: "Zero visibility into laundry progress", solution: "Live 5-stage tracking from wash to press" },
+      { problem: "Cash friction & unpredictable pricing", solution: "Built-in digital wallet with transparent rates" },
+    ],
+    features: [
+      "7 dedicated laundry care services including Only Wash, Wash & Iron, Dry Clean, Blankets, and Shoe Care",
+      "Dual-channel fulfillment with 2-hour doorstep pickup scheduling and campus counter drop-offs",
+      "Camera & numeric QR verification allowing counter partners to log and count garments in seconds",
+      "Real-time order progress timeline tracking clothes through Collect, Wash, Dry, Iron, and Return",
+      "Integrated in-app wallet with instant UPI top-ups, referral reward scratch cards, and promo discounts",
+      "Web operations and management dashboard for live order dispatch, driver scheduling, and location intake controls"
+    ],
+    scope: ["Monorepo architecture", "React Native mobile app", "Vite operations portal", "Design system & brand", "Vercel deploy"],
+    role: "Lead Full-Stack & Mobile Engineer — Architected the monorepo, engineered the cross-platform React Native/Expo app, developed the React 19 operations portal, established the tokenized brand system, and deployed to Vercel.",
+    tech: ["React Native", "Expo", "React 19", "TypeScript", "Vite", "GSAP", "Tailwind CSS", "Vercel"],
+    stats: [
+      { label: "Turnaround", val: "24-48 hrs" },
+      { label: "Architecture", val: "Monorepo" }
+    ],
+    demoLink: "https://washingbasket.vercel.app/",
+    repoLink: "https://github.com/Dhanush1376/WashingBasket"
+  },
   siriarts: {
     id: "siriarts",
-    accent: "#F2A93B", // colour field for its case-study page
+    accent: "#F2D47E", // champagne gold field: soft but vibrant, from siriartsandcrafts.com ivory + antique gold
     slug: "siri-arts-and-crafts", // case-study URL: /work/siri-arts-and-crafts
-    num: "01",
-    tag: "01 / FREELANCE CLIENT",
+    num: "02",
+    tag: "02 / FREELANCE CLIENT",
     service: "Production Website & Visual Storefront",
     category: "Event Decor & Custom Crafts",
     year: "2026",
@@ -20,7 +93,7 @@ export const PROJECTS_DATA = {
     stage: {
       tone: "light",
       phrases: [
-        { words: ["Event", "decor"], color: "#EA580C" },
+        { words: ["Event", "decor"], color: "#D47A1E" },
         { words: ["Handmade", "gifts"], color: "#DB2777" },
         { words: ["Live", "client"], color: "#16A34A" },
         { words: ["Custom", "crafts"], color: "#2563EB" }
@@ -61,8 +134,8 @@ export const PROJECTS_DATA = {
     id: "akulas_kitchen",
     accent: "#94CF4E", // colour field for its case-study page
     slug: "akulas-kitchen", // case-study URL: /work/akulas-kitchen
-    num: "02",
-    tag: "02 / PRODUCTION CLIENT",
+    num: "03",
+    tag: "03 / PRODUCTION CLIENT",
     service: "Food E-Commerce & Cloud Kitchen Portal",
     category: "Culinary E-Commerce & Cloud Kitchen",
     year: "2026",
@@ -119,8 +192,8 @@ export const PROJECTS_DATA = {
     id: "cakepoprush",
     accent: "#EF7AA0", // colour field for its case-study page
     slug: "cakepoprush", // case-study URL: /work/cakepoprush
-    num: "03",
-    tag: "03 / E-COMMERCE STOREFRONT",
+    num: "04",
+    tag: "04 / E-COMMERCE STOREFRONT",
     service: "Artisan Dessert Storefront & Experience",
     category: "Dessert Storefront & E-Commerce",
     year: "2026",
@@ -175,10 +248,10 @@ export const PROJECTS_DATA = {
   },
   ragchatbot: {
     id: "ragchatbot",
-    accent: "#9D8CFF", // colour field for its case-study page
+    accent: "#CFC4AE", // deep bone colour field (visible on the off-white page); text on it stays obsidian (#0E0F12)
     slug: "tutorboard", // case-study URL: /work/tutorboard
-    num: "04",
-    tag: "04 / INTELLIGENT SYSTEM",
+    num: "05",
+    tag: "05 / INTELLIGENT SYSTEM",
     service: "AI / Retrieval-Augmented Generation",
     category: "AI & Vector Search",
     year: "2025",

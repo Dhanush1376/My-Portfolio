@@ -325,7 +325,7 @@ video::-webkit-media-controls {
 /* Unbolded Modern Grotesque Title (Large, Punchy Editorial Scale) */
 .hero-studio-title {
   font-family: 'Schibsted Grotesk', 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
-  font-size: clamp(2.35rem, 4.8vw, 4.65rem);
+  font-size: clamp(2.21rem, 4.52vw, 4.37rem); /* 6% under the original on laptops (two 3% steps) */
   font-weight: 500;
   line-height: 1.04;
   letter-spacing: -0.028em;
@@ -401,7 +401,7 @@ html.hero-entrance-pending .hero-btn-row > * {
   margin-top: 2px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .hero-btn-row {
     flex-direction: column;
     align-items: flex-start;
@@ -500,7 +500,7 @@ html.hero-entrance-pending .hero-btn-row > * {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .hero-section {
     min-height: 100vh;
     min-height: 100dvh;

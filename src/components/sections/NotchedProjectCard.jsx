@@ -3,7 +3,9 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import NotchedCard from '../common/NotchedCard';
 import KineticStage from '../common/KineticStage';
-import { ArrowUpRight } from 'lucide-react';
+import AppShowcaseStage from '../common/AppShowcaseStage';
+import { getProjectScreens } from '../../data/projectScreens';
+import { ArrowUpRight, Smartphone } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { navigateWithColor } from '../../utils/pageTransition';
 
@@ -42,6 +44,10 @@ export default function NotchedProjectCard({
   };
 
   // Determine tone and bezel color
+  // Mobile apps with real phone screens get the animated phone carousel instead of a static image
+  const appScreens = project.isApp && project.slug ? getProjectScreens(project.slug).mobile.filter((sc) => sc.kind === 'mobile') : [];
+  const useShowcase = appScreens.length >= 3 && !project.video;
+
   const tone = project.stage?.tone || (index % 2 === 0 ? 'light' : 'dark');
   const bezelColor = '#000000';
 
@@ -181,8 +187,17 @@ export default function NotchedProjectCard({
               </div>
               <div className="project-tags-mobile">
                 <span className="project-tag-pill project-tag-website">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                  Website
+                  {project.isApp ? (
+                    <>
+                      <Smartphone size={13} strokeWidth={2.4} style={{ marginRight: '6px' }} />
+                      Mobile App
+                    </>
+                  ) : (
+                    <>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                      Website
+                    </>
+                  )}
                 </span>
               </div>
             </div>
@@ -202,6 +217,15 @@ export default function NotchedProjectCard({
           }
         >
           {/* Main Stage: Live Preview Showcase */}
+          {useShowcase ? (
+            <AppShowcaseStage
+              projectId={project.id}
+              screens={appScreens}
+              labels={project.showcaseLabels}
+              logo={project.logo}
+              brand={project.title}
+            />
+          ) : (
           <KineticStage
             projectId={project.id}
             phrases={project.stage?.phrases || []}
@@ -211,6 +235,7 @@ export default function NotchedProjectCard({
             activeVideo={project.video}
             showImagePreview={true}
           />
+          )}
         </NotchedCard>
       </a>
 

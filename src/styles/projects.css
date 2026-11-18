@@ -290,10 +290,10 @@ html[data-theme="light"] .projects-title-stroke {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  font-family: var(--font-mono, monospace);
-  font-size: clamp(0.72rem, 0.8vw, 0.78rem);
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(0.74rem, 0.82vw, 0.8rem);
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.75);
   transition: color 0.3s ease;
@@ -396,7 +396,7 @@ html[data-theme="light"] .projects-title-stroke {
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.75rem;
-  background: var(--accent, #FF5520);
+  background: #94CF4E; /* Projects section colour: green */
   color: #FFFFFF;
   font-family: var(--font-mono, monospace);
   font-size: clamp(0.7rem, 0.9vw, 0.85rem);
@@ -405,7 +405,7 @@ html[data-theme="light"] .projects-title-stroke {
   text-transform: uppercase;
   border-radius: 0;
   transform: rotate(-3.5deg);
-  box-shadow: 0 4px 14px rgba(255, 85, 32, 0.28);
+  box-shadow: 0 4px 14px rgba(148, 207, 78, 0.28);
 }
 
 .projects-huge-headline {
@@ -421,12 +421,12 @@ html[data-theme="light"] .projects-title-stroke {
 }
 
 .projects-huge-headline .title-accent {
-  color: var(--accent, #FF5520);
+  color: #94CF4E;
   display: inline-block;
   margin-left: 0.04em;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .projects-climax-header {
     margin-bottom: 2rem;
   }
@@ -860,6 +860,28 @@ html[data-theme="light"] .projects-title-stroke {
   background: #000000 !important;
 }
 
+/* Washing Basket: clean warm peach preview cover fitting seamlessly inside card */
+.preview-layer-washingbasket,
+.preview-layer-washingbasket .kinetic-preview-img,
+.kinetic-preview-img.kinetic-img-washingbasket {
+  background: #FFF4E8 !important;
+}
+
+.preview-layer-washingbasket {
+  overflow: hidden !important;
+  background: #FFF4E8 !important;
+}
+
+.kinetic-preview-img.kinetic-img-washingbasket {
+  object-fit: contain !important;
+  object-position: center 56% !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: clamp(14px, 2.4vw, 28px) clamp(18px, 2.8vw, 32px) clamp(10px, 1.5vw, 18px) clamp(18px, 2.8vw, 32px) !important;
+  box-sizing: border-box !important;
+  background: #FFF4E8 !important;
+}
+
 /* CakePopRush: seamless pure white background matching site header with no black borders and fully visible logo */
 .preview-layer-cakepoprush,
 .preview-layer-cakepoprush .kinetic-preview-video,
@@ -902,6 +924,16 @@ html[data-theme="light"] .projects-title-stroke {
       rgba(0, 0, 0, 0.22) 100%) !important;
 }
 
+/* Gentle subtle bottom gradient for Washing Basket: prevents dark black smear and matches soft orange brand */
+.preview-layer-washingbasket .kinetic-preview-overlay,
+.kinetic-img-washingbasket ~ .kinetic-preview-overlay {
+  background: linear-gradient(180deg,
+      rgba(255, 244, 232, 0) 0%,
+      rgba(255, 244, 232, 0) 78%,
+      rgba(255, 166, 68, 0.08) 89%,
+      rgba(255, 166, 68, 0.22) 100%) !important;
+}
+
 /* Gentle subtle bottom gradient for CakePopRush */
 .video-cakepoprush~.kinetic-preview-overlay {
   background: linear-gradient(180deg,
@@ -921,6 +953,15 @@ html[data-theme="light"] .projects-title-stroke {
 }
 
 @media (hover: hover) and (pointer: fine) {
+
+  .featured-project-interactive-group:hover .preview-layer-washingbasket .kinetic-preview-overlay,
+  .featured-project-interactive-group:hover .kinetic-img-washingbasket ~ .kinetic-preview-overlay {
+    background: linear-gradient(180deg,
+        rgba(255, 244, 232, 0) 0%,
+        rgba(255, 244, 232, 0) 72%,
+        rgba(255, 166, 68, 0.16) 86%,
+        rgba(255, 166, 68, 0.35) 100%) !important;
+  }
 
   .featured-project-interactive-group:hover .video-cakepoprush~.kinetic-preview-overlay {
     background: linear-gradient(180deg,
@@ -1055,6 +1096,22 @@ html[data-theme="light"] .projects-title-stroke {
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
 }
 
+/* Washing Basket: plain white "view" label, made readable by a soft shade in that corner of the card
+   (.app-showcase-corner-shade) instead of a pill background or a text shadow */
+#project-washingbasket .project-card-hover-drawer {
+  color: #FFFFFF !important;
+  background: none !important;
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+#project-washingbasket .project-card-hover-drawer svg,
+#project-washingbasket .project-card-hover-drawer .project-drawer-icon {
+  stroke: #FFFFFF !important;
+}
+
 .project-card-hover-drawer svg,
 .project-card-hover-drawer .project-drawer-icon {
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1135,61 +1192,93 @@ html[data-theme="light"] .projects-title-stroke {
   justify-content: center;
   width: clamp(48px, 3.6vw, 62px);
   height: clamp(48px, 3.6vw, 62px);
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  border-radius: 50% !important;
+  background: #FFFFFF !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
   padding: 0 !important;
+  box-sizing: border-box;
+  overflow: hidden;
   flex-shrink: 0;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+[data-theme="dark"] .project-title-logo-wrap,
+body[data-theme="dark"] .project-title-logo-wrap,
+html[data-theme="dark"] .project-title-logo-wrap {
+  background: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
 }
 
 .featured-project-title-link:hover .project-title-logo-wrap {
   transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16), 0 0 0 1.5px rgba(255, 85, 32, 0.35) !important;
 }
 
 .project-title-logo-img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
-  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.7)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
-  transition: filter 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 50%;
+  filter: none !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 [data-theme="light"] .project-title-logo-img,
 body[data-theme="light"] .project-title-logo-img,
 html[data-theme="light"] .project-title-logo-img {
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.22)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.14));
+  filter: none !important;
 }
 
 .featured-project-title-link:hover .project-title-logo-img {
-  filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 14px rgba(255, 85, 32, 0.25));
+  filter: none !important;
+  transform: scale(1.04);
 }
 
 [data-theme="light"] .featured-project-title-link:hover .project-title-logo-img,
 body[data-theme="light"] .featured-project-title-link:hover .project-title-logo-img,
 html[data-theme="light"] .featured-project-title-link:hover .project-title-logo-img {
-  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.28)) drop-shadow(0 3px 8px rgba(0, 0, 0, 0.16));
+  filter: none !important;
 }
 
 .project-title-text {
   display: inline-block;
 }
 
-/* Circular styling for project logos */
-.logo-wrap-ragchatbot,
-.logo-wrap-tutorboard,
+/* Circular badges: complete circular emblems fill 100% edge-to-edge without padding gaps */
+.logo-wrap-akulas_kitchen,
 .logo-wrap-siriarts,
-.logo-wrap-akulas_kitchen {
+.logo-wrap-cakepoprush,
+.logo-wrap-ragchatbot,
+.logo-wrap-tutorboard {
   border-radius: 50% !important;
+  padding: 0 !important;
 }
 
-.logo-img-ragchatbot,
-.logo-img-tutorboard,
+.logo-img-akulas_kitchen,
 .logo-img-siriarts,
-.logo-img-akulas_kitchen {
+.logo-img-cakepoprush,
+.logo-img-ragchatbot,
+.logo-img-tutorboard {
   border-radius: 50% !important;
-  object-fit: contain;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Freeform icon logos (Washing Basket laundry basket icon) center cleanly inside the white round badge */
+.logo-wrap-washingbasket {
+  border-radius: 50% !important;
+  padding: clamp(5px, 0.45vw, 8px) !important;
+}
+
+.logo-img-washingbasket {
+  border-radius: 50% !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
 }
 
 .featured-project-interactive-group:hover+.project-under-content .featured-project-headline,
@@ -1451,7 +1540,7 @@ body[data-theme="light"] .featured-project-card-item:hover .featured-project-des
 /* ==========================================================================
    SYMMETRICAL HIGH-IMPACT PROJECT CARDS (PRESERVED 16:10.4 RATIO MATCHING GITHUB)
    ========================================================================== */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
 
   .portfolio-app .featured-projects-section,
   .featured-projects-section {
@@ -1610,4 +1699,276 @@ body[data-theme="dark"] .project-case-study-link:hover .project-case-study-arrow
   background: #FFFFFF;
   color: #0A0A0D;
   transform: rotate(45deg);
+}
+
+/* --------------------------------------------------------------------------
+   APP SHOWCASE STAGE (animated phone carousel for mobile-app cards)
+   -------------------------------------------------------------------------- */
+.app-showcase-root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+  /* Washing Basket brand orange, deep enough that the cream app screens stand out */
+  background: radial-gradient(120% 90% at 50% 100%, #FF9A2E 0%, #FFAE52 45%, #FFC888 100%);
+  user-select: none;
+  --pw: 33.5cqh;                      /* centre phone width: phone height follows the screen, ~78% of the card */
+}
+
+.app-showcase-glow {
+  position: absolute;
+  left: 50%;
+  bottom: -70cqh;
+  width: 150cqh;
+  height: 150cqh;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 246, 232, 0.75) 0%, rgba(255, 240, 220, 0.3) 40%, rgba(255, 240, 220, 0) 68%);
+  animation: appShowcaseGlow 6s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes appShowcaseGlow {
+  from { transform: translateX(-50%) scale(0.94); opacity: 0.85; }
+  to   { transform: translateX(-50%) scale(1.06); opacity: 1; }
+}
+
+.app-showcase-track {
+  position: absolute;
+  inset: 0;
+}
+
+/* Soft shade in the bottom-right corner so the white "view" label reads on the orange */
+.app-showcase-corner-shade {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 46cqw;
+  height: 46cqh;
+  z-index: 25;
+  pointer-events: none;
+  background: radial-gradient(farthest-side at 100% 100%, rgba(70, 28, 0, 0.55) 0%, rgba(70, 28, 0, 0.28) 45%, rgba(70, 28, 0, 0) 100%);
+}
+
+.app-showcase-phone {
+  position: absolute;
+  left: 50%;
+  /* Every phone stands on the same floor line (bottom-anchored, scaled from its base, no tilt),
+     so the phones and their reflections line up instead of stepping up and down */
+  bottom: 10cqh;
+  width: var(--pw);
+  margin-left: calc(var(--pw) / -2);
+  transform-origin: 50% 100%;
+  transform:
+    translateX(calc(var(--x) * var(--pw)))  /* step set per position in AppShowcaseStage */
+    scale(calc(1 - var(--abs) * 0.12));
+  transition:
+    transform 0.9s cubic-bezier(0.65, 0, 0.2, 1),
+    opacity 0.7s ease,
+    filter 0.9s ease;
+  filter: saturate(calc(1 - var(--abs) * 0.15));
+  will-change: transform, opacity;
+}
+
+.app-showcase-bob {
+  width: 100%;
+}
+
+@keyframes appShowcaseBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-1.6cqh); }
+}
+
+.app-showcase-device {
+  /* Concentric corners: inner screen radius = outer radius - bezel */
+  --bezel: 0.9cqh;
+  --r-out: 5.2cqh;
+  position: relative;
+  width: 100%;
+  padding: var(--bezel);
+  box-sizing: border-box;
+  border-radius: var(--r-out);
+  background: #0d0d0f;
+  /* Mirror reflection on the "floor" below each phone (Chromium/Safari; others simply skip it) */
+  -webkit-box-reflect: below 0.8cqh linear-gradient(transparent 0%, transparent 84%, rgba(255, 255, 255, 0.24) 100%);
+  box-shadow:
+    0 0 0 0.3cqh #2b2b30 inset,
+    0 3cqh 6cqh -2cqh rgba(90, 40, 0, 0.45),
+    0 1cqh 2cqh rgba(0, 0, 0, 0.12);
+}
+
+.app-showcase-screen {
+  position: relative;
+  overflow: hidden;
+  border-radius: calc(var(--r-out) - var(--bezel));
+  background: #faf8f4;
+  container-type: inline-size;
+}
+
+/* Status bar sits above the screenshot so the full screen (incl. bottom nav) is shown */
+.app-showcase-statusbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 11.5cqw;
+  padding: 0 7cqw 0 9cqw;
+  background: #faf8f4;
+  color: #0b1f3a;
+}
+
+.app-showcase-time {
+  font-size: 4.4cqw;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.app-showcase-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.4cqw;
+}
+
+.app-showcase-icons svg {
+  width: 4.4cqw;
+  height: auto;
+}
+
+.app-showcase-battery {
+  position: relative;
+  width: 6.4cqw;
+  height: 3.1cqw;
+  border: 0.45cqw solid currentColor;
+  border-radius: 1cqw;
+  box-sizing: border-box;
+  opacity: 0.9;
+}
+
+.app-showcase-battery::after {
+  content: '';
+  position: absolute;
+  right: -1.3cqw;
+  top: 50%;
+  width: 0.7cqw;
+  height: 1.3cqw;
+  transform: translateY(-50%);
+  border-radius: 0 0.5cqw 0.5cqw 0;
+  background: currentColor;
+}
+
+.app-showcase-battery i {
+  position: absolute;
+  inset: 0.35cqw;
+  right: 1.2cqw;
+  border-radius: 0.4cqw;
+  background: currentColor;
+}
+
+.app-showcase-screen img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+.app-showcase-island {
+  position: absolute;
+  top: 2.6cqw;
+  left: 50%;
+  width: 30cqw;
+  height: 8cqw;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #0d0d0f;
+}
+
+.app-showcase-brand {
+  position: absolute;
+  top: 4.5cqh;
+  left: 3.2cqw;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.5em 0.95em 0.5em 0.55em;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 14px rgba(120, 60, 0, 0.08);
+  font-size: clamp(9px, 1.25cqw, 13px);
+  font-weight: 700;
+  color: #0b1f3a;
+  letter-spacing: -0.01em;
+}
+
+.app-showcase-brand-logo {
+  width: 1.8em;
+  height: 1.8em;
+  object-fit: contain;
+}
+
+.app-showcase-brand-sep,
+.app-showcase-brand-sub {
+  color: #8a8f99;
+  font-weight: 600;
+}
+
+.app-showcase-chip {
+  /* Top-right under the tag notch, dark so it reads as a caption, not a second brand pill */
+  position: absolute;
+  top: 13.5cqh;
+  right: 3.2cqw;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.7em 1.05em;
+  border-radius: 999px;
+  background: #0B1F3A;
+  color: #FFFFFF;
+  font-size: clamp(9px, 1.3cqw, 13.5px);
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 10px 26px -10px rgba(11, 31, 58, 0.55);
+  animation: appShowcaseChip 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+}
+
+.app-showcase-chip-dot {
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 50%;
+  background: #FF8A00;
+  box-shadow: 0 0 0 0.3em rgba(255, 138, 0, 0.28);
+}
+
+@keyframes appShowcaseChip {
+  from { opacity: 0; transform: translateY(10px) scale(0.92); filter: blur(4px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+
+.app-showcase-chip-count {
+  margin-left: 0.2em;
+  padding-left: 0.7em;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* Narrow cards (phones): a bit taller centre phone, chip moves under the brand */
+@container (max-width: 520px) {
+  .app-showcase-track,
+  .app-showcase-chip { --pw: 34.5cqh; }
+  .app-showcase-brand-sep,
+  .app-showcase-brand-sub { display: none; }
+  .app-showcase-chip { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-showcase-phone { transition: none; }
+  .app-showcase-bob,
+  .app-showcase-glow,
+  .app-showcase-chip { animation: none; }
 }

@@ -75,7 +75,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-redesign-wrapper {
     padding: 0 0.5rem 0.75rem 0.5rem; /* No top gap: blends directly into contact */
     gap: 0;
@@ -100,7 +100,7 @@
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-left-column {
     position: absolute;
     top: 0;
@@ -137,7 +137,7 @@
   align-items: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-social-bar {
     flex-direction: row;
     gap: 0.6rem;
@@ -197,7 +197,7 @@
   transition: background 0.3s ease;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-left-extension {
     display: none; /* Hide vertical extension since social icons are a top-left row on mobile */
   }
@@ -235,7 +235,7 @@
   position: relative; /* Ensure absolute positioning works */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-main-block {
     padding: 5rem 1.15rem 2.75rem 1.15rem; /* Symmetrically scaled mobile padding */
     border-radius: 26px; /* Symmetrically scaled corners */
@@ -250,7 +250,7 @@
   /* Width dynamically fits the pill content, restoring the perfect notch cutout! */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-right-column {
     width: 100%;
     margin-top: 1rem;
@@ -264,7 +264,7 @@
   justify-content: flex-start;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-back-top-bar {
     padding: 0;
     display: flex;
@@ -290,7 +290,7 @@
   pointer-events: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-right-extension {
     display: none;
   }
@@ -391,7 +391,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-logo {
     margin-bottom: 1.5rem;
   }
@@ -411,7 +411,7 @@
   padding: 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-action-row {
     flex-direction: column;
     align-items: flex-start;
@@ -465,7 +465,7 @@
   flex-direction: column;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-tiny-desc {
     display: none; /* Remove text clutter under CTA on mobile */
   }
@@ -521,7 +521,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-links-grid {
     display: grid;
     grid-template-columns: 1fr 1.6fr;
@@ -699,7 +699,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-marquee-wrapper {
     margin: 1.25rem -1.15rem 1.25rem -1.15rem;
     width: calc(100% + 2.3rem);
@@ -723,7 +723,7 @@
   gap: 1.5rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-giant-text {
     font-size: clamp(1.25rem, 4.8vw, 1.65rem);
     gap: 1rem;
@@ -744,7 +744,7 @@
   filter: drop-shadow(0 0 4px rgba(217, 119, 6, 0.3));
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .marquee-star {
     font-size: 0.85rem;
   }
@@ -771,7 +771,7 @@
 
 /* Removed absolute positioning for .footer-bottom-right on desktop so it naturally aligns in the flex row */
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-main-bottom {
     flex-direction: column;
     align-items: flex-start;
@@ -828,7 +828,7 @@
   pointer-events: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-bottom-scroll-cutout {
     right: 0; /* Align with the edge of the screen on mobile */
     bottom: 0.75rem;
@@ -891,7 +891,7 @@
   bottom: 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .footer-redesign-wrapper {
     --fillet: 22px;
     /* The social tab is taller, so its curves can be rounder */
