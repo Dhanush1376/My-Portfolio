@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "headers": [
     {
-      "source": "/assets/(.*)\.(js|css|woff2)",
+      "source": "/assets/(.*)\\.(js|css|woff2)",
       "headers": [
         {
           "key": "Cache-Control",
